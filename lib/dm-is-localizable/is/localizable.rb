@@ -1,0 +1,56 @@
+module DataMapper
+  module Is
+    
+    module Localizable
+      
+      
+      def is_localizable(options = {}, &block)
+        
+        extend  ClassMethods
+        include InstanceMethods
+        
+        options = {
+          :as         => nil,
+          :class_name => "#{self}Translation"
+        }.merge(options)
+        
+        @translation_class_name = options[:class_name]    
+        class_inheritable_accessor :translation_class_name
+        
+        remix n, Translation, :as => options[:as], :class_name => @translation_class_name
+        
+        remixer = Extlib::Inflection.foreign_key(self.name).gsub('_id', '').to_sym
+        remixee = Extlib::Inflection.tableize(@translation_class_name).to_sym
+        
+        enhance :translation, @translation_class_name do
+          belongs_to remixer
+          belongs_to :language
+          class_eval &block
+        end
+        
+        self.class_eval(<<-EOS, __FILE__, __LINE__ + 1)
+          alias :translations #{remixee}
+        EOS
+        
+      end
+      
+      module ClassMethods
+      
+        def available_languages
+          
+        end
+        
+      end
+      
+      module InstanceMethods
+        
+        def translate(language, translation)
+         # translations << { :language => language }.merge!(translation)
+        end
+        
+      end
+      
+    end
+    
+  end
+end

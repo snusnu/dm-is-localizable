@@ -1,5 +1,9 @@
+require 'pathname'
 require 'rubygems'
 require 'rake'
+
+ROOT = Pathname(__FILE__).dirname.expand_path
+JRUBY = RUBY_PLATFORM =~ /java/
 
 begin
   require 'jeweler'
@@ -16,16 +20,30 @@ rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end
 
-require 'spec/rake/spectask'
-Spec::Rake::SpecTask.new(:spec) do |spec|
-  spec.libs << 'lib' << 'spec'
-  spec.spec_files = FileList['spec/**/*_spec.rb']
-end
-
-Spec::Rake::SpecTask.new(:rcov) do |spec|
-  spec.libs << 'lib' << 'spec'
-  spec.pattern = 'spec/**/*_spec.rb'
-  spec.rcov = true
+begin
+  gem 'rspec', '>=1.1.12'
+  require 'spec'
+  require 'spec/rake/spectask'
+ 
+  task :default => [ :spec ]
+ 
+  desc 'Run specifications'
+  Spec::Rake::SpecTask.new(:spec) do |t|
+    t.spec_opts << '--options' << 'spec/spec.opts' if File.exists?('spec/spec.opts')
+    t.spec_files = Pathname.glob((ROOT + 'spec/**/*_spec.rb').to_s).map { |f| f.to_s }
+ 
+    begin
+      gem 'rcov', '~>0.8'
+      t.rcov = JRUBY ? false : (ENV.has_key?('NO_RCOV') ? ENV['NO_RCOV'] != 'true' : true)
+      t.rcov_opts << '--exclude' << 'spec'
+      t.rcov_opts << '--text-summary'
+      t.rcov_opts << '--sort' << 'coverage' << '--sort-reverse'
+    rescue LoadError
+      # rcov not installed
+    end
+  end
+rescue LoadError
+  # rspec not installed
 end
 
 begin
