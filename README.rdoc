@@ -1,0 +1,7 @@
+= dm-is-localizable
+
+Description goes here.
+
+== Copyright
+
+Copyright (c) 2009 snusnu. See LICENSE for details.
