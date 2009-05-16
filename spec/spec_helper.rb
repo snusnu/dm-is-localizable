@@ -7,14 +7,14 @@ require 'dm-is-remixable'
 
 gem 'dm-validations', '>=0.9.11'
 require 'dm-validations'
- 
+
 require Pathname(__FILE__).dirname.parent.expand_path + 'lib/dm-is-localizable'
- 
+
 ENV["SQLITE3_SPEC_URI"]  ||= 'sqlite3::memory:'
 ENV["MYSQL_SPEC_URI"]    ||= 'mysql://localhost/dm-accepts_nested_attributes_test'
 ENV["POSTGRES_SPEC_URI"] ||= 'postgres://postgres@localhost/dm-accepts_nested_attributes_test'
- 
- 
+
+
 def setup_adapter(name, default_uri = nil)
   begin
     DataMapper.setup(name, ENV["#{ENV['ADAPTER'].to_s.upcase}_SPEC_URI"] || default_uri)
@@ -45,7 +45,7 @@ if USE_TEXTMATE_RSPEC_BUNDLE
 
   # use the tmbundle logger
   RSpecTmBundleHelpers::TextmateRspecLogger.new(STDOUT, :off)
-  
+
 
   class Object
     include RSpecTmBundleHelpers
@@ -59,11 +59,11 @@ Dir[Pathname(__FILE__).dirname.to_s + "/fixtures/**/*.rb"].each { |rb| require(r
 
 
 Spec::Runner.configure do |config|
-  
+
   config.before(:all) do
     DataMapper.auto_migrate!
   end
-  
+
   config.before(:each) do
     DataMapper.repository(:default) do |r|
       transaction = DataMapper::Transaction.new(r)
@@ -71,7 +71,7 @@ Spec::Runner.configure do |config|
       r.adapter.push_transaction(transaction)
     end
   end
-  
+
   config.after(:each) do
     DataMapper.repository(:default) do |r|
       adapter = r.adapter
@@ -81,5 +81,5 @@ Spec::Runner.configure do |config|
       end
     end
   end
-  
+
 end

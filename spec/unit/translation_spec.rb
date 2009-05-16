@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe "the remixed translation resource" do
-  
+
   it "should store unique languages for every resource to translate" do
     l = Language.create :code => 'en-US', :name => 'English'
     i = Item.create
@@ -12,5 +12,5 @@ describe "the remixed translation resource" do
     t2.errors.should_not be_empty
     t2.errors.size.should == 1
   end
-  
+
 end

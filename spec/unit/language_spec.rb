@@ -49,7 +49,7 @@ describe "Language" do
       Language.new(:code => 'EN-us',   :name => "English").should_not be_valid
       Language.new(:code => 'EN-US',   :name => "English").should_not be_valid
     end
-    
+
     it "should only allow unique locale string codes" do
       l1 = Language.create(:code => 'en-US', :name => "English")
       l1.should_not be_new_record
