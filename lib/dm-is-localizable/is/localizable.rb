@@ -59,7 +59,7 @@ module DataMapper
         
         # checks if all localizable resources are translated in all available languages
         def translations_complete?
-          nr_of_available_languages * all.size == translation_class.all.size
+          available_languages.size * all.size == translation_class.all.size
         end
         
       end
