@@ -33,7 +33,29 @@ ENV['ADAPTER'] ||= 'sqlite3'
 setup_adapter(:default)
 Dir[Pathname(__FILE__).dirname.to_s + "/fixtures/**/*.rb"].each { |rb| require(rb) }
 
+# have the loggers handy
+# DataObjects::Logger.new(STDOUT, :debug)
+# DataObjects::Sqlite3.logger = DataObjects::Logger.new(STDOUT, :debug)
+
 
 Spec::Runner.configure do |config|
+  
+  config.before do
+    DataMapper.repository(:default) do |r|
+      transaction = DataMapper::Transaction.new(r)
+      transaction.begin
+      r.adapter.push_transaction(transaction)
+    end
+  end
+  
+  config.after do
+    DataMapper.repository(:default) do |r|
+      adapter = r.adapter
+      while adapter.current_transaction
+        adapter.current_transaction.rollback
+        adapter.pop_transaction
+      end
+    end
+  end
   
 end
