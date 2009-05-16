@@ -94,4 +94,16 @@ describe DataMapper::Is::Localizable do
     
   end
   
+  describe "class method API" do
+    
+    describe "translation_class" do
+      
+      it "should follow naming conventions" do
+        Item.translation_class.should == ItemTranslation
+      end
+      
+    end
+    
+  end
+  
 end
