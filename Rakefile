@@ -9,11 +9,13 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "dm-is-localizable"
-    gem.summary = %Q{TODO}
+    gem.summary = %Q{Datamapper support for localization of content in multilanguage applications}
     gem.email = "gamsnjaga@gmail.com"
     gem.homepage = "http://github.com/snusnu/dm-is-localizable"
-    gem.authors = ["snusnu"]
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+    gem.authors = ["Martin Gamsjaeger (snusnu)"]
+    gem.add_dependency('dm-core',         '>= 0.9.11')
+    gem.add_dependency('dm-is-remixable', '>= 0.9.11')
+    gem.add_dependency('dm-validations',  '>= 0.9.11')
   end
 
 rescue LoadError
