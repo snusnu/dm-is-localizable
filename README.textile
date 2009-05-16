@@ -109,6 +109,7 @@ class Item
   # added by is :localizable
   
   has n, :item_translations
+  has n, :languages, :through => :item_translations
   
   # and a handy alias
   alias :translations :item_translations
@@ -123,7 +124,6 @@ class Item
   
   
   # TODO
-  # has n, :languages, :through => :item_translations
   # more API to support common usecases (and i18n/l10n solutions)
   
 end

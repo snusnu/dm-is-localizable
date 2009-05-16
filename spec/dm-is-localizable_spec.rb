@@ -182,4 +182,20 @@ describe DataMapper::Is::Localizable do
     
   end
   
+  describe "instance method API" do
+    
+    it "should create a one_to_many association that follows naming conventions" do
+      Item.new.should respond_to :item_translations
+    end
+    
+    it "should add a translations alias to the one_to_many association" do
+      Item.new.should respond_to :translations
+    end
+    
+    it "should create a many_to_many association to languages" do
+      Item.new.should respond_to :languages
+    end
+    
+  end
+  
 end

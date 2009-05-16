@@ -28,6 +28,8 @@ module DataMapper
           class_eval &block
         end
         
+        has n, :languages, :through => remixee
+        
         self.class_eval(<<-EOS, __FILE__, __LINE__ + 1)
           alias :translations #{remixee}
         EOS
