@@ -1,3 +1,2 @@
-* Spec unique languages per translated resource
 * Add accessors for the localized properties in the localizable resource
 * Think about validation and null constraints
