@@ -2,12 +2,21 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe DataMapper::Is::Localizable do
   
+  before :all do
+    DataMapper.auto_migrate!
+  end
+  
   describe "Language" do
 
     describe "with valid attributes" do
     
       it "should be valid" do
         Language.new(:code => "en-US", :name => "English").should be_valid
+      end
+      
+      it "should store unique locale string codes" do
+        Language.create(:code => "en-US", :name => "English").should_not be_new_record
+        Language.create(:code => "en-US", :name => "English").should be_new_record
       end
       
     end
