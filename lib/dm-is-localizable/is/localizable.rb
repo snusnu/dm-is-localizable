@@ -38,6 +38,7 @@ module DataMapper
       
       module ClassMethods
       
+        # list all available languages for Items
         def available_languages
           Language.all :id => translation_class.all.map { |t| t.language_id }.uniq
         end
@@ -45,6 +46,11 @@ module DataMapper
       end
       
       module InstanceMethods
+        
+        # list all available languages for a specific Item instance
+        def available_languages
+          Language.all :id => translations.map { |t| t.language_id }.uniq
+        end
         
         def translate(language, translation)
          # translations << { :language => language }.merge!(translation)

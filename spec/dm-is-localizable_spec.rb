@@ -99,6 +99,75 @@ describe DataMapper::Is::Localizable do
     
   end
   
+  describe "all available languages", :shared => true do
+    
+    describe "with no translations" do
+    
+      it "should return 0 languages" do
+        @provider.available_languages.size.should == 0
+      end
+      
+    end
+    
+    describe "with 1 translation in 1 language" do
+      
+      before :each do
+        @l = Language.create :code => 'en-US', :name => 'English'
+        @t = ItemTranslation.create :item => @item, :language => @l, :name => "Book", :desc => "Literature"
+      end
+    
+      it "should return 1 language" do
+        @provider.available_languages.size.should == 1
+      end
+      
+      it "should return the right language" do
+        @provider.available_languages.first.should == @l
+      end
+      
+    end
+    
+    describe "with 2 translations in 1 language" do
+      
+      before :each do
+        @l = Language.create :code => 'en-US', :name => 'English'
+        @t = ItemTranslation.create :item => @item, :language => @l, :name => "Book", :desc => "Literature"
+        @t = ItemTranslation.create :item => @item, :language => @l, :name => "Hook", :desc => "Tool"
+        @item.reload
+      end
+    
+      it "should return 1 language" do
+        @provider.available_languages.size.should == 1
+      end
+      
+      it "should return the right language" do
+        @provider.available_languages.first.should == @l
+      end
+      
+    end
+    
+    describe "with 3 translations in 2 languages" do
+      
+      before :each do
+        @l1 = Language.create :code => 'en-US', :name => 'English (US)'
+        @l2 = Language.create :code => 'de-AT', :name => 'Deutsch (Österreich)'
+        @t  = ItemTranslation.create :item => @item, :language => @l1, :name => "Book",  :desc => "Literature"
+        @t  = ItemTranslation.create :item => @item, :language => @l1, :name => "Hook",  :desc => "Tool"
+        @t  = ItemTranslation.create :item => @item, :language => @l2, :name => "Haken", :desc => "Werkzeug"
+      end
+    
+      it "should return 2 language" do
+        @provider.available_languages.size.should == 2
+      end
+      
+      it "should return the right language" do
+        @provider.available_languages.first.should == @l1
+        @provider.available_languages.last.should  == @l2
+      end
+      
+    end
+    
+  end
+  
   describe "class method API" do
     
     describe "translation_class" do
@@ -111,72 +180,12 @@ describe DataMapper::Is::Localizable do
     
     describe "available_languages" do
       
-      describe "with no translations" do
-      
-        it "should return 0 languages" do
-          Item.available_languages.size.should == 0
-        end
-        
+      before :each do
+        @item  = Item.create
+        @provider = Item
       end
       
-      describe "with 1 translation in 1 language" do
-        
-        before :each do
-          @l = Language.create :code => 'en-US', :name => 'English'
-          @i = Item.create
-          @t = ItemTranslation.create :item_id => @i.id, :language_id => @l.id, :name => "Book", :desc => "Literature"
-        end
-      
-        it "should return 1 language" do
-          Item.available_languages.size.should == 1
-        end
-        
-        it "should return the right language" do
-          Item.available_languages.first.should == @l
-        end
-        
-      end
-      
-      describe "with 2 translation in 1 language" do
-        
-        before :each do
-          @l = Language.create :code => 'en-US', :name => 'English'
-          @i = Item.create
-          @t = ItemTranslation.create :item_id => @i.id, :language_id => @l.id, :name => "Book", :desc => "Literature"
-          @t = ItemTranslation.create :item_id => @i.id, :language_id => @l.id, :name => "Hook", :desc => "Tool"
-        end
-      
-        it "should return 1 language" do
-          Item.available_languages.size.should == 1
-        end
-        
-        it "should return the right language" do
-          Item.available_languages.first.should == @l
-        end
-        
-      end
-      
-      describe "with 3 translation in 2 language" do
-        
-        before :each do
-          @l1 = Language.create :code => 'en-US', :name => 'English (US)'
-          @l2 = Language.create :code => 'de-AT', :name => 'Deutsch (Österreich)'
-          @i  = Item.create
-          @t  = ItemTranslation.create :item_id => @i.id, :language_id => @l1.id, :name => "Book",  :desc => "Literature"
-          @t  = ItemTranslation.create :item_id => @i.id, :language_id => @l1.id, :name => "Hook",  :desc => "Tool"
-          @t  = ItemTranslation.create :item_id => @i.id, :language_id => @l2.id, :name => "Haken", :desc => "Werkzeug"
-        end
-      
-        it "should return 2 language" do
-          Item.available_languages.size.should == 2
-        end
-        
-        it "should return the right language" do
-          Item.available_languages.first.should == @l1
-          Item.available_languages.last.should  == @l2
-        end
-        
-      end
+      it_should_behave_like "all available languages"
       
     end
     
@@ -194,6 +203,17 @@ describe DataMapper::Is::Localizable do
     
     it "should create a many_to_many association to languages" do
       Item.new.should respond_to :languages
+    end
+    
+    describe "available_languages" do
+      
+      before :each do
+        @item  = Item.create
+        @provider = @item
+      end
+      
+      it_should_behave_like "all available languages"
+      
     end
     
   end

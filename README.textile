@@ -117,9 +117,14 @@ class Item
   # helper to get at ItemTranslation
   class_inheritable_reader :translation_class
   
-  # list all available languages for this Item
+  # list all available languages for Items
   def self.available_languages
     Language.all :id => translation_class.all.map { |t| t.language_id }.uniq
+  end
+  
+  # list all available languages for a specific Item instance
+  def available_languages
+    Language.all :id => translations.map { |t| t.language_id }.uniq
   end
   
   
