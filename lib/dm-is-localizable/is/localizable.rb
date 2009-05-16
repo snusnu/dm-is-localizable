@@ -37,7 +37,7 @@ module DataMapper
       module ClassMethods
       
         def available_languages
-          
+          Language.all :id => translation_class.all.map { |t| t.language_id }.uniq
         end
         
       end

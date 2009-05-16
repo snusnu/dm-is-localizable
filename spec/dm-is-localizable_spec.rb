@@ -75,13 +75,9 @@ describe DataMapper::Is::Localizable do
   describe "DataMapper::Model.is_localizable with no options" do
     
     before :each do
-      Language.auto_migrate!
-      Item.auto_migrate!
-      ItemTranslation.auto_migrate!
-      
-      @item = Item.create
-      @language = Language.create :code => 'en', :name => 'English'
-      @t = ItemTranslation.new :item => @item, :language => @language
+      @i = Item.create
+      @l = Language.create :code => 'en', :name => 'English'
+      @t = ItemTranslation.new :item => @i, :language => @l
     end
     
     it "should belong_to a resource" do
@@ -109,6 +105,77 @@ describe DataMapper::Is::Localizable do
       
       it "should follow naming conventions" do
         Item.translation_class.should == ItemTranslation
+      end
+      
+    end
+    
+    describe "available_languages" do
+      
+      describe "with no translations" do
+      
+        it "should return 0 languages" do
+          Item.available_languages.size.should == 0
+        end
+        
+      end
+      
+      describe "with 1 translation in 1 language" do
+        
+        before :each do
+          @l = Language.create :code => 'en-US', :name => 'English'
+          @i = Item.create
+          @t = ItemTranslation.create :item_id => @i.id, :language_id => @l.id, :name => "Book", :desc => "Literature"
+        end
+      
+        it "should return 1 language" do
+          Item.available_languages.size.should == 1
+        end
+        
+        it "should return the right language" do
+          Item.available_languages.first.should == @l
+        end
+        
+      end
+      
+      describe "with 2 translation in 1 language" do
+        
+        before :each do
+          @l = Language.create :code => 'en-US', :name => 'English'
+          @i = Item.create
+          @t = ItemTranslation.create :item_id => @i.id, :language_id => @l.id, :name => "Book", :desc => "Literature"
+          @t = ItemTranslation.create :item_id => @i.id, :language_id => @l.id, :name => "Hook", :desc => "Tool"
+        end
+      
+        it "should return 1 language" do
+          Item.available_languages.size.should == 1
+        end
+        
+        it "should return the right language" do
+          Item.available_languages.first.should == @l
+        end
+        
+      end
+      
+      describe "with 3 translation in 2 language" do
+        
+        before :each do
+          @l1 = Language.create :code => 'en-US', :name => 'English (US)'
+          @l2 = Language.create :code => 'de-AT', :name => 'Deutsch (Österreich)'
+          @i  = Item.create
+          @t  = ItemTranslation.create :item_id => @i.id, :language_id => @l1.id, :name => "Book",  :desc => "Literature"
+          @t  = ItemTranslation.create :item_id => @i.id, :language_id => @l1.id, :name => "Hook",  :desc => "Tool"
+          @t  = ItemTranslation.create :item_id => @i.id, :language_id => @l2.id, :name => "Haken", :desc => "Werkzeug"
+        end
+      
+        it "should return 2 language" do
+          Item.available_languages.size.should == 2
+        end
+        
+        it "should return the right language" do
+          Item.available_languages.first.should == @l1
+          Item.available_languages.last.should  == @l2
+        end
+        
       end
       
     end

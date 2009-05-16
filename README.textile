@@ -113,11 +113,17 @@ class Item
   # and a handy alias
   alias :translations :item_translations
   
+  # helper to get at ItemTranslation
+  class_inheritable_reader :translation_class
+  
+  # list all available languages for this Item
+  def available_languages
+    Language.all :id => translation_class.all.map { |t| t.language_id }.uniq
+  end
+  
+  
   # TODO
-  # 
   # has n, :languages, :through => :item_translations
-  #
-  # TODO
   # more API to support common usecases (and i18n/l10n solutions)
   
 end
