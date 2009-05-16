@@ -1,0 +1,133 @@
+h1. dm-is-localizable
+
+Datamapper support for localization of (user entered) content in multilanguage applications
+
+h3. Schema
+
+* one xxx_translations table for every translatable resource
+* xxx_translations belongs_to the resource to translate
+* xxx_translations belongs_to a language
+* properties to be translated are defined in xxx_translations
+
+h3. Example definition of a localized model
+
+Currently, you need to define a @Language@ model yourself, to get @dm-is-localizable@ started.
+
+<pre>
+<code>
+class Language
+
+  include DataMapper::Resource
+
+  # properties
+
+  property :id, Serial
+
+  property :code, String, :nullable => false
+  property :name, String, :nullable => false
+
+end
+</code>
+</pre>
+
+Once you have this model in place, you can start defining your _localized models_.
+
+<pre>
+<code>
+class Item
+
+  include DataMapper::Resource
+  
+  property :id, Serial
+  
+  is :localizable do
+    property :name, String, :nullable => false
+    property :desc, String, :nullable => false
+  end
+  
+end
+</code>
+</pre>
+
+The above @Item@ model will define and thus be able to @DataMapper.auto_migrate!@ the @ItemTranslation@ model. The _naming convention_ used here is @"#{ClassToBeLocalized.name}Translation"@.
+
+Preliminary support for changing this is available by using the @:class_name@ option like so: @DataMapper::Model.is :localized, :class_name => 'ItemLocalization'@. However, this currently not yet specced.
+
+<pre>
+<code>
+class ItemTranslation
+
+  include DataMapper::Resource
+  
+  property :id, Serial
+  
+  property :item_id,     Integer, :nullable => false
+  property :language_id, Integer, :nullable => false
+  
+  property :name,        String,  :nullable => false
+  property :desc,        String,  :nullable => false
+
+  belongs_to :item
+  belongs_to :language
+  
+end
+</code>
+</pre>
+
+Furthermore, the following API gets defined on the @Item@ class:
+
+<pre>
+<code>
+class Item
+
+  include DataMapper::Resource
+  
+  property :id, Serial
+  
+  is :localizable do
+    property :name, String, :nullable => false
+    property :desc, String, :nullable => false
+  end
+  
+  # added by is :localizable
+  
+  has n, :item_translations
+  
+  # and a handy alias
+  alias :translations :item_translations
+  
+  # TODO
+  # 
+  # has n, :languages, :through => :item_translations
+  #
+  # TODO
+  # more API to support common usecases (and i18n/l10n solutions)
+  
+end
+</code>
+</pre>
+
+
+h3. Advantages
+
+  * Proper normalization and referential integrity
+  * Ease in adding a new language (add row to xxx_translations)
+  * Easy to query
+  * Columns keep there names
+
+
+h3. Disadvantages (not really if you think about it)
+
+  * One table for every resource that needs translations
+
+
+h3. Inspired by (thx guys!)
+
+* Neil Barnwell's comment on the top voted answer to "Schema for a multilanguage database":http://stackoverflow.com/questions/316780/schema-for-a-multilanguage-database
+
+* Gabi Solomon's option (4) at this blog post on "Multilanguage database design approach":http://www.gsdesign.ro/blog/multilanguage-database-design-approach/
+
+
+h3. Copyright
+
+Copyright (c) 2009 Martin Gamsjaeger (snusnu). See "LICENSE":http://github.com/snusnu/dm-is-localizable/tree/master/LICENSE for details.
