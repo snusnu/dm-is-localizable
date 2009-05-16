@@ -40,7 +40,8 @@ Gem::Specification.new do |s|
      "spec/unit/is_localizable_spec.rb",
      "spec/unit/language_spec.rb",
      "spec/unit/translation_spec.rb",
-     "tasks/changelog.rb"
+     "tasks/changelog.rb",
+     "tasks/whitespace.rb"
   ]
   s.homepage = %q{http://github.com/snusnu/dm-is-localizable}
   s.rdoc_options = ["--charset=UTF-8"]
