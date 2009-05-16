@@ -5,8 +5,8 @@ class Item
   property :id, Serial
 
   is :localizable do
-    property :name, String, :nullable => false
-    property :desc, String, :nullable => false
+    property :name, String
+    property :desc, String
   end
 
 end

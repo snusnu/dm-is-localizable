@@ -58,8 +58,8 @@ class Item
   property :id, Serial
   
   is :localizable do
-    property :name, String, :nullable => false
-    property :desc, String, :nullable => false
+    property :name, String
+    property :desc, String
   end
   
 end
@@ -106,7 +106,9 @@ class Item
     property :desc, String, :nullable => false
   end
   
-  # added by is :localizable
+  # ----------------------------
+  #   added by is :localizable
+  # ----------------------------
   
   has n, :item_translations
   has n, :languages, :through => :item_translations
@@ -117,14 +119,42 @@ class Item
   # helper to get at ItemTranslation
   class_inheritable_reader :translation_class
   
+  # -------------------
+  #   class level API
+  # -------------------
+  
   # list all available languages for Items
   def self.available_languages
     Language.all :id => translation_class.all.map { |t| t.language_id }.uniq
   end
   
-  # list all available languages for a specific Item instance
+  # the number of all available languages for the localizable model
+  def self.nr_of_available_languages
+    available_languages.size
+  end
+  
+  # checks if all localizable resources are translated in all available languages
+  def self.translations_complete?
+    nr_of_available_languages * all.size == translation_class.all.size
+  end
+  
+  # ----------------------
+  #   instance level API
+  # ----------------------
+  
+  # list all available languages for this instance
   def available_languages
     Language.all :id => translations.map { |t| t.language_id }.uniq
+  end
+  
+  # the number of all available languages for this instance
+  def nr_of_available_languages
+    available_languages.size
+  end
+  
+  # checks if this instance is translated into all available languages for this model
+  def translations_complete?
+    self.class.nr_of_available_languages == translations.size
   end
   
   
