@@ -74,3 +74,5 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
+# require all tasks below tasks
+Pathname.glob(ROOT.join('tasks/**/*.rb').to_s).each { |f| require f }

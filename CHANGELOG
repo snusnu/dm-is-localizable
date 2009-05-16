@@ -1,0 +1,183 @@
+[e66cccc | Sat May 16 19:02:07 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * Version bump to 0.0.4
+
+[963611b | Sat May 16 19:00:47 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * README corrections to reflect the recently added uniqueness constraints
+
+[47c5e1e | Sat May 16 18:56:09 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * added passing specs for unique language translations
+
+[fd37d64 | Sat May 16 18:55:09 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * more comprehensive unique constraint violation checks for language
+
+[15a9626 | Sat May 16 18:34:13 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * added passing spec for unique language codes
+
+[20242b3 | Sat May 16 18:17:19 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * split spec files into better manageable chunks
+
+[f4b6d30 | Sat May 16 17:32:46 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * moved rspec_tmbundle_support from specs/shared to specs/lib
+
+[12fe27a | Sat May 16 17:26:30 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * added TODO file
+
+[c66d793 | Sat May 16 17:22:51 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * added more class and instance level API.
+
+    These API methods mainly target the support for a UI that allows
+    clients to enter localized versions of their textual data (and
+    find out if they already completed their translations for specific
+    resources).
+    
+    added class level API
+    
+      * available_languages
+      * nr_of_available_languages
+      * translations_complete?
+    
+    instance level API
+    
+      * available_languages
+      * nr_of_available_languages
+      * translations_complete?
+
+[cb462f4 | Sat May 16 17:13:57 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * added support for nice html output in rspec tmbundle.
+
+[f713c84 | Sat May 16 05:33:54 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * Version bump to 0.0.3
+
+[aa6188c | Sat May 16 05:33:44 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * added available_languages instance level API
+
+[d5f13e1 | Sat May 16 05:12:03 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * README correction (available_languages is a class method)
+
+[92bf341 | Sat May 16 05:06:05 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * Version bump to 0.0.2
+
+[8de6a08 | Sat May 16 05:00:33 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * added specs for the translations and languages association.
+
+    I wonder if available_languages should be implemeted on top of
+    has n, :languages, :through => :translations
+
+[dd4830f | Sat May 16 04:51:23 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * added available_languages class method API
+
+[3596021 | Sat May 16 04:37:45 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * use transactional fixtures and have the loggers handy
+
+[fa00b88 | Sat May 16 04:07:10 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * enforce unique language codes (locale strings)
+
+[b7b8221 | Sat May 16 04:01:59 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * added missing spec for translation_class reader
+
+[b0cd326 | Sat May 16 03:43:33 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * translation_class reader instead of translation_class_name
+
+[d34352b | Sat May 16 03:31:54 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * jeweler generated gemspec
+
+[0ddc194 | Sat May 16 03:28:33 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * Version bump to 0.0.1
+
+[5abddb9 | Sat May 16 03:28:06 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * Version bump to 0.0.0
+
+[25ace0a | Sat May 16 03:26:39 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * updated README to reflect validations for Language
+
+[8f78083 | Sat May 16 03:24:00 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * validations and specs for Language.
+
+    * Think about locale string validation.
+    * Currently this is only a regex
+    * Should THIS be checked against a full list of possible locales?
+
+[d1c0a25 | Sat May 16 03:23:01 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * proper namespace for module Translation
+
+[982e081 | Sat May 16 03:21:29 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * added gem dependencies to gem specification and spec_helper
+
+[8cf2113 | Sat May 16 00:57:17 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * README cosmetics
+
+[8507bab | Sat May 16 00:27:42 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * updated README with usage examples.
+
+[d277892 | Fri May 15 23:49:27 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * updated LICENSE information
+
+[f6655c8 | Fri May 15 21:42:44 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * basic storage layout functional and tested. now add useful API.
+
+    * one xxx_translations table for every translatable resource
+    * belongs_to the resource to translate
+    * belongs_to a language
+    * properties to be translated are defined in xxx_translations
+    
+    Example
+    
+      class Item
+        include DataMapper::Resource
+        property :id, Serial
+        is :localizable do
+          property :name, String, :nullable => false
+          property :desc, String, :nullable => false
+        end
+      end
+    
+    Advantages
+    
+      * Proper normalization and referential integrity
+      * Ease in adding a new language (add row to xxx_translations)
+      * Easy to query
+      * Columns keep there names
+    
+    Disadvantages (not really if you think about it)
+    
+      * one table for every tables resource that needs translations
+    
+    Inspired by
+    
+      option 4) at http://is.gd/Af0d
+
+[bebfb8d | Fri May 15 13:57:49 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * Initial commit to dm-is-localizable.
+
