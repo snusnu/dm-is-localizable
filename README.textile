@@ -37,7 +37,7 @@ class Language
 
   property :id, Serial
 
-  property :code, String, :nullable => false
+  property :code, String, :nullable => false, :unique => true, :unique_index => true
   property :name, String, :nullable => false
   
   # locale string like 'en-US'
@@ -76,13 +76,13 @@ class ItemTranslation
 
   include DataMapper::Resource
   
-  property :id, Serial
+  property :id,          Serial
   
-  property :item_id,     Integer, :nullable => false
-  property :language_id, Integer, :nullable => false
+  property :item_id,     Integer, :nullable => false, :unique_index => :unique_languages
+  property :language_id, Integer, :nullable => false, :unique_index => :unique_languages
   
-  property :name,        String,  :nullable => false
-  property :desc,        String,  :nullable => false
+  property :name,        String
+  property :desc,        String
 
   belongs_to :item
   belongs_to :language
@@ -102,8 +102,8 @@ class Item
   property :id, Serial
   
   is :localizable do
-    property :name, String, :nullable => false
-    property :desc, String, :nullable => false
+    property :name, String
+    property :desc, String
   end
   
   # ----------------------------
