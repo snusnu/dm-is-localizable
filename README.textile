@@ -9,6 +9,20 @@ h3. Schema
 * xxx_translations belongs_to a language
 * properties to be translated are defined in xxx_translations
 
+
+h4. Advantages
+
+  * Proper normalization and referential integrity
+  * Ease in adding a new language (add row to xxx_translations)
+  * Easy to query
+  * Columns keep their names
+
+
+h4. Disadvantages (not really if you think about it)
+
+  * One table for every resource that needs translations
+
+
 h3. Example definition of a localized model
 
 Currently, you need to define a @Language@ model yourself, to get @dm-is-localizable@ started.
@@ -106,20 +120,6 @@ class Item
 end
 </code>
 </pre>
-
-
-h3. Advantages
-
-  * Proper normalization and referential integrity
-  * Ease in adding a new language (add row to xxx_translations)
-  * Easy to query
-  * Columns keep there names
-
-
-h3. Disadvantages (not really if you think about it)
-
-  * One table for every resource that needs translations
-
 
 h3. Inspired by (thx guys!)
 
