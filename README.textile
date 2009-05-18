@@ -183,6 +183,16 @@ class Item
     end
   end
   
+  # translates the :name property to the given language
+  def name(language_code)
+    translate(:name, language_code)
+  end
+  
+  # translates the :desc property to the given language
+  def desc(language_code)
+    translate(:name, language_code)
+  end
+  
   
   # TODO
   # more API to support common usecases (and i18n/l10n solutions)

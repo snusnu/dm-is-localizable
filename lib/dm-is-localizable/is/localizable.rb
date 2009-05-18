@@ -39,9 +39,19 @@ module DataMapper
 
         has n, :languages, :through => remixee
 
-        self.class_eval(<<-EOS, __FILE__, __LINE__ + 1)
+        self.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
           alias :translations #{remixee}
-        EOS
+        RUBY
+
+        localizable_properties.each do |property_name|
+          self.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
+
+            def #{property_name}(language_code)
+              translate(:#{property_name.to_sym}, language_code)
+            end
+
+          RUBY
+        end
 
       end
 

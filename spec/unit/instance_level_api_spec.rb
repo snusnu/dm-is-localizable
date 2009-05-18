@@ -208,4 +208,23 @@ describe "instance level API:" do
 
   end
 
+  describe "property_name(language_code)" do
+
+    before :each do
+      @l1 = Language.create :code => 'en-US', :name => 'English'
+      @l2 = Language.create :code => 'de-AT', :name => 'Deutsch'
+      @i1 = Item.create
+      @t1 = ItemTranslation.create :item => @i1, :language => @l1, :name => 'Book', :desc => 'Literature'
+      @t2 = ItemTranslation.create :item => @i1, :language => @l2, :name => 'Buch', :desc => 'Literatur'
+    end
+
+    it "should return the translated property" do
+      @i1.name(:en_US).should == 'Book'
+      @i1.desc(:en_US).should == 'Literature'
+      @i1.name(:de_AT).should == 'Buch'
+      @i1.desc(:de_AT).should == 'Literatur'
+    end
+
+  end
+
 end
