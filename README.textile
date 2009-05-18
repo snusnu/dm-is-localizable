@@ -25,7 +25,7 @@ h4. Disadvantages (not really if you think about it)
 
 h3. Example definition of a localized model
 
-Currently, you need to define a @Language@ model yourself, to get @dm-is-localizable@ started.
+Currently, you need to define a @Language@ model yourself, to get @dm-is-localizable@ started. However, this is reasonably easy! If you do a @rake install@ after you cloned the repo (I guess it won't work if you do a simple @gem install@), it will print out the code for language.rb and will tell you where to put it.
 
 <pre>
 <code>
