@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{dm-is-localizable}
-  s.version = "0.0.7"
+  s.version = "0.0.8"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Martin Gamsjaeger (snusnu)"]
@@ -41,6 +41,7 @@ Gem::Specification.new do |s|
      "spec/unit/language_spec.rb",
      "spec/unit/translation_spec.rb",
      "tasks/changelog.rb",
+     "tasks/install.rb",
      "tasks/whitespace.rb"
   ]
   s.homepage = %q{http://github.com/snusnu/dm-is-localizable}
