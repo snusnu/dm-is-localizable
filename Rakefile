@@ -1,5 +1,4 @@
 require 'pathname'
-require 'rubygems'
 require 'rake'
 
 ROOT = Pathname(__FILE__).dirname.expand_path

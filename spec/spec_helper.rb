@@ -1,11 +1,7 @@
 require 'pathname'
-require 'rubygems'
 require 'spec'
 
-gem 'dm-is-remixable', '>=0.9.11'
 require 'dm-is-remixable'
-
-gem 'dm-validations', '>=0.9.11'
 require 'dm-validations'
 
 require Pathname(__FILE__).dirname.parent.expand_path + 'lib/dm-is-localizable'
