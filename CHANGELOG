@@ -1,3 +1,56 @@
+[82db7fd | Mon May 18 15:42:50 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * Version bump to 0.0.6
+
+[016ddd5 | Mon May 18 15:42:28 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * added localizable_instance.translate(attribute, language_code)
+
+[30e7f81 | Mon May 18 15:39:08 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * added more specs for the remixed translation class.
+
+    Although the specs for the generated belongs_to association readers
+    pass, it's not possible to use :language as query condition when
+    calling translations.first :language => 'en-US'. Need to use
+    :language_id here. I've no idea why, but it could be some problem
+    with dm-is-remixable's enhance method, and association generation
+    inside this block.
+    
+    TODO investigate this!
+
+[1b3ff53 | Mon May 18 15:38:17 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * added Language.[](code) method
+
+[6465349 | Mon May 18 13:28:26 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * removed rubygems usage from dm-is-localizable
+
+[ce1d783 | Mon May 18 13:27:58 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * updated gemspec to reflect latest version
+
+[0749a4b | Sat May 16 19:22:33 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * Version bump to 0.0.5
+
+[ab0090a | Sat May 16 19:22:19 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * strip whitespace
+
+[f5de7dd | Sat May 16 19:21:42 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * added whitespace task to gemspec
+
+[e759d98 | Sat May 16 19:20:27 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * added rake task to strip whitespace (taken from brynary/webrat)
+
+[2ad8adc | Sat May 16 19:17:42 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * added CHANGELOG and task to generate(update) it
+
 [e66cccc | Sat May 16 19:02:07 UTC 2009] snusnu <gamsnjaga@gmail.com>
 
  * Version bump to 0.0.4

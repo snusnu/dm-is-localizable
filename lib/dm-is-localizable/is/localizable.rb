@@ -80,7 +80,7 @@ module DataMapper
         def translations_complete?
           self.class.nr_of_available_languages == translations.size
         end
-        
+
         def translate(attribute, language_code)
           if language = Language[language_code]
             t = translations.first(:language_id => language.id)

@@ -11,8 +11,8 @@ class Language
 
   # locale string like 'en-US'
   validates_format :code, :with => /^[a-z]{2}-[A-Z]{2}$/
-  
-  
+
+
   def self.[](code)
     return nil if code.nil?
     first :code => code.to_s.gsub('_', '-')
