@@ -68,7 +68,13 @@ end
 
 The above @Item@ model will define and thus be able to @DataMapper.auto_migrate!@ the @ItemTranslation@ model. The _naming convention_ used here is @"#{ClassToBeLocalized.name}Translation"@.
 
-Preliminary support for changing this is available by using the @:class_name@ option like so: @DataMapper::Model.is :localized, :class_name => 'ItemLocalization'@. However, this currently not yet specced.
+Preliminary support for changing this is available by using the @:class_name@ option like so (note that this isn't specced yet).
+
+<pre>
+<code>
+@DataMapper::Model.is :localized, :class_name => 'ItemLocalization'@
+</code>
+</pre>
 
 <pre>
 <code>
