@@ -78,7 +78,7 @@ Preliminary support for changing this is available by using the @:class_name@ op
 
 <pre>
 <code>
-@DataMapper::Model.is :localized, :class_name => 'ItemLocalization'@
+DataMapper::Model.is :localized, :class_name => 'ItemLocalization'
 </code>
 </pre>
 
