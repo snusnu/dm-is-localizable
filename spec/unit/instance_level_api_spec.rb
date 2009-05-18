@@ -152,5 +152,60 @@ describe "instance level API:" do
     end
 
   end
+  
+  describe "translate(attribute, language_code)" do
+    
+    before :each do
+      @l1 = Language.create :code => 'en-US', :name => 'English'
+      @l2 = Language.create :code => 'de-AT', :name => 'Deutsch'
+      @i1 = Item.create
+      @t1 = ItemTranslation.create :item => @i1, :language => @l1, :name => 'Book', :desc => 'Literature'
+      @t2 = ItemTranslation.create :item => @i1, :language => @l2, :name => 'Buch', :desc => 'Literatur'
+    end
+    
+    describe "with an existing attribute" do
+      
+      describe "and an existing language_code" do
+      
+        it "should return the translated string" do
+          @i1.translate(:name, :en_US).should == 'Book'
+          @i1.translate(:desc, :en_US).should == 'Literature'
+          @i1.translate(:name, :de_AT).should == 'Buch'
+          @i1.translate(:desc, :de_AT).should == 'Literatur'
+        end
+        
+      end
+      
+      describe "and a non existent language_code" do
+      
+        it "should return the translated string" do
+          @i1.translate(:name, :it).should be_nil
+        end
+        
+      end
+      
+    end
+    
+    describe "with a non existent attribute" do
+      
+      describe "and an existing language_code" do
+      
+        it "should return the translated string" do
+          @i1.translate(:foo, :en_US).should be_nil
+        end
+        
+      end
+      
+      describe "and a non existent language_code" do
+      
+        it "should return the translated string" do
+          @i1.translate(:foo, :it).should be_nil
+        end
+        
+      end
+      
+    end
+    
+  end
 
 end
