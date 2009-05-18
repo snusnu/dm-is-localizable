@@ -156,4 +156,14 @@ describe "class level API:" do
 
   end
 
+  describe "localizable_properties" do
+
+    it "should return a list of symbols reflecting the localizable properties" do
+      Item.localizable_properties.size.should == 2
+      Item.localizable_properties.should include(:name)
+      Item.localizable_properties.should include(:desc)
+    end
+
+  end
+
 end

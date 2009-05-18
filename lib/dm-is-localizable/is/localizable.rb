@@ -62,6 +62,16 @@ module DataMapper
           available_languages.size * all.size == translation_class.all.size
         end
 
+        # returns a list of symbols reflecting all localizable property names of this resource
+        def localizable_properties
+          translation_class.properties.map do |p|
+            p.name
+          end.select do |p|
+            # exclude properties that are'nt localizable
+            p != :id && p != :language_id && p != Extlib::Inflection.foreign_key(self.name).to_sym
+          end
+        end
+
       end
 
       module InstanceMethods
