@@ -218,11 +218,31 @@ describe "instance level API:" do
       @t2 = ItemTranslation.create :item => @i1, :language => @l2, :name => 'Buch', :desc => 'Literatur'
     end
 
-    it "should return the translated property" do
-      @i1.name(:en_US).should == 'Book'
-      @i1.desc(:en_US).should == 'Literature'
-      @i1.name(:de_AT).should == 'Buch'
-      @i1.desc(:de_AT).should == 'Literatur'
+    describe "with a nil language_code" do
+
+      it "should return nil" do
+        @i1.name(nil).should be_nil
+      end
+
+    end
+
+    describe "with a non existent language_code" do
+
+      it "should return nil" do
+        @i1.name(:it).should be_nil
+      end
+
+    end
+
+    describe "with an existing language_code" do
+
+      it "should return the translated property" do
+        @i1.name(:en_US).should == 'Book'
+        @i1.desc(:en_US).should == 'Literature'
+        @i1.name(:de_AT).should == 'Buch'
+        @i1.desc(:de_AT).should == 'Literatur'
+      end
+
     end
 
   end
