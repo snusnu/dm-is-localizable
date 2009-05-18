@@ -81,6 +81,7 @@ module DataMapper
           self.class.nr_of_available_languages == translations.size
         end
 
+        # translates the given attribute to the language identified by the given language_code
         def translate(attribute, language_code)
           if language = Language[language_code]
             t = translations.first(:language_id => language.id)
