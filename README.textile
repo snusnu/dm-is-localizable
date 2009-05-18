@@ -190,7 +190,7 @@ class Item
   
   # translates the :desc property to the given language
   def desc(language_code)
-    translate(:name, language_code)
+    translate(:desc, language_code)
   end
   
   
