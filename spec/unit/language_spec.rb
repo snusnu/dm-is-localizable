@@ -60,5 +60,38 @@ describe "Language" do
     end
 
   end
+  
+  describe "the [](value) class method" do
+    
+    before :each do
+      Language.create :code => 'en-US', :name => 'English'
+      Language.create :code => 'de-AT', :name => 'Deutsch'
+    end
+    
+    describe "with nil as paramter" do
+      
+      it "should return nil" do
+        Language[nil].should be_nil
+      end
+      
+    end
+    
+    describe "with an invalid (not present) language symbol as parameter" do
+      
+      it "should return nil" do
+        Language[:it].should be_nil
+      end
+      
+    end
+    
+    describe "with a valid (present) language symbol as parameter" do
+      
+      it "should return the correct language instance" do
+        Language[:en_US].should == Language.first(:code => 'en-US')
+      end
+      
+    end
+    
+  end
 
 end
