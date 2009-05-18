@@ -95,6 +95,8 @@ class ItemTranslation
   
   property :name,        String
   property :desc,        String
+  
+  validates_is_unique :language_id, :scope => :item_id
 
   belongs_to :item
   belongs_to :language
