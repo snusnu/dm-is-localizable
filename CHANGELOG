@@ -1,3 +1,42 @@
+[59dd665 | Mon May 18 17:23:50 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * Version bump to 0.0.7
+
+[845b6f0 | Mon May 18 16:44:16 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * more specs for the generated property translation readers
+
+[30990da | Mon May 18 16:31:07 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * fixed README
+
+[e8c9981 | Mon May 18 16:25:46 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * added readers that return the property translated to the target language.
+
+    If the property :name is declared to be localizable for class Item,
+    and there is a ItemTranslation for 'en-US', you're able to call
+    
+      * i.name(:en_US)
+    
+    on an instance of Item named i
+
+[0981aa8 | Mon May 18 16:10:25 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * README cosmetics
+
+[f8993ae | Mon May 18 16:07:00 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * added localizable_properties class level API
+
+[9bace64 | Mon May 18 15:52:23 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * updated README to reflect latest API addition
+
+[4a43df6 | Mon May 18 15:43:52 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * stripped whitespace, updated changelog and regenerated gemspec
+
 [82db7fd | Mon May 18 15:42:50 UTC 2009] snusnu <gamsnjaga@gmail.com>
 
  * Version bump to 0.0.6
