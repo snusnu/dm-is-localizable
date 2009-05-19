@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Martin Gamsjaeger (snusnu)"]
-  s.date = %q{2009-05-18}
+  s.date = %q{2009-05-19}
   s.email = %q{gamsnjaga@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -22,9 +22,6 @@ Gem::Specification.new do |s|
      "TODO",
      "VERSION",
      "dm-is-localizable.gemspec",
-     "features/dm-is-localizable.feature",
-     "features/step_definitions/dm-is-localizable_steps.rb",
-     "features/support/env.rb",
      "lib/dm-is-localizable.rb",
      "lib/dm-is-localizable/is/localizable.rb",
      "lib/dm-is-localizable/storage/language.rb",
