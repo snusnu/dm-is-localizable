@@ -37,7 +37,7 @@ module DataMapper
 
         end
 
-        has n, :languages, :through => remixee
+        has n, :languages, :through => remixee, :constraint => :destroy
 
         self.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
           alias :translations #{remixee}
