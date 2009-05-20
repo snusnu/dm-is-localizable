@@ -49,11 +49,12 @@ describe "all available_languages providers", :shared => true do
   describe "with 3 translations in 2 languages" do
 
     before :each do
+      @item2 = Item.create
       @l1 = Language.create :code => 'en-US', :name => 'English'
       @l2 = Language.create :code => 'de-AT', :name => 'Deutsch'
-      @t  = ItemTranslation.create :item => @item, :language => @l1, :name => "Book",  :desc => "Literature"
-      @t  = ItemTranslation.create :item => @item, :language => @l1, :name => "Hook",  :desc => "Tool"
-      @t  = ItemTranslation.create :item => @item, :language => @l2, :name => "Haken", :desc => "Werkzeug"
+      ItemTranslation.create :item => @item,  :language => @l1, :name => "Book",  :desc => "Literature"
+      ItemTranslation.create :item => @item,  :language => @l2, :name => "Haken", :desc => "Werkzeug"
+      ItemTranslation.create :item => @item2, :language => @l1, :name => "Hook",  :desc => "Tool"
     end
 
     it "should return 2 language" do
@@ -61,8 +62,9 @@ describe "all available_languages providers", :shared => true do
     end
 
     it "should return the right language" do
-      @provider.available_languages.first.should == @l1
-      @provider.available_languages.last.should  == @l2
+      @provider.available_languages.size.should == 2
+      @provider.available_languages.should include(@l1)
+      @provider.available_languages.should include(@l2)
     end
 
   end
