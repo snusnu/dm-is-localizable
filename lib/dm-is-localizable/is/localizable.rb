@@ -59,7 +59,8 @@ module DataMapper
 
         # list all available languages for the localizable model
         def available_languages
-          Language.all :id => translation_class.all.map { |t| t.language_id }.uniq
+          ids = translation_class.all.map { |t| t.language_id }.uniq
+          ids.empty? ? [] : Language.all(:id => ids)
         end
 
         # the number of all available languages for the localizable model
@@ -88,7 +89,8 @@ module DataMapper
 
         # list all available languages for this instance
         def available_languages
-          Language.all :id => translations.map { |t| t.language_id }.uniq
+          ids = translations.map { |t| t.language_id }.uniq
+          ids.empty? ? [] : Language.all(:id => ids)
         end
 
         # the number of all available languages for this instance
