@@ -12,9 +12,9 @@ begin
     gem.email = "gamsnjaga@gmail.com"
     gem.homepage = "http://github.com/snusnu/dm-is-localizable"
     gem.authors = ["Martin Gamsjaeger (snusnu)"]
-    gem.add_dependency('dm-core',         '>= 0.9.11')
-    gem.add_dependency('dm-is-remixable', '>= 0.9.11')
-    gem.add_dependency('dm-validations',  '>= 0.9.11')
+    gem.add_dependency('dm-core',         '>= 0.10.0')
+    gem.add_dependency('dm-is-remixable', '>= 0.10.0')
+    gem.add_dependency('dm-validations',  '>= 0.10.0')
   end
 
 rescue LoadError
