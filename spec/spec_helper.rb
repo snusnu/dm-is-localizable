@@ -56,26 +56,26 @@ Dir[Pathname(__FILE__).dirname.to_s + "/fixtures/**/*.rb"].each { |rb| require(r
 
 Spec::Runner.configure do |config|
 
-  config.before(:all) do
+  config.before(:each) do
     DataMapper.auto_migrate!
   end
 
-  config.before(:each) do
-    DataMapper.repository(:default) do |r|
-      transaction = DataMapper::Transaction.new(r)
-      transaction.begin
-      r.adapter.push_transaction(transaction)
-    end
-  end
-
-  config.after(:each) do
-    DataMapper.repository(:default) do |r|
-      adapter = r.adapter
-      while adapter.current_transaction
-        adapter.current_transaction.rollback
-        adapter.pop_transaction
-      end
-    end
-  end
+  # config.before(:each) do
+  #   DataMapper.repository(:default) do |r|
+  #     transaction = DataMapper::Transaction.new(r)
+  #     transaction.begin
+  #     r.adapter.push_transaction(transaction)
+  #   end
+  # end
+  # 
+  # config.after(:each) do
+  #   DataMapper.repository(:default) do |r|
+  #     adapter = r.adapter
+  #     while adapter.current_transaction
+  #       adapter.current_transaction.rollback
+  #       adapter.pop_transaction
+  #     end
+  #   end
+  # end
 
 end
