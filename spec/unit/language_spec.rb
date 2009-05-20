@@ -9,8 +9,8 @@ describe "Language" do
     end
 
     it "should store unique locale string codes" do
-      Language.create(:code => "en-US", :name => "English").should_not be_new_record
-      Language.create(:code => "en-US", :name => "English").should be_new_record
+      Language.create(:code => "en-US", :name => "English").should_not be_new
+      Language.create(:code => "en-US", :name => "English").should be_new
     end
 
   end
@@ -52,9 +52,9 @@ describe "Language" do
 
     it "should only allow unique locale string codes" do
       l1 = Language.create(:code => 'en-US', :name => "English")
-      l1.should_not be_new_record
+      l1.should_not be_new
       l2 = Language.create(:code => 'en-US', :name => "English")
-      l2.should be_new_record
+      l2.should be_new
       l2.errors.on(:code).should_not be_empty
       l2.errors.size.should == 1
     end
