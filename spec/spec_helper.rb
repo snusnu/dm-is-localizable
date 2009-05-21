@@ -60,22 +60,22 @@ Spec::Runner.configure do |config|
     DataMapper.auto_migrate!
   end
 
-  # config.before(:each) do
-  #   DataMapper.repository(:default) do |r|
-  #     transaction = DataMapper::Transaction.new(r)
-  #     transaction.begin
-  #     r.adapter.push_transaction(transaction)
-  #   end
-  # end
-  # 
-  # config.after(:each) do
-  #   DataMapper.repository(:default) do |r|
-  #     adapter = r.adapter
-  #     while adapter.current_transaction
-  #       adapter.current_transaction.rollback
-  #       adapter.pop_transaction
-  #     end
-  #   end
-  # end
+  config.before(:each) do
+    DataMapper.repository(:default) do |r|
+      transaction = DataMapper::Transaction.new(r)
+      transaction.begin
+      r.adapter.push_transaction(transaction)
+    end
+  end
+  
+  config.after(:each) do
+    DataMapper.repository(:default) do |r|
+      adapter = r.adapter
+      while adapter.current_transaction
+        adapter.current_transaction.rollback
+        adapter.pop_transaction
+      end
+    end
+  end
 
 end
