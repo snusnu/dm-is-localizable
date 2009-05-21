@@ -56,7 +56,7 @@ Dir[Pathname(__FILE__).dirname.to_s + "/fixtures/**/*.rb"].each { |rb| require(r
 
 Spec::Runner.configure do |config|
 
-  config.before(:each) do
+  config.before(:all) do
     DataMapper.auto_migrate!
   end
 
