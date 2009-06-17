@@ -131,7 +131,7 @@ class Item
   alias :translations :item_translations
   
   # helper to get at ItemTranslation
-  class_inheritable_reader :translation_class
+  class_inheritable_reader :translation_model
   
   # -------------------
   #   class level API
@@ -139,7 +139,7 @@ class Item
   
   # list all available languages for Items
   def self.available_languages
-    Language.all :id => translation_class.all.map { |t| t.language_id }.uniq
+    Language.all :id => translation_model.all.map { |t| t.language_id }.uniq
   end
   
   # the number of all available languages for the localizable model
@@ -149,12 +149,12 @@ class Item
   
   # checks if all localizable resources are translated in all available languages
   def self.translations_complete?
-    nr_of_available_languages * all.size == translation_class.all.size
+    nr_of_available_languages * all.size == translation_model.all.size
   end
   
   # returns a list of symbols reflecting all localizable property names of this resource
   def localizable_properties
-    translation_class.properties.map do |p|
+    translation_model.properties.map do |p|
       p.name
     end.select do |p|
       # exclude properties that are'nt localizable

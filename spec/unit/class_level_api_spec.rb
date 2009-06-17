@@ -3,10 +3,10 @@ require File.expand_path(File.dirname(__FILE__) + '/../shared/shared_examples_sp
 
 describe "class level API:" do
 
-  describe "translation_class" do
+  describe "translation_model" do
 
     it "should follow naming conventions" do
-      Item.translation_class.should == ItemTranslation
+      Item.translation_model.should == ItemTranslation
     end
 
   end

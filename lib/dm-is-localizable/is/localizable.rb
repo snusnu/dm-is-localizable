@@ -20,10 +20,10 @@ module DataMapper
 
         remix n, Translation, :as => options[:as], :model => options[:model]
 
-        @translation_class = Extlib::Inflection.constantize(options[:model])
-        class_inheritable_accessor :translation_class
+        @translation_model = Extlib::Inflection.constantize(options[:model])
+        class_inheritable_accessor :translation_model
 
-        enhance :translation, @translation_class do
+        enhance :translation, @translation_model do
 
           property remixer_fk,   Integer, :nullable => false, :unique_index => :unique_languages
           property :language_id, Integer, :nullable => false, :unique_index => :unique_languages
@@ -59,7 +59,7 @@ module DataMapper
 
         # list all available languages for the localizable model
         def available_languages
-          ids = translation_class.all.map { |t| t.language_id }.uniq
+          ids = translation_model.all.map { |t| t.language_id }.uniq
           ids.empty? ? [] : Language.all(:id => ids)
         end
 
@@ -70,12 +70,12 @@ module DataMapper
 
         # checks if all localizable resources are translated in all available languages
         def translations_complete?
-          available_languages.size * all.size == translation_class.all.size
+          available_languages.size * all.size == translation_model.all.size
         end
 
         # returns a list of symbols reflecting all localizable property names of this resource
         def localizable_properties
-          translation_class.properties.map do |p|
+          translation_model.properties.map do |p|
             p.name
           end.select do |p|
             # exclude properties that are'nt localizable
