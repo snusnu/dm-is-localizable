@@ -1,6 +1,8 @@
 require 'pathname'
 require 'spec'
 
+require 'extlib'
+require 'dm-core'
 require 'dm-is-remixable'
 require 'dm-validations'
 
