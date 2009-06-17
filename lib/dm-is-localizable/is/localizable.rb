@@ -11,16 +11,16 @@ module DataMapper
 
         options = {
           :as         => nil,
-          :class_name => "#{self}Translation"
+          :model => "#{self}Translation"
         }.merge(options)
 
         remixer_fk = Extlib::Inflection.foreign_key(self.name).to_sym
         remixer    = remixer_fk.to_s.gsub('_id', '').to_sym
-        remixee    = Extlib::Inflection.tableize(options[:class_name]).to_sym
+        remixee    = Extlib::Inflection.tableize(options[:model]).to_sym
 
-        remix n, Translation, :as => options[:as], :class_name => options[:class_name]
+        remix n, Translation, :as => options[:as], :model => options[:model]
 
-        @translation_class = Extlib::Inflection.constantize(options[:class_name])
+        @translation_class = Extlib::Inflection.constantize(options[:model])
         class_inheritable_accessor :translation_class
 
         enhance :translation, @translation_class do
