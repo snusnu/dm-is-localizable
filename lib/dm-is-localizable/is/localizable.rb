@@ -10,8 +10,9 @@ module DataMapper
         include InstanceMethods
 
         options = {
-          :as         => nil,
-          :model => "#{self}Translation"
+          :as                       => nil,
+          :model                    => "#{self}Translation",
+          :accept_nested_attributes => true
         }.merge(options)
 
         remixer_fk = Extlib::Inflection.foreign_key(self.name).to_sym
@@ -40,7 +41,19 @@ module DataMapper
         has n, :languages, :through => remixee, :constraint => :destroy
 
         self.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
-          alias :translations #{remixee}
+
+          alias :translations :#{remixee}
+
+          if options[:accept_nested_attributes]
+
+            # cannot accept_nested_attributes_for :translations
+            # since this is no valid relationship name, only an alias
+
+            accepts_nested_attributes_for :#{remixee}
+            alias :translations_attributes :#{remixee}_attributes
+
+          end
+
         RUBY
 
         localizable_properties.each do |property_name|
