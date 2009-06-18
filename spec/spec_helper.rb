@@ -5,6 +5,7 @@ require 'extlib'
 require 'dm-core'
 require 'dm-is-remixable'
 require 'dm-validations'
+require 'dm-accepts_nested_attributes'
 
 require Pathname(__FILE__).dirname.parent.expand_path + 'lib/dm-is-localizable'
 
@@ -42,7 +43,7 @@ if USE_TEXTMATE_RSPEC_BUNDLE
   require Pathname(__FILE__).dirname.expand_path + 'lib/rspec_tmbundle_support'
 
   # use the tmbundle logger
-  RSpecTmBundleHelpers::TextmateRspecLogger.new(STDOUT, :off)
+  #RSpecTmBundleHelpers::TextmateRspecLogger.new(STDOUT, :off)
 
 
   class Object
@@ -58,26 +59,8 @@ Dir[Pathname(__FILE__).dirname.to_s + "/fixtures/**/*.rb"].each { |rb| require(r
 
 Spec::Runner.configure do |config|
 
-  config.before(:all) do
-    DataMapper.auto_migrate!
-  end
-
   config.before(:each) do
-    DataMapper.repository(:default) do |r|
-      transaction = DataMapper::Transaction.new(r)
-      transaction.begin
-      r.adapter.push_transaction(transaction)
-    end
-  end
-  
-  config.after(:each) do
-    DataMapper.repository(:default) do |r|
-      adapter = r.adapter
-      while adapter.current_transaction
-        adapter.current_transaction.rollback
-        adapter.pop_transaction
-      end
-    end
+    DataMapper.auto_migrate!
   end
 
 end
