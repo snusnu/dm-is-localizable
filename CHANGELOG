@@ -1,3 +1,131 @@
+[b879a46 | Thu Jun 18 16:13:36 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * minor README additions
+
+[5db8c9f | Thu Jun 18 15:49:49 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * add #translations_attributes= method via dm-accepts_nested_attributes
+
+    * this behavior can be turned off by calling
+      is :localizable, :accept_nested_attributes => false do ... end
+
+[0cb8c6f | Thu Jun 18 15:33:11 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * temporarily comment rspec bundle logger (needs different fix)
+
+    * also, don't use transactional fixtures anymore since they
+      cause weird behavior when including dm-accepts_nested_attributes
+      functionality which will be added in the next commit(s)
+
+[b2bfb6c | Wed Jun 17 22:57:37 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * renamed translation_class method to translation_model
+
+[c07e5f7 | Wed Jun 17 22:54:25 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * renamed :class_name option to :model
+
+[7b874ae | Wed Jun 17 19:16:20 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * explicitly require extlib and dm-core for spec runs
+
+    * Pathname#/ is provided by extlib
+    * dm-validations depends on dm-core
+
+[3bc5264 | Thu May 21 22:27:50 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * perform DataMapper.auto_migrate! before(:all)
+
+[9007954 | Thu May 21 22:27:04 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * use transactional fixtures in sqlite3 specs
+
+[c64d1ce | Wed May 20 17:02:45 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * workaround bug in dm-core-0.10.0
+
+    * this workaround is necessary to overcome:
+    
+      a sql error that happens when the id array is empty
+    
+      generated (invalid) sql:
+    
+      WHERE "id" IN ()
+
+[a50a50b | Wed May 20 17:00:56 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * fixed bug in shared specs
+
+[e05db41 | Wed May 20 17:00:40 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * updated test db names
+
+[fce05dc | Wed May 20 03:40:49 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * Version bump to 0.10.0
+
+[1b92fe5 | Wed May 20 00:56:12 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * one failing spec but no warnings with datamapper 0.10.0
+
+    * instance level API: available_languages
+      with 3 translations in 2 languages
+      should return the right language'
+      FAILED
+    
+      expected:
+      #<Language @id=1 @code="en-US" @name="English">,
+      got:
+      #<Language @id=2 @code="de-AT" @name="Deutsch">
+      (using ==)
+
+[e712a32 | Wed May 20 00:54:23 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * added :constraint option in case dm-constraints is present
+
+[6fab6aa | Wed May 20 00:51:40 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * disabled transaction fixtures for now
+
+    * find out how to achieve this with 0.10.0
+    
+    * 0.9.11 code raises the following error:
+    
+      undefined method `transaction_primitive' for
+      #<DataMapper::Adapters::Sqlite3Adapter:0x12918b8>
+
+[88f4569 | Wed May 20 00:48:33 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * upgraded datamapper dependencies to 0.10.0
+
+[0f33595 | Tue May 19 01:52:35 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * jeweler doesn't regenerate gemspec on rake version:bump:patch
+
+[df67b01 | Tue May 19 01:41:46 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * Version bump to 0.0.9
+
+[3de795f | Tue May 19 01:41:30 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * exclude removed features directory from gemspec
+
+[ca59bf1 | Mon May 18 19:08:00 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * removed empty cucumber features. it's rspec only for now
+
+[4ed37d6 | Mon May 18 18:55:53 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * updated README to include a hint on how to add language.rb to your app
+
+[23b1175 | Mon May 18 18:51:39 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * print installation instructions for language.rb after rake install
+
+    This actually happened in an earlier commit, but jeweler's
+    rake version:bump:patch committed it because it was already staged
+    to be visible for rake gemspec.
+
 [f33f1e3 | Mon May 18 18:49:28 UTC 2009] snusnu <gamsnjaga@gmail.com>
 
  * Version bump to 0.0.8
