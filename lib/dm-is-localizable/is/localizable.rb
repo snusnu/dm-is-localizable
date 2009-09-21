@@ -22,7 +22,6 @@ module DataMapper
         remix n, Translation, :as => options[:as], :model => options[:model]
 
         @translation_model = Extlib::Inflection.constantize(options[:model])
-        class_inheritable_accessor :translation_model
 
         enhance :translation, @translation_model do
 
@@ -69,6 +68,10 @@ module DataMapper
       end
 
       module ClassMethods
+
+        def translation_model
+          @translation_model
+        end
 
         # list all available languages for the localizable model
         def available_languages
