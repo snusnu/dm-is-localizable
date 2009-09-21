@@ -1,13 +1,14 @@
-require 'pathname'
-require 'spec'
+require 'rubygems'
 
-require 'extlib'
 require 'dm-core'
 require 'dm-is-remixable'
 require 'dm-validations'
 require 'dm-accepts_nested_attributes'
 
-require Pathname(__FILE__).dirname.parent.expand_path + 'lib/dm-is-localizable'
+# Support running specs with 'rake spec' and 'spec'
+$LOAD_PATH.unshift('lib') unless $LOAD_PATH.include?('lib')
+
+require 'dm-is-localizable'
 
 ENV["SQLITE3_SPEC_URI"]  ||= 'sqlite3::memory:'
 ENV["MYSQL_SPEC_URI"]    ||= 'mysql://localhost/dm-is_localizable_test'
