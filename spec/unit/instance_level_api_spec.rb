@@ -167,19 +167,46 @@ describe "instance level API:" do
 
       describe "and an existing language_code" do
 
-        it "should return the translated string" do
-          @i1.translate(:name, :en_US).should == 'Book'
-          @i1.translate(:desc, :en_US).should == 'Literature'
-          @i1.translate(:name, :de_AT).should == 'Buch'
-          @i1.translate(:desc, :de_AT).should == 'Literatur'
+        describe "passed as Symbol" do
+
+          it "should return the translated string" do
+            @i1.translate(:name, :en_US).should == 'Book'
+            @i1.translate(:desc, :en_US).should == 'Literature'
+            @i1.translate(:name, :de_AT).should == 'Buch'
+            @i1.translate(:desc, :de_AT).should == 'Literatur'
+          end
+
+        end
+
+        describe "passed as String" do
+
+          it "should return the translated string" do
+            @i1.translate(:name, 'en_US').should == 'Book'
+            @i1.translate(:desc, 'en_US').should == 'Literature'
+            @i1.translate(:name, 'de_AT').should == 'Buch'
+            @i1.translate(:desc, 'de_AT').should == 'Literatur'
+          end
+
         end
 
       end
 
       describe "and a non existent language_code" do
 
-        it "should return the translated string" do
-          @i1.translate(:name, :it).should be_nil
+        describe "passed as Symbol" do
+
+          it "should return the translated string" do
+            @i1.translate(:name, :it).should be_nil
+          end
+
+        end
+
+        describe "passed as String" do
+
+          it "should return the translated string" do
+            @i1.translate(:name, 'it').should be_nil
+          end
+
         end
 
       end
@@ -190,16 +217,40 @@ describe "instance level API:" do
 
       describe "and an existing language_code" do
 
-        it "should return the translated string" do
-          @i1.translate(:foo, :en_US).should be_nil
+        describe "passed as Symbol" do
+
+          it "should return the translated string" do
+            @i1.translate(:foo, :en_US).should be_nil
+          end
+
+        end
+
+        describe "passed as String" do
+
+          it "should return the translated string" do
+            @i1.translate(:foo, 'en_US').should be_nil
+          end
+
         end
 
       end
 
       describe "and a non existent language_code" do
 
-        it "should return the translated string" do
-          @i1.translate(:foo, :it).should be_nil
+        describe "passed as Symbol" do
+
+          it "should return the translated string" do
+            @i1.translate(:foo, :it).should be_nil
+          end
+
+        end
+
+        describe "passed as String" do
+
+          it "should return the translated string" do
+            @i1.translate(:foo, 'it').should be_nil
+          end
+
         end
 
       end
@@ -228,19 +279,46 @@ describe "instance level API:" do
 
     describe "with a non existent language_code" do
 
-      it "should return nil" do
-        @i1.name(:it).should be_nil
+      describe "passed as Symbol" do
+
+        it "should return nil" do
+          @i1.name(:it).should be_nil
+        end
+
+      end
+
+      describe "passed as String" do
+
+        it "should return nil" do
+          @i1.name('it').should be_nil
+        end
+
       end
 
     end
 
     describe "with an existing language_code" do
 
-      it "should return the translated property" do
-        @i1.name(:en_US).should == 'Book'
-        @i1.desc(:en_US).should == 'Literature'
-        @i1.name(:de_AT).should == 'Buch'
-        @i1.desc(:de_AT).should == 'Literatur'
+      describe "passed as Symbol" do
+
+        it "should return the translated property" do
+          @i1.name(:en_US).should == 'Book'
+          @i1.desc(:en_US).should == 'Literature'
+          @i1.name(:de_AT).should == 'Buch'
+          @i1.desc(:de_AT).should == 'Literatur'
+        end
+
+      end
+
+      describe "passed as String" do
+
+        it "should return the translated property" do
+          @i1.name('en_US').should == 'Book'
+          @i1.desc('en_US').should == 'Literature'
+          @i1.name('de_AT').should == 'Buch'
+          @i1.desc('de_AT').should == 'Literatur'
+        end
+
       end
 
     end
