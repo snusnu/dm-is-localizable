@@ -25,8 +25,8 @@ module DataMapper
 
         enhance :translation, @translation_model do
 
-          property remixer_fk,   Integer, :nullable => false, :unique_index => :unique_languages
-          property :language_id, Integer, :nullable => false, :unique_index => :unique_languages
+          property remixer_fk,   Integer, :min => 0, :nullable => false, :unique_index => :unique_languages
+          property :language_id, Integer, :min => 0, :nullable => false, :unique_index => :unique_languages
 
           belongs_to remixer
           belongs_to :language
