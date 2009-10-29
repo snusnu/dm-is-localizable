@@ -9,7 +9,7 @@ module DataMapper
         is :remixable
 
         property :id,          Serial
-        property :language_id, Integer, :nullable => false
+        property :language_id, Integer, :min => 0, :nullable => false
 
       end
 
