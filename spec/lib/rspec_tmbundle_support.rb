@@ -27,7 +27,7 @@ module RSpecTmBundleHelpers
     print "#{h(html)}<br />"
   end
 
-  ESCAPE_TABLE = { '&'=>'&amp;', '<'=>'&lt;', '>'=>'&gt;', '"'=>'&quot;', "'"=>'&#039;', }
+  ESCAPE_TABLE = { '&' => '&amp;', '<' => '&lt;', '>' => '&gt;', '"' => '&quot;', "'" => '&#039;' }
   def h(value)
     value.to_s.gsub(/[&<>"]/) {|s| ESCAPE_TABLE[s] }
   end
