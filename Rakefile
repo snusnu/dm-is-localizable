@@ -21,6 +21,9 @@ begin
     gem.add_dependency('dm-validations',  '>= 0.10.2')
 
     gem.add_development_dependency 'rspec', '~> 1.3'
+
+    Jeweler::GemcutterTasks.new
+
   end
 
 rescue LoadError
