@@ -6,8 +6,8 @@ class Language
 
   property :id, Serial
 
-  property :code, String, :nullable => false, :unique => true, :unique_index => true
-  property :name, String, :nullable => false
+  property :code, String, :required => true, :unique => true, :unique_index => true
+  property :name, String, :required => true
 
   # locale string like 'en-US'
   validates_format :code, :with => /^[a-z]{2}-[A-Z]{2}$/
