@@ -71,15 +71,18 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<dm-core>, [">= 0.10.2"])
       s.add_runtime_dependency(%q<dm-is-remixable>, [">= 0.10.2"])
       s.add_runtime_dependency(%q<dm-validations>, [">= 0.10.2"])
+      s.add_development_dependency(%q<rspec>, ["~> 1.3"])
     else
       s.add_dependency(%q<dm-core>, [">= 0.10.2"])
       s.add_dependency(%q<dm-is-remixable>, [">= 0.10.2"])
       s.add_dependency(%q<dm-validations>, [">= 0.10.2"])
+      s.add_dependency(%q<rspec>, ["~> 1.3"])
     end
   else
     s.add_dependency(%q<dm-core>, [">= 0.10.2"])
     s.add_dependency(%q<dm-is-remixable>, [">= 0.10.2"])
     s.add_dependency(%q<dm-validations>, [">= 0.10.2"])
+    s.add_dependency(%q<rspec>, ["~> 1.3"])
   end
 end
 
