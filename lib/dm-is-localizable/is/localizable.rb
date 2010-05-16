@@ -1,3 +1,8 @@
+require 'dm-core'
+require 'dm-validations'
+require 'dm-is-remixable'
+require 'dm-accepts_nested_attributes'
+
 module DataMapper
   module Is
 
@@ -33,7 +38,7 @@ module DataMapper
 
           class_eval &block
 
-          validates_is_unique :language_id, :scope => remixer_fk
+          validates_uniqueness_of :language_id, :scope => remixer_fk
 
         end
 
