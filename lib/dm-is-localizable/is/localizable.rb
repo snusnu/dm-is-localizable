@@ -1,3 +1,8 @@
+require 'dm-core'
+require 'dm-validations'
+require 'dm-is-remixable'
+require 'dm-accepts_nested_attributes'
+
 module DataMapper
   module Is
 
@@ -15,13 +20,13 @@ module DataMapper
           :accept_nested_attributes => true
         }.merge(options)
 
-        remixer_fk = Extlib::Inflection.foreign_key(self.name).to_sym
+        remixer_fk = ActiveSupport::Inflector.foreign_key(self.name).to_sym
         remixer    = remixer_fk.to_s.gsub('_id', '').to_sym
-        remixee    = Extlib::Inflection.tableize(options[:model]).to_sym
+        remixee    = ActiveSupport::Inflector.tableize(options[:model]).to_sym
 
         remix n, Translation, :as => options[:as], :model => options[:model]
 
-        @translation_model = Extlib::Inflection.constantize(options[:model])
+        @translation_model = ActiveSupport::Inflector.constantize(options[:model])
 
         enhance :translation, @translation_model do
 
@@ -33,7 +38,7 @@ module DataMapper
 
           class_eval &block
 
-          validates_is_unique :language_id, :scope => remixer_fk
+          validates_uniqueness_of :language_id, :scope => remixer_fk
 
         end
 
@@ -93,7 +98,7 @@ module DataMapper
         def localizable_properties
           translation_model.properties.map { |p| p.name }.select do |p|
             # exclude properties that are'nt localizable
-            p != :id && p != :language_id && p != Extlib::Inflection.foreign_key(self.name).to_sym
+            p != :id && p != :language_id && p != ActiveSupport::Inflector.foreign_key(self.name).to_sym
           end
         end
 
