@@ -20,3 +20,5 @@ rspec_report.html
 *.swp
 _Yardoc
 */ri
+*.gem
+
