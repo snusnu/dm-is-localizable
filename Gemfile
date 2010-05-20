@@ -71,7 +71,7 @@
 source 'http://rubygems.org'
 
 DATAMAPPER = 'git://github.com/datamapper'
-DM_VERSION = '~> 0.10.3'
+DM_VERSION = '~> 1.0.0.rc1'
 
 
 group :runtime do # Runtime dependencies (as in the gemspec)
@@ -85,9 +85,8 @@ group :runtime do # Runtime dependencies (as in the gemspec)
   gem 'dm-core',         DM_VERSION, :git => "#{DATAMAPPER}/dm-core.git"
   gem 'dm-validations',  DM_VERSION, :git => "#{DATAMAPPER}/dm-validations.git"
   gem 'dm-is-remixable', DM_VERSION, :git => "#{DATAMAPPER}/dm-is-remixable.git"
-  gem 'dm-transactions', DM_VERSION, :git => "#{DATAMAPPER}/dm-transactions.git"
 
-  gem 'dm-accepts_nested_attributes', '~> 0.12.0', :git => 'git://github.com/snusnu/dm-accepts_nested_attributes.git'
+  gem 'dm-accepts_nested_attributes', DM_VERSION, :git => 'git://github.com/snusnu/dm-accepts_nested_attributes.git'
 
 end
 
