@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Martin Gamsjaeger (snusnu)"]
-  s.date = %q{2010-03-16}
+  s.date = %q{2010-05-20}
   s.email = %q{gamsnjaga@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
     ".document",
      ".gitignore",
      "CHANGELOG",
+     "Gemfile",
      "LICENSE",
      "README.textile",
      "Rakefile",
@@ -32,6 +33,7 @@ Gem::Specification.new do |s|
      "lib/dm-is-localizable/storage/translation.rb",
      "spec/fixtures/item.rb",
      "spec/lib/rspec_tmbundle_support.rb",
+     "spec/rcov.opts",
      "spec/shared/shared_examples_spec.rb",
      "spec/spec.opts",
      "spec/spec_helper.rb",
@@ -41,14 +43,20 @@ Gem::Specification.new do |s|
      "spec/unit/is_localizable_spec.rb",
      "spec/unit/language_spec.rb",
      "spec/unit/translation_spec.rb",
-     "tasks/changelog.rb",
-     "tasks/install.rb",
-     "tasks/whitespace.rb"
+     "tasks/changelog.rake",
+     "tasks/ci.rake",
+     "tasks/install.rake",
+     "tasks/local_gemfile.rake",
+     "tasks/metrics.rake",
+     "tasks/spec.rake",
+     "tasks/whitespace.rake",
+     "tasks/yard.rake",
+     "tasks/yardstick.rake"
   ]
   s.homepage = %q{http://github.com/snusnu/dm-is-localizable}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.6}
+  s.rubygems_version = %q{1.3.7}
   s.summary = %q{Datamapper support for localization of content in multilanguage applications}
   s.test_files = [
     "spec/fixtures/item.rb",
@@ -67,7 +75,7 @@ Gem::Specification.new do |s|
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<dm-core>, ["~> 0.10.2"])
       s.add_runtime_dependency(%q<dm-is-remixable>, ["~> 0.10.2"])
       s.add_runtime_dependency(%q<dm-validations>, ["~> 0.10.2"])
