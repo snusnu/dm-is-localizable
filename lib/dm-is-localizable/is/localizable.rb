@@ -20,13 +20,15 @@ module DataMapper
           :accept_nested_attributes => true
         }.merge(options)
 
-        remixer_fk = ActiveSupport::Inflector.foreign_key(self.name).to_sym
+        remixer_fk = DataMapper::Inflector.foreign_key(self.name).to_sym
         remixer    = remixer_fk.to_s.gsub('_id', '').to_sym
-        remixee    = ActiveSupport::Inflector.tableize(options[:model]).to_sym
+
+        demodulized = DataMapper::Inflector.demodulize(options[:model].to_s)
+        remixee     = DataMapper::Inflector.tableize(demodulized).to_sym
 
         remix n, Translation, :as => options[:as], :model => options[:model]
 
-        @translation_model = ActiveSupport::Inflector.constantize(options[:model])
+        @translation_model = DataMapper::Inflector.constantize(options[:model])
 
         enhance :translation, @translation_model do
 
@@ -98,7 +100,7 @@ module DataMapper
         def localizable_properties
           translation_model.properties.map { |p| p.name }.select do |p|
             # exclude properties that are'nt localizable
-            p != :id && p != :language_id && p != ActiveSupport::Inflector.foreign_key(self.name).to_sym
+            p != :id && p != :language_id && p != DataMapper::Inflector.foreign_key(self.name).to_sym
           end
         end
 
