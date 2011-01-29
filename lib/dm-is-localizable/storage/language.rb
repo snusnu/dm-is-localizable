@@ -4,18 +4,23 @@ class Language
 
   # properties
 
-  property :id, Serial
+  property :id,   Serial
 
-  property :code, String, :required => true, :unique => true, :unique_index => true
+  property :code, String, :required => true, :unique => true, :format => /\A[a-z]{2}-[A-Z]{2}\z/
   property :name, String, :required => true
 
-  # locale string like 'en-US'
-  validates_format_of :code, :with => /^[a-z]{2}-[A-Z]{2}$/
-
-
   def self.[](code)
-    return nil if code.nil?
-    first :code => code.to_s.gsub('_', '-')
+    codes[code]
+  end
+
+  class << self
+    private
+
+    def codes
+      @codes ||= Hash.new do |codes, code|
+        codes[code] = first(:code => code.to_s.tr('_', '-')).freeze
+      end
+    end
   end
 
 end
