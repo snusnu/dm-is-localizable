@@ -21,4 +21,4 @@ rspec_report.html
 _Yardoc
 */ri
 *.gem
-
+Gemfile.lock
