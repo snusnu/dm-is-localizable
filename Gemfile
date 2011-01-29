@@ -71,22 +71,20 @@
 source 'http://rubygems.org'
 
 DATAMAPPER = 'git://github.com/datamapper'
-DM_VERSION = '~> 1.0.0'
-
 
 group :runtime do # Runtime dependencies (as in the gemspec)
 
   if ENV['EXTLIB']
-    gem 'extlib',        '~> 0.9.15',      :git => "#{DATAMAPPER}/extlib.git"
+    gem 'extlib',        '~> 0.9.15', :git => "#{DATAMAPPER}/extlib.git"
   else
-    gem 'activesupport', '~> 3.0.0.beta3', :git => 'git://github.com/rails/rails.git', :require => nil
+    gem 'activesupport', '~> 3.0.0', :require => nil
   end
 
-  gem 'dm-core',         DM_VERSION, :git => "#{DATAMAPPER}/dm-core.git"
-  gem 'dm-validations',  DM_VERSION, :git => "#{DATAMAPPER}/dm-validations.git"
-  gem 'dm-is-remixable', DM_VERSION, :git => "#{DATAMAPPER}/dm-is-remixable.git"
+  gem 'dm-core',         :git => "#{DATAMAPPER}/dm-core.git"
+  gem 'dm-validations',  :git => "#{DATAMAPPER}/dm-validations.git"
+  gem 'dm-is-remixable', :git => "#{DATAMAPPER}/dm-is-remixable.git"
 
-  gem 'dm-accepts_nested_attributes', DM_VERSION, :git => 'git://github.com/snusnu/dm-accepts_nested_attributes.git'
+  gem 'dm-accepts_nested_attributes', :git => 'git://github.com/snusnu/dm-accepts_nested_attributes.git'
 
 end
 
@@ -100,15 +98,6 @@ group(:development) do # Development dependencies (as in the gemspec)
 
 end
 
-group :quality do # These gems contain rake tasks that check the quality of the source code
-
-  gem 'yardstick',      '~> 0.1'
-  gem 'metric_fu',      '~> 1.3'
-  gem 'reek',           '~> 1.2.7'
-  gem 'roodi',          '~> 2.1'
-
-end
-
 group :datamapper do # We need this because we want to pin these dependencies to their git master sources
 
   adapters = ENV['ADAPTER'] || ENV['ADAPTERS']
@@ -119,19 +108,19 @@ group :datamapper do # We need this because we want to pin these dependencies to
     DO_VERSION     = '~> 0.10.3'
     DM_DO_ADAPTERS = %w[sqlite postgres mysql oracle sqlserver]
 
-    gem 'data_objects',  DO_VERSION, :git => "#{DATAMAPPER}/do.git"
+    gem 'data_objects',  :git => "#{DATAMAPPER}/do.git"
 
     adapters.each do |adapter|
       if DM_DO_ADAPTERS.any? { |dm_do_adapter| dm_do_adapter =~ /#{adapter}/  }
         adapter = 'sqlite3' if adapter == 'sqlite'
-        gem "do_#{adapter}", DO_VERSION, :git => "#{DATAMAPPER}/do.git"
+        gem "do_#{adapter}", :git => "#{DATAMAPPER}/do.git"
       end
     end
 
-    gem 'dm-do-adapter', DM_VERSION, :git => "#{DATAMAPPER}/dm-do-adapter.git"
+    gem 'dm-do-adapter', :git => "#{DATAMAPPER}/dm-do-adapter.git"
 
     adapters.each do |adapter|
-      gem "dm-#{adapter}-adapter", DM_VERSION, :git => "#{DATAMAPPER}/dm-#{adapter}-adapter.git"
+      gem "dm-#{adapter}-adapter", :git => "#{DATAMAPPER}/dm-#{adapter}-adapter.git"
     end
 
   end
@@ -140,7 +129,7 @@ group :datamapper do # We need this because we want to pin these dependencies to
   plugins = (plugins.to_s.gsub(',',' ').split(' ') + ['dm-migrations']).uniq
 
   plugins.each do |plugin|
-    gem plugin, DM_VERSION, :git => "#{DATAMAPPER}/#{plugin}.git"
+    gem plugin, :git => "#{DATAMAPPER}/#{plugin}.git"
   end
 
 end
