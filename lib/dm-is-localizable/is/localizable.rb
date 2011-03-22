@@ -30,9 +30,8 @@ module DataMapper
           :accept_nested_attributes => true
         }.merge(options)
 
-        remixer_fk = DataMapper::Inflector.foreign_key(self.name).to_sym
-        remixer    = remixer_fk.to_s.gsub('_id', '').to_sym
-
+        remixer_fk  = DataMapper::Inflector.foreign_key(self.name).to_sym
+        remixer     = remixer_fk.to_s.gsub('_id', '').to_sym
         demodulized = DataMapper::Inflector.demodulize(options[:model].to_s)
         remixee     = DataMapper::Inflector.tableize(demodulized).to_sym
 
