@@ -25,41 +25,7 @@ h4. Disadvantages (not really if you think about it)
 
 h3. Example definition of a localizable model
 
-Currently, you need to define a @Language@ model yourself, to get @dm-is-localizable@ started. However, this is reasonably easy! If you do a @rake install@ after you cloned the repo (I guess it won't work if you do a simple @gem install@), it will print out the code for language.rb and will tell you where to put it.
-
-<pre>
-<code>
-class Language
-
-  include DataMapper::Resource
-
-  # properties
-
-  property :id,   Serial
-
-  property :code, String, :required => true, :unique => true, :format => /\A[a-z]{2}-[A-Z]{2}\z/
-  property :name, String, :required => true
-
-  def self.[](code)
-    codes[code]
-  end
-
-  class << self
-    private
-
-    def codes
-      @codes ||= Hash.new do |codes, code|
-        codes[code] = first(:code => code.to_s.tr('_', '-')).freeze
-      end
-    end
-  end
-
-end
-
-</code>
-</pre>
-
-Once you have this model in place, you can start defining your _localizable models_.
+The plugin comes with a @Language@ model that already got required for you. This means that the underlying storage will be created automatically when you run @auto_migrate!@ or @auto_upgrade!@.
 
 <pre>
 <code>
