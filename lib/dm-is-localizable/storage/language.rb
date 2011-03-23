@@ -10,17 +10,17 @@ class Language
   property :name, String, :required => true
 
   def self.[](code)
-    codes[code]
+    cache[code]
   end
 
   class << self
     private
 
-    def codes
-      @codes ||= Hash.new do |codes, code|
+    def cache
+      @cache ||= Hash.new do |cache, code|
         # TODO find out why dm-core complains
         # when we try to freeze these values
-        codes[code] = first(:code => code.to_s.tr('_', '-'))
+        cache[code] = first(:code => code.to_s.tr('_', '-'))
       end
     end
   end
