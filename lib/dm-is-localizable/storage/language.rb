@@ -18,7 +18,9 @@ class Language
 
     def codes
       @codes ||= Hash.new do |codes, code|
-        codes[code] = first(:code => code.to_s.tr('_', '-')).freeze
+        # TODO find out why dm-core complains
+        # when we try to freeze these values
+        codes[code] = first(:code => code.to_s.tr('_', '-'))
       end
     end
   end
