@@ -166,4 +166,15 @@ describe "class level API:" do
 
   end
 
+  describe "non_localizable_properties" do
+
+    it "should return a list of symbols reflecting the names of all but localizable properties in the remixed translations model" do
+      Item.non_localizable_properties.size.should == 3
+      Item.non_localizable_properties.should include(:id)
+      Item.non_localizable_properties.should include(:language_id)
+      Item.non_localizable_properties.should include(DataMapper::Inflector.foreign_key('Item').to_sym)
+    end
+
+  end
+
 end

@@ -107,10 +107,13 @@ module DataMapper
 
         # returns a list of symbols reflecting all localizable property names of this resource
         def localizable_properties
-          translation_model.properties.map { |p| p.name }.select do |p|
-            # exclude properties that are'nt localizable
-            p != :id && p != :language_id && p != DataMapper::Inflector.foreign_key(self.name).to_sym
-          end
+          translation_model.properties.map { |p| p.name } - non_localizable_properties
+        end
+
+        # returns a list of symbols reflecting the names of all the
+        # not localizable properties in the remixed translation_model
+        def non_localizable_properties
+          [ :id, :language_id, DataMapper::Inflector.foreign_key(self.name).to_sym ]
         end
 
       end
