@@ -35,8 +35,8 @@ describe "class level API:" do
     describe "with 1 item" do
 
       before :each do
-        @l1 = Language.create :code => 'en-US', :name => 'English'
-        @l2 = Language.create :code => 'de-AT', :name => 'Deutsch'
+        @l1 = Language.create :locale => 'en-US', :name => 'English'
+        @l2 = Language.create :locale => 'de-AT', :name => 'Deutsch'
         @i1 = Item.create
       end
 
@@ -100,7 +100,7 @@ describe "class level API:" do
       describe "and 1 translation" do
 
         it "should return true" do
-          l = Language.create :code => 'en-US', :name => 'English'
+          l = Language.create :locale => 'en-US', :name => 'English'
           ItemTranslation.create :item => @i1, :language => l, :name => 'Book', :desc => 'Literature'
           Item.translations_complete?.should be_true
         end
@@ -110,8 +110,8 @@ describe "class level API:" do
       describe "and more than 1 translation" do
 
         it "should return true" do
-          l1 = Language.create :code => 'en-US', :name => 'English'
-          l2 = Language.create :code => 'de-AT', :name => 'Deutsch'
+          l1 = Language.create :locale => 'en-US', :name => 'English'
+          l2 = Language.create :locale => 'de-AT', :name => 'Deutsch'
           ItemTranslation.create :item => @i1, :language => l1, :name => 'Book', :desc => 'Literature'
           ItemTranslation.create :item => @i1, :language => l2, :name => 'Buch', :desc => 'Literatur'
           Item.translations_complete?.should be_true
@@ -124,8 +124,8 @@ describe "class level API:" do
     describe "with 2 items" do
 
       before :each do
-        @l1 = Language.create :code => 'en-US', :name => 'English'
-        @l2 = Language.create :code => 'de-AT', :name => 'Deutsch'
+        @l1 = Language.create :locale => 'en-US', :name => 'English'
+        @l2 = Language.create :locale => 'de-AT', :name => 'Deutsch'
         @i1 = Item.create
         @i2 = Item.create
       end

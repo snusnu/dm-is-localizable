@@ -4,6 +4,8 @@ require 'fixtures/item'
 
 DataMapper::Spec.setup
 
+include DataMapper::I18n
+
 Spec::Runner.configure do |config|
 
   config.before(:each) do

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "the remixed translation resource" do
 
   before :each do
-    @l = Language.create :code => 'en-US', :name => 'English'
+    @l = Language.create :locale => 'en-US', :name => 'English'
     @i = Item.create
     @t1 = ItemTranslation.create(:item => @i, :language => @l)
   end

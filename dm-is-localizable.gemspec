@@ -27,7 +27,6 @@ Gem::Specification.new do |s|
     "VERSION",
     "dm-is-localizable.gemspec",
     "lib/dm-is-localizable.rb",
-    "lib/dm-is-localizable/language.rb",
     "spec/fixtures/item.rb",
     "spec/lib/rspec_tmbundle_support.rb",
     "spec/rcov.opts",

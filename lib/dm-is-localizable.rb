@@ -3,24 +3,132 @@ require 'dm-validations'
 require 'dm-is-remixable'
 require 'dm-accepts_nested_attributes'
 
-require 'dm-is-localizable/language'
-
 module DataMapper
   module I18n
 
-    DEFAULT_LANGUAGE_CODE = 'en-US'
-
-    def self.default_language=(code)
-      @default_language = Language[code]
+    def self.backend=(backend)
+      @backend = backend
     end
 
-    def self.default_language
-      @default_language ||= Language[DEFAULT_LANGUAGE_CODE]
+    def self.backend
+      @backend ||= Backend::Default.new
     end
 
-    def self.default_language_code
-      default_language.code
+    module Backend
+
+      module API
+        def default_locale=(locale)
+          raise NotImplementedError, "#{self}#default_locale= must be implemented"
+        end
+
+        def default_locale
+          raise NotImplementedError, "#{self}#default_locale must be implemented"
+        end
+
+        def locale_format
+          raise NotImplementedError, "#{self}#locale_format must be implemented"
+        end
+
+        def locale_storage_name
+          raise NotImplementedError, "#{self}#locale_storage_name must be implemented"
+        end
+
+        def available_locales
+          raise NotImplementedError, "#{self}#available_locales must be implemented"
+        end
+
+        def normalized_locale(locale)
+          raise NotImplementedError, "#{self}#normalized_locale(locale) must be implemented"
+        end
+      end
+
+      class Default
+        include API
+
+        DEFAULT_LOCALE              = 'en-US'
+        DEFAULT_LOCALE_STORAGE_NAME = 'locales'
+
+        attr_accessor :default_locale
+        attr_reader   :locale_format
+        attr_reader   :locale_storage_name
+
+        def initialize
+          @default_locale      = DEFAULT_LOCALE
+          @locale_format       = /\A[a-z]{2}-[A-Z]{2}\z/
+          @locale_storage_name = DEFAULT_LOCALE_STORAGE_NAME
+        end
+
+        def normalized_locale(locale)
+          locale = locale.to_s.tr("_","-")
+          unless locale =~ locale_format
+            locale = "#{locale.downcase}-#{locale.upcase}"
+          end
+          locale
+        end
+
+        def available_locales
+          @available_locales ||= Language.all(:fields => [:locale])
+        end
+      end
     end
+
+    module API
+      include Backend::API
+
+      def default_locale=(locale)
+        backend.default_locale = locale
+      end
+
+      def default_locale
+        backend.default_locale
+      end
+
+      def locale_format
+        backend.locale_format
+      end
+
+      def normalized_locale(locale)
+        backend.normalized_locale(locale)
+      end
+
+      def available_locales
+        backend.available_locales
+      end
+
+      def locale_storage_name
+        backend.locale_storage_name
+      end
+    end
+
+    extend API
+
+    class Language
+
+      include DataMapper::Resource
+
+      storage_names[:default] = DataMapper::I18n.locale_storage_name
+
+      property :id,     Serial
+      property :locale, String, :required => true, :unique => true, :format => DataMapper::I18n.locale_format
+      property :name,   String, :required => true
+
+      def self.[](locale)
+        cache[locale]
+      end
+
+      class << self
+        private
+
+        def cache
+          @cache ||= Hash.new do |cache, locale|
+            # TODO find out why dm-core complains
+            # when we try to freeze these values
+            cache[locale] = first(:locale => DataMapper::I18n.normalized_locale(locale))
+          end
+        end
+      end
+
+    end # class Language
 
     module Model
 
@@ -56,7 +164,7 @@ module DataMapper
           property :language_id, Integer, :min => 1, :required => true, :unique_index => :unique_languages
 
           belongs_to remixer
-          belongs_to :language
+          belongs_to :language, DataMapper::I18n::Language
 
           class_eval &block
 
@@ -64,7 +172,7 @@ module DataMapper
 
         end
 
-        has n, :languages, :through => remixee, :constraint => :destroy
+        has n, :languages, DataMapper::I18n::Language, :through => remixee, :constraint => :destroy
 
         self.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
 
@@ -85,8 +193,8 @@ module DataMapper
         localizable_properties.each do |property_name|
           self.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
 
-            def #{property_name}(language_code = DataMapper::I18n.default_language_code)
-              translate(:#{property_name.to_sym}, Language.normalized_code(language_code))
+            def #{property_name}(locale = DataMapper::I18n.default_locale)
+              translate(:#{property_name}, DataMapper::I18n.normalized_locale(locale))
             end
 
           RUBY
