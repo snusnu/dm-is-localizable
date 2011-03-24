@@ -2,22 +2,12 @@ class Language
 
   include DataMapper::Resource
 
-  DEFAULT_CODE = 'en-US'
-
   # properties
 
   property :id,   Serial
 
   property :code, String, :required => true, :unique => true, :format => /\A[a-z]{2}-[A-Z]{2}\z/
   property :name, String, :required => true
-
-  def self.default
-    @default ||= cache[DEFAULT_CODE]
-  end
-
-  def self.default_code
-    @default_code ||= DEFAULT_CODE
-  end
 
   def self.normalized_code(code)
     code = code.to_s.tr("_","-")

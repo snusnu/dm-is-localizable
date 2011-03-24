@@ -7,18 +7,28 @@ require 'dm-is-localizable/language'
 
 module DataMapper
   module I18n
+
+    DEFAULT_LANGUAGE_CODE = 'en-US'
+
+    def self.default_language=(code)
+      @default_language = Language[code]
+    end
+
+    def self.default_language
+      @default_language ||= Language[DEFAULT_LANGUAGE_CODE]
+    end
+
+    def self.default_language_code
+      default_language.code
+    end
+
     module Model
 
       module Translation
-
         include DataMapper::Resource
-
         is :remixable
-
-        property :id,          Serial
-        property :language_id, Integer, :min => 1, :required => false
-
-      end # module Translation
+        property :id, Serial
+      end
 
       def is_localizable(options = {}, &block)
 
