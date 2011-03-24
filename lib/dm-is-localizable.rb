@@ -85,8 +85,8 @@ module DataMapper
         localizable_properties.each do |property_name|
           self.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
 
-            def #{property_name}(language_code = Language.default_code)
-              translate(:#{property_name.to_sym}, language_code)
+            def #{property_name}(language_code = DataMapper::I18n.default_language_code)
+              translate(:#{property_name.to_sym}, Language.normalized_code(language_code))
             end
 
           RUBY
