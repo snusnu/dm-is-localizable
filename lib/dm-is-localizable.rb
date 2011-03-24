@@ -6,8 +6,8 @@ require 'dm-accepts_nested_attributes'
 require 'dm-is-localizable/language'
 
 module DataMapper
-  module Is
-    module Localizable
+  module I18n
+    module Model
 
       module Translation
 
@@ -149,10 +149,10 @@ module DataMapper
 
       end # module InstanceMethods
 
-    end # module Localizable
-  end # module Is
+    end # module Model
+  end # module I18n
 
-  Model.append_extensions Is::Localizable
+  Model.append_extensions I18n::Model
 
 end # module DataMapper
 
