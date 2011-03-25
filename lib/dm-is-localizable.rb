@@ -60,9 +60,9 @@ module DataMapper
 
         def initialize
           @default_locale         = DEFAULT_LOCALE
-          @locale_format          = /\A[a-z]{2}-[A-Z]{2}\z/
           @locale_repository_name = DEFAULT_LOCALE_REPOSITORY_NAME
           @locale_storage_name    = DEFAULT_LOCALE_STORAGE_NAME
+          @locale_format          = /\A[a-z]{2}-[A-Z]{2}\z/
         end
 
         def normalized_locale(locale)
