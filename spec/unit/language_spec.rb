@@ -61,7 +61,7 @@ describe "Language" do
 
   end
 
-  describe "the [](value) class method" do
+  describe "the for(value) class method" do
 
     before :each do
       Language.create :locale => 'en-US', :name => 'English'
@@ -71,7 +71,7 @@ describe "Language" do
     describe "with nil as paramter" do
 
       it "should return nil" do
-        Language[nil].should be_nil
+        Language.for(nil).should be_nil
       end
 
     end
@@ -79,7 +79,7 @@ describe "Language" do
     describe "with an invalid (not present) language symbol as parameter" do
 
       it "should return nil" do
-        Language[:it].should be_nil
+        Language.for(:it).should be_nil
       end
 
     end
@@ -87,7 +87,7 @@ describe "Language" do
     describe "with a valid (present) language symbol as parameter" do
 
       it "should return the correct language instance" do
-        Language[:en_US].should == Language.first(:locale => 'en-US')
+        Language.for(:en_US).should == Language.first(:locale => 'en-US')
       end
 
     end

@@ -124,7 +124,7 @@ module DataMapper
       property :locale, String, :required => true, :unique => true, :format => DataMapper::I18n.locale_format
       property :name,   String, :required => true
 
-      def self.[](locale)
+      def self.for(locale)
         cache[locale]
       end
 
@@ -271,7 +271,7 @@ module DataMapper
 
         # translates the given attribute to the language identified by the given language_code
         def translate(attribute, language_code)
-          if language = Language[language_code]
+          if language = Language.for(language_code)
             t = translations.first(:language_id => language.id)
             t.respond_to?(attribute) ? t.send(attribute) : nil
           else
