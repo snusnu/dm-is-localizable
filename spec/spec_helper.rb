@@ -2,6 +2,10 @@ require 'dm-is-localizable'
 require 'dm-core/spec/setup'
 require 'fixtures/item'
 
+# Have a logger handy but mostly very quiet
+# Must be done before DataMapper::Spec.setup
+DataMapper::Logger.new($stdout, :fatal)
+
 DataMapper::Spec.setup
 
 include DataMapper::I18n
@@ -18,4 +22,12 @@ Spec::Runner.configure do |config|
     end
   end
 
+end
+
+# Allow glimpses of SQL to shine through
+def with_dm_logger(level = :debug)
+  DataMapper.logger.level = DataMapper::Logger::Levels[level]
+  yield
+ensure
+  DataMapper.logger.level = DataMapper::Logger::Levels[:fatal]
 end
