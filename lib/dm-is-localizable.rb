@@ -29,6 +29,10 @@ module DataMapper
           raise NotImplementedError, "#{self}#locale_format must be implemented"
         end
 
+        def locale_repository_name
+          raise NotImplementedError, "#{self}#locale_repository_name must be implemented"
+        end
+
         def locale_storage_name
           raise NotImplementedError, "#{self}#locale_storage_name must be implemented"
         end
@@ -45,17 +49,20 @@ module DataMapper
       class Default
         include API
 
-        DEFAULT_LOCALE              = 'en-US'
-        DEFAULT_LOCALE_STORAGE_NAME = 'locales'
+        DEFAULT_LOCALE                 = 'en-US'
+        DEFAULT_LOCALE_REPOSITORY_NAME = :default
+        DEFAULT_LOCALE_STORAGE_NAME    = 'locales'
 
         attr_accessor :default_locale
         attr_reader   :locale_format
+        attr_reader   :locale_repository_name
         attr_reader   :locale_storage_name
 
         def initialize
-          @default_locale      = DEFAULT_LOCALE
-          @locale_format       = /\A[a-z]{2}-[A-Z]{2}\z/
-          @locale_storage_name = DEFAULT_LOCALE_STORAGE_NAME
+          @default_locale         = DEFAULT_LOCALE
+          @locale_format          = /\A[a-z]{2}-[A-Z]{2}\z/
+          @locale_repository_name = DEFAULT_LOCALE_REPOSITORY_NAME
+          @locale_storage_name    = DEFAULT_LOCALE_STORAGE_NAME
         end
 
         def normalized_locale(locale)
@@ -95,6 +102,10 @@ module DataMapper
         backend.available_locales
       end
 
+      def locale_repository_name
+        backend.locale_repository_name
+      end
+
       def locale_storage_name
         backend.locale_storage_name
       end
@@ -106,7 +117,8 @@ module DataMapper
 
       include DataMapper::Resource
 
-      storage_names[:default] = DataMapper::I18n.locale_storage_name
+      storage_names[DataMapper::I18n.locale_repository_name] =
+        DataMapper::I18n.locale_storage_name
 
       property :id,     Serial
       property :locale, String, :required => true, :unique => true, :format => DataMapper::I18n.locale_format
@@ -164,7 +176,9 @@ module DataMapper
           property :language_id, Integer, :min => 1, :required => true, :unique_index => :unique_languages
 
           belongs_to remixer
-          belongs_to :language, DataMapper::I18n::Language
+          belongs_to :language, DataMapper::I18n::Language,
+            :parent_repository_name => DataMapper::I18n.locale_repository_name,
+            :child_repository_name  => self.repository_name
 
           class_eval &block
 
