@@ -14,7 +14,7 @@ describe "all available_languages providers", :shared => true do
 
     before :each do
       @l = Language.create :locale => 'en-US', :name => 'English'
-      @t = ItemTranslation.create :item => @item, :language => @l, :name => "Book", :desc => "Literature"
+      ItemTranslation.create :item => @item, :language => @l, :name => "Book", :desc => "Literature"
     end
 
     it "should return 1 language" do
@@ -31,8 +31,8 @@ describe "all available_languages providers", :shared => true do
 
     before :each do
       @l = Language.create :locale => 'en-US', :name => 'English'
-      @t = ItemTranslation.create :item => @item, :language => @l, :name => "Book", :desc => "Literature"
-      @t = ItemTranslation.create :item => @item, :language => @l, :name => "Hook", :desc => "Tool"
+      ItemTranslation.create :item => @item, :language => @l, :name => "Book", :desc => "Literature"
+      ItemTranslation.create :item => @item, :language => @l, :name => "Hook", :desc => "Tool"
       @item.reload
     end
 
