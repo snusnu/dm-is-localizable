@@ -74,7 +74,7 @@ module DataMapper
         end
 
         def available_locales
-          @available_locales ||= Language.all(:fields => [:locale])
+          @available_locales ||= Locale.all(:fields => [:locale])
         end
       end
     end
@@ -113,7 +113,7 @@ module DataMapper
 
     extend API
 
-    class Language
+    class Locale
 
       include DataMapper::Resource
 
@@ -140,7 +140,7 @@ module DataMapper
         end
       end
 
-    end # class Language
+    end # class Locale
 
     module Model
 
@@ -177,7 +177,7 @@ module DataMapper
           property :language_id, Integer, :min => 1, :required => true, :unique_index => :unique_languages
 
           belongs_to remixer
-          belongs_to :language, DataMapper::I18n::Language,
+          belongs_to :language, DataMapper::I18n::Locale,
             :parent_repository_name => DataMapper::I18n.locale_repository_name,
             :child_repository_name  => self.repository_name
 
@@ -187,7 +187,7 @@ module DataMapper
 
         end
 
-        has n, :languages, DataMapper::I18n::Language, :through => remixee, :constraint => :destroy
+        has n, :languages, DataMapper::I18n::Locale, :through => remixee, :constraint => :destroy
 
         self.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
 
@@ -226,7 +226,7 @@ module DataMapper
         # list all available languages for the localizable model
         def available_languages
           ids = translation_model.all.map { |t| t.language_id }.uniq
-          ids.any? ? Language.all(:id => ids) : []
+          ids.any? ? Locale.all(:id => ids) : []
         end
 
         # the number of all available languages for the localizable model
@@ -257,7 +257,7 @@ module DataMapper
         # list all available languages for this instance
         def available_languages
           ids = translations.map { |t| t.language_id }.uniq
-          ids.any? ? Language.all(:id => ids) : []
+          ids.any? ? Locale.all(:id => ids) : []
         end
 
         # the number of all available languages for this instance
@@ -272,7 +272,7 @@ module DataMapper
 
         # translates the given attribute to the language identified by the given language_code
         def translate(attribute, language_code)
-          if language = Language.for(language_code)
+          if language = Locale.for(language_code)
             t = translations.first(:language => language)
             t.respond_to?(attribute) ? t.send(attribute) : nil
           else

@@ -1,16 +1,16 @@
 require 'spec_helper'
 
-describe "Language" do
+describe "Locale" do
 
   describe "with valid attributes" do
 
     it "should be valid" do
-      Language.new(:locale => "en-US", :name => "English").should be_valid
+      Locale.new(:locale => "en-US", :name => "English").should be_valid
     end
 
     it "should store unique locale string locales" do
-      Language.create(:locale => "en-US", :name => "English").should_not be_new
-      Language.create(:locale => "en-US", :name => "English").should be_new
+      Locale.create(:locale => "en-US", :name => "English").should_not be_new
+      Locale.create(:locale => "en-US", :name => "English").should be_new
     end
 
   end
@@ -18,7 +18,7 @@ describe "Language" do
   describe "with incomplete attributes" do
 
     before :each do
-      @l = Language.new
+      @l = Locale.new
     end
 
     it "should require a locale" do
@@ -40,20 +40,20 @@ describe "Language" do
   describe "with invalid attributes" do
 
     it "should not accept invalid locale strings" do
-      Language.new(:locale => 'foo',     :name => "English").should_not be_valid
-      Language.new(:locale => 'foo-bar', :name => "English").should_not be_valid
-      Language.new(:locale => 'foo-BAR', :name => "English").should_not be_valid
-      Language.new(:locale => 'FOO-bar', :name => "English").should_not be_valid
-      Language.new(:locale => 'FOO-BAR', :name => "English").should_not be_valid
-      Language.new(:locale => 'en-us',   :name => "English").should_not be_valid
-      Language.new(:locale => 'EN-us',   :name => "English").should_not be_valid
-      Language.new(:locale => 'EN-US',   :name => "English").should_not be_valid
+      Locale.new(:locale => 'foo',     :name => "English").should_not be_valid
+      Locale.new(:locale => 'foo-bar', :name => "English").should_not be_valid
+      Locale.new(:locale => 'foo-BAR', :name => "English").should_not be_valid
+      Locale.new(:locale => 'FOO-bar', :name => "English").should_not be_valid
+      Locale.new(:locale => 'FOO-BAR', :name => "English").should_not be_valid
+      Locale.new(:locale => 'en-us',   :name => "English").should_not be_valid
+      Locale.new(:locale => 'EN-us',   :name => "English").should_not be_valid
+      Locale.new(:locale => 'EN-US',   :name => "English").should_not be_valid
     end
 
     it "should only allow unique locale string locales" do
-      l1 = Language.create(:locale => 'en-US', :name => "English")
+      l1 = Locale.create(:locale => 'en-US', :name => "English")
       l1.should_not be_new
-      l2 = Language.create(:locale => 'en-US', :name => "English")
+      l2 = Locale.create(:locale => 'en-US', :name => "English")
       l2.should be_new
       l2.errors.on(:locale).should_not be_empty
       l2.errors.size.should == 1
@@ -64,14 +64,14 @@ describe "Language" do
   describe "the for(value) class method" do
 
     before :each do
-      Language.create :locale => 'en-US', :name => 'English'
-      Language.create :locale => 'de-AT', :name => 'Deutsch'
+      Locale.create :locale => 'en-US', :name => 'English'
+      Locale.create :locale => 'de-AT', :name => 'Deutsch'
     end
 
     describe "with nil as paramter" do
 
       it "should return nil" do
-        Language.for(nil).should be_nil
+        Locale.for(nil).should be_nil
       end
 
     end
@@ -79,7 +79,7 @@ describe "Language" do
     describe "with an invalid (not present) language symbol as parameter" do
 
       it "should return nil" do
-        Language.for(:it).should be_nil
+        Locale.for(:it).should be_nil
       end
 
     end
@@ -87,7 +87,7 @@ describe "Language" do
     describe "with a valid (present) language symbol as parameter" do
 
       it "should return the correct language instance" do
-        Language.for(:en_US).should == Language.first(:locale => 'en-US')
+        Locale.for(:en_US).should == Locale.first(:locale => 'en-US')
       end
 
     end

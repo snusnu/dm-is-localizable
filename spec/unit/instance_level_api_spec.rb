@@ -31,8 +31,8 @@ describe "instance level API:" do
   describe "nr_of_available_languages" do
 
     before :each do
-      @l1 = Language.create :locale => 'en-US', :name => 'English'
-      @l2 = Language.create :locale => 'de-AT', :name => 'Deutsch'
+      @l1 = Locale.create :locale => 'en-US', :name => 'English'
+      @l2 = Locale.create :locale => 'de-AT', :name => 'Deutsch'
       @i1 = Item.create
     end
 
@@ -95,7 +95,7 @@ describe "instance level API:" do
       describe "and 1 translation" do
 
         it "should return true" do
-          l = Language.create :locale => 'en-US', :name => 'English'
+          l = Locale.create :locale => 'en-US', :name => 'English'
           ItemTranslation.create :item => @i1, :language => l, :name => 'Book', :desc => 'Literature'
           @i1.translations_complete?.should be_true
         end
@@ -105,8 +105,8 @@ describe "instance level API:" do
       describe "and more than 1 translation" do
 
         it "should return true" do
-          l1 = Language.create :locale => 'en-US', :name => 'English'
-          l2 = Language.create :locale => 'de-AT', :name => 'Deutsch'
+          l1 = Locale.create :locale => 'en-US', :name => 'English'
+          l2 = Locale.create :locale => 'de-AT', :name => 'Deutsch'
           ItemTranslation.create :item => @i1, :language => l1, :name => 'Book', :desc => 'Literature'
           ItemTranslation.create :item => @i1, :language => l2, :name => 'Buch', :desc => 'Literatur'
           @i1.translations_complete?.should be_true
@@ -119,8 +119,8 @@ describe "instance level API:" do
     describe "with 2 items" do
 
       before :each do
-        @l1 = Language.create :locale => 'en-US', :name => 'English'
-        @l2 = Language.create :locale => 'de-AT', :name => 'Deutsch'
+        @l1 = Locale.create :locale => 'en-US', :name => 'English'
+        @l2 = Locale.create :locale => 'de-AT', :name => 'Deutsch'
         @i1 = Item.create
         @i2 = Item.create
       end
@@ -156,8 +156,8 @@ describe "instance level API:" do
   describe "translate(attribute, language_locale)" do
 
     before :each do
-      @l1 = Language.create :locale => 'en-US', :name => 'English'
-      @l2 = Language.create :locale => 'de-AT', :name => 'Deutsch'
+      @l1 = Locale.create :locale => 'en-US', :name => 'English'
+      @l2 = Locale.create :locale => 'de-AT', :name => 'Deutsch'
       @i1 = Item.create
       @t1 = ItemTranslation.create :item => @i1, :language => @l1, :name => 'Book', :desc => 'Literature'
       @t2 = ItemTranslation.create :item => @i1, :language => @l2, :name => 'Buch', :desc => 'Literatur'
@@ -262,8 +262,8 @@ describe "instance level API:" do
   describe "property_name(language_locale)" do
 
     before :each do
-      @l1 = Language.create :locale => 'en-US', :name => 'English'
-      @l2 = Language.create :locale => 'de-AT', :name => 'Deutsch'
+      @l1 = Locale.create :locale => 'en-US', :name => 'English'
+      @l2 = Locale.create :locale => 'de-AT', :name => 'Deutsch'
       @i1 = Item.create
       @t1 = ItemTranslation.create :item => @i1, :language => @l1, :name => 'Book', :desc => 'Literature'
       @t2 = ItemTranslation.create :item => @i1, :language => @l2, :name => 'Buch', :desc => 'Literatur'

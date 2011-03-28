@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Martin Gamsjaeger (snusnu)"]
-  s.date = %q{2011-03-24}
+  s.date = %q{2011-03-29}
   s.email = %q{gamsnjaga@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -28,7 +28,6 @@ Gem::Specification.new do |s|
     "dm-is-localizable.gemspec",
     "lib/dm-is-localizable.rb",
     "spec/fixtures/item.rb",
-    "spec/lib/rspec_tmbundle_support.rb",
     "spec/rcov.opts",
     "spec/shared/shared_examples_spec.rb",
     "spec/spec.opts",
@@ -37,7 +36,6 @@ Gem::Specification.new do |s|
     "spec/unit/class_level_api_spec.rb",
     "spec/unit/instance_level_api_spec.rb",
     "spec/unit/is_localizable_spec.rb",
-    "spec/unit/language_spec.rb",
     "spec/unit/translation_spec.rb",
     "tasks/changelog.rake",
     "tasks/ci.rake",
@@ -55,14 +53,13 @@ Gem::Specification.new do |s|
   s.summary = %q{Datamapper support for localization of content in multilanguage applications}
   s.test_files = [
     "spec/fixtures/item.rb",
-    "spec/lib/rspec_tmbundle_support.rb",
     "spec/shared/shared_examples_spec.rb",
     "spec/spec_helper.rb",
     "spec/unit/auto_migrate_spec.rb",
     "spec/unit/class_level_api_spec.rb",
     "spec/unit/instance_level_api_spec.rb",
     "spec/unit/is_localizable_spec.rb",
-    "spec/unit/language_spec.rb",
+    "spec/unit/locale_spec.rb",
     "spec/unit/translation_spec.rb"
   ]
 
