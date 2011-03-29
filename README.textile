@@ -6,26 +6,26 @@ h3. Schema
 
 * one xxx_translations table for every translatable resource
 * xxx_translations belongs_to the resource to translate
-* xxx_translations belongs_to a language
+* xxx_translations belongs_to a locale
 * properties to be translated are defined in xxx_translations
 
 
 h4. Advantages
 
   * Proper normalization and referential integrity
-  * Ease in adding a new language (add row to xxx_translations)
+  * Easy to add a new language (add row to xxx_translations)
   * Easy to query
   * Columns keep their names
 
 
 h4. Disadvantages (not really if you think about it)
 
-  * One table for every resource that needs translations
+  * One extra table for every resource that needs translations
 
 
 h3. Example definition of a localizable model
 
-The plugin comes with a @Language@ model that already got required for you. This means that the underlying storage will be created automatically when you run @auto_migrate!@ or @auto_upgrade!@.
+The plugin comes with a @Locale@ model that already got required for you. This means that the underlying storage will be created automatically when you run @auto_migrate!@ or @auto_upgrade!@.
 
 <pre>
 <code>
@@ -80,18 +80,18 @@ class ItemTranslation
 
   include DataMapper::Resource
 
-  property :id,          Serial
+  property :id,        Serial
 
-  property :item_id,     Integer, :required => true, :unique_index => :unique_languages
-  property :language_id, Integer, :required => true, :unique_index => :unique_languages
+  property :item_id,   Integer, :required => true, :unique_index => :unique_locales
+  property :locale_id, Integer, :required => true, :unique_index => :unique_locales
 
-  property :name,        String
-  property :desc,        String
+  property :name,      String
+  property :desc,      String
 
-  validates_is_unique :language_id, :scope => :item_id
+  validates_is_unique :locale_id, :scope => :item_id
 
   belongs_to :item
-  belongs_to :language
+  belongs_to :locale
 
 end
 </code>
@@ -117,7 +117,7 @@ class Item
   # ----------------------------
 
   has n, :item_translations
-  has n, :languages, :through => :item_translations
+  has n, :locales, :through => :item_translations
 
   # and a handy alias
   alias :translations :item_translations
@@ -129,19 +129,19 @@ class Item
   #   class level API
   # -------------------
 
-  # list all available languages for Items
-  def self.available_languages
-    Language.all :id => translation_model.all.map { |t| t.language_id }.uniq
+  # list all available locales for Items
+  def self.available_locales
+    Locale.all :id => translation_model.all.map { |t| t.locale_id }.uniq
   end
 
-  # the number of all available languages for the localizable model
-  def self.nr_of_available_languages
-    available_languages.size
+  # the number of all available locales for the localizable model
+  def self.nr_of_available_locales
+    available_locales.size
   end
 
-  # checks if all localizable resources are translated in all available languages
+  # checks if all localizable resources are translated in all available locales
   def self.translations_complete?
-    nr_of_available_languages * all.size == translation_model.all.size
+    nr_of_available_locales * all.size == translation_model.all.size
   end
 
   # returns a list of symbols reflecting all localizable property names of this resource
@@ -150,7 +150,7 @@ class Item
       p.name
     end.select do |p|
       # exclude properties that are'nt localizable
-      p != :id && p != :language_id && p != Extlib::Inflection.foreign_key(self.name).to_sym
+      p != :id && p != :locale_id && p != DataMapper::Inflection.foreign_key(self.name).to_sym
     end
   end
 
@@ -158,39 +158,39 @@ class Item
   #   instance level API
   # ----------------------
 
-  # list all available languages for this instance
-  def available_languages
-    Language.all :id => translations.map { |t| t.language_id }.uniq
+  # list all available locales for this instance
+  def available_locales
+    Locale.all :id => translations.map { |t| t.locale_id }.uniq
   end
 
-  # the number of all available languages for this instance
-  def nr_of_available_languages
-    available_languages.size
+  # the number of all available locales for this instance
+  def nr_of_available_locales
+    available_locales.size
   end
 
-  # checks if this instance is translated into all available languages for this model
+  # checks if this instance is translated into all available locales for this model
   def translations_complete?
-    self.class.nr_of_available_languages == translations.size
+    self.class.nr_of_available_locales == translations.size
   end
 
-  # translates the given attribute to the language identified by the given language_code
-  def translate(attribute, language_code)
-    if language = Language[language_code]
-      t = translations.first(:language_id => language.id)
+  # translates the given attribute to the locale identified by the given locale_code
+  def translate(attribute, locale_code)
+    if locale = Locale.for(locale_code)
+      t = translations.first(:locale => locale)
       t.respond_to?(attribute) ? t.send(attribute) : nil
     else
       nil
     end
   end
 
-  # translates the :name property to the given language
-  def name(language_code)
-    translate(:name, language_code)
+  # translates the :name property to the given locale
+  def name(locale_code)
+    translate(:name, locale_code)
   end
 
-  # translates the :desc property to the given language
-  def desc(language_code)
-    translate(:desc, language_code)
+  # translates the :desc property to the given locale
+  def desc(locale_code)
+    translate(:desc, locale_code)
   end
 
 
@@ -222,9 +222,9 @@ end
 
 h3. Inspired by (thx guys!)
 
-* Neil Barnwell's comment on the top voted answer to "Schema for a multilanguage database":http://stackoverflow.com/questions/316780/schema-for-a-multilanguage-database
+* Neil Barnwell's comment on the top voted answer to "Schema for a multilocale database":http://stackoverflow.com/questions/316780/schema-for-a-multilocale-database
 
-* Gabi Solomon's option (4) at this blog post on "Multilanguage database design approach":http://www.gsdesign.ro/blog/multilanguage-database-design-approach/
+* Gabi Solomon's option (4) at this blog post on "Multilocale database design approach":http://www.gsdesign.ro/blog/multilocale-database-design-approach/
 
 
 h3. Copyright
