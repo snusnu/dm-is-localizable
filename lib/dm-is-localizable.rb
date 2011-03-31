@@ -173,21 +173,21 @@ module DataMapper
 
         enhance :translation, @translation_model do
 
-          property remixer_fk,   Integer, :min => 1, :required => true, :unique_index => :unique_languages
-          property :language_id, Integer, :min => 1, :required => true, :unique_index => :unique_languages
+          property remixer_fk, Integer, :min => 1, :required => true, :unique_index => :unique_locales
+          property :locale_id, Integer, :min => 1, :required => true, :unique_index => :unique_locales
 
           belongs_to remixer
-          belongs_to :language, DataMapper::I18n::Locale,
+          belongs_to :locale, DataMapper::I18n::Locale,
             :parent_repository_name => DataMapper::I18n.locale_repository_name,
             :child_repository_name  => self.repository_name
 
           class_eval &block
 
-          validates_uniqueness_of :language_id, :scope => remixer_fk
+          validates_uniqueness_of :locale_id, :scope => remixer_fk
 
         end
 
-        has n, :languages, DataMapper::I18n::Locale, :through => remixee, :constraint => :destroy
+        has n, :locales, DataMapper::I18n::Locale, :through => remixee, :constraint => :destroy
 
         self.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
 
@@ -223,20 +223,20 @@ module DataMapper
           @translation_model
         end
 
-        # list all available languages for the localizable model
-        def available_languages
-          ids = translation_model.all.map { |t| t.language_id }.uniq
+        # list all available locales for the localizable model
+        def available_locales
+          ids = translation_model.all.map { |t| t.locale_id }.uniq
           ids.any? ? Locale.all(:id => ids) : []
         end
 
-        # the number of all available languages for the localizable model
-        def nr_of_available_languages
-          available_languages.size
+        # the number of all available locales for the localizable model
+        def nr_of_available_locales
+          available_locales.size
         end
 
-        # checks if all localizable resources are translated in all available languages
+        # checks if all localizable resources are translated in all available locales
         def translations_complete?
-          available_languages.size * all.size == translation_model.all.size
+          available_locales.size * all.size == translation_model.all.size
         end
 
         # returns a list of symbols reflecting all localizable property names of this resource
@@ -247,33 +247,33 @@ module DataMapper
         # returns a list of symbols reflecting the names of all the
         # not localizable properties in the remixed translation_model
         def non_localizable_properties
-          [ :id, :language_id, DataMapper::Inflector.foreign_key(self.name).to_sym ]
+          [ :id, :locale_id, DataMapper::Inflector.foreign_key(self.name).to_sym ]
         end
 
       end # module ClassMethods
 
       module InstanceMethods
 
-        # list all available languages for this instance
-        def available_languages
-          ids = translations.map { |t| t.language_id }.uniq
+        # list all available locales for this instance
+        def available_locales
+          ids = translations.map { |t| t.locale_id }.uniq
           ids.any? ? Locale.all(:id => ids) : []
         end
 
-        # the number of all available languages for this instance
-        def nr_of_available_languages
-          available_languages.size
+        # the number of all available locales for this instance
+        def nr_of_available_locales
+          available_locales.size
         end
 
-        # checks if this instance is translated into all available languages for this model
+        # checks if this instance is translated into all available locales for this model
         def translations_complete?
-          self.class.nr_of_available_languages == translations.size
+          self.class.nr_of_available_locales == translations.size
         end
 
-        # translates the given attribute to the language identified by the given language_code
-        def translate(attribute, language_code)
-          if language = Locale.for(language_code)
-            t = translations.first(:language => language)
+        # translates the given attribute to the locale identified by the given locale_code
+        def translate(attribute, locale_code)
+          if locale = Locale.for(locale_code)
+            t = translations.first(:locale => locale)
             t.respond_to?(attribute) ? t.send(attribute) : nil
           else
             nil
@@ -288,4 +288,3 @@ module DataMapper
   Model.append_extensions I18n::Model
 
 end # module DataMapper
-

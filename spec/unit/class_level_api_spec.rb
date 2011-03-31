@@ -11,23 +11,23 @@ describe "class level API:" do
 
   end
 
-  describe "available_languages" do
+  describe "available_locales" do
 
     before :each do
       @item  = Item.create
       @provider = Item
     end
 
-    it_should_behave_like "all available_languages providers"
+    it_should_behave_like "all available_locales providers"
 
   end
 
-  describe "nr_of_available_languages" do
+  describe "nr_of_available_locales" do
 
     describe "with 0 items" do
 
       it "should return 0" do
-        Item.nr_of_available_languages.should == 0
+        Item.nr_of_available_locales.should == 0
       end
 
     end
@@ -43,7 +43,7 @@ describe "class level API:" do
       describe "and 0 translations" do
 
         it "should return 0" do
-          Item.nr_of_available_languages == 0
+          Item.nr_of_available_locales == 0
         end
 
       end
@@ -51,8 +51,8 @@ describe "class level API:" do
       describe "and 1 translation" do
 
         it "should return 1" do
-          ItemTranslation.create :item => @i1, :language => @l1, :name => 'Book', :desc => 'Literature'
-          Item.nr_of_available_languages == 1
+          ItemTranslation.create :item => @i1, :locale => @l1, :name => 'Book', :desc => 'Literature'
+          Item.nr_of_available_locales == 1
         end
 
       end
@@ -60,9 +60,9 @@ describe "class level API:" do
       describe "and 2 translations" do
 
         it "should return 2" do
-          ItemTranslation.create :item => @i1, :language => @l1, :name => 'Book', :desc => 'Literature'
-          ItemTranslation.create :item => @i1, :language => @l2, :name => 'Book', :desc => 'Literature'
-          Item.nr_of_available_languages == 2
+          ItemTranslation.create :item => @i1, :locale => @l1, :name => 'Book', :desc => 'Literature'
+          ItemTranslation.create :item => @i1, :locale => @l2, :name => 'Book', :desc => 'Literature'
+          Item.nr_of_available_locales == 2
         end
 
       end
@@ -101,7 +101,7 @@ describe "class level API:" do
 
         it "should return true" do
           l = Locale.create :locale => 'en-US', :name => 'English'
-          ItemTranslation.create :item => @i1, :language => l, :name => 'Book', :desc => 'Literature'
+          ItemTranslation.create :item => @i1, :locale => l, :name => 'Book', :desc => 'Literature'
           Item.translations_complete?.should be_true
         end
 
@@ -112,8 +112,8 @@ describe "class level API:" do
         it "should return true" do
           l1 = Locale.create :locale => 'en-US', :name => 'English'
           l2 = Locale.create :locale => 'de-AT', :name => 'Deutsch'
-          ItemTranslation.create :item => @i1, :language => l1, :name => 'Book', :desc => 'Literature'
-          ItemTranslation.create :item => @i1, :language => l2, :name => 'Buch', :desc => 'Literatur'
+          ItemTranslation.create :item => @i1, :locale => l1, :name => 'Book', :desc => 'Literature'
+          ItemTranslation.create :item => @i1, :locale => l2, :name => 'Buch', :desc => 'Literatur'
           Item.translations_complete?.should be_true
         end
 
@@ -133,8 +133,8 @@ describe "class level API:" do
       describe "and not all items are translated" do
 
         it "should return false" do
-          ItemTranslation.create :item => @i1, :language => @l1, :name => 'Book', :desc => 'Literature'
-          ItemTranslation.create :item => @i1, :language => @l2, :name => 'Buch', :desc => 'Literatur'
+          ItemTranslation.create :item => @i1, :locale => @l1, :name => 'Book', :desc => 'Literature'
+          ItemTranslation.create :item => @i1, :locale => @l2, :name => 'Buch', :desc => 'Literatur'
           Item.translations_complete?.should be_false
         end
 
@@ -143,10 +143,10 @@ describe "class level API:" do
       describe "and all items are translated" do
 
         it "should return true" do
-          ItemTranslation.create :item => @i1, :language => @l1, :name => 'Book',  :desc => 'Literature'
-          ItemTranslation.create :item => @i1, :language => @l2, :name => 'Buch',  :desc => 'Literatur'
-          ItemTranslation.create :item => @i2, :language => @l1, :name => 'Hook',  :desc => 'Tool'
-          ItemTranslation.create :item => @i2, :language => @l2, :name => 'Haken', :desc => 'Werkzeug'
+          ItemTranslation.create :item => @i1, :locale => @l1, :name => 'Book',  :desc => 'Literature'
+          ItemTranslation.create :item => @i1, :locale => @l2, :name => 'Buch',  :desc => 'Literatur'
+          ItemTranslation.create :item => @i2, :locale => @l1, :name => 'Hook',  :desc => 'Tool'
+          ItemTranslation.create :item => @i2, :locale => @l2, :name => 'Haken', :desc => 'Werkzeug'
           Item.translations_complete?.should be_true
         end
 
@@ -171,7 +171,7 @@ describe "class level API:" do
     it "should return a list of symbols reflecting the names of all but localizable properties in the remixed translations model" do
       Item.non_localizable_properties.size.should == 3
       Item.non_localizable_properties.should include(:id)
-      Item.non_localizable_properties.should include(:language_id)
+      Item.non_localizable_properties.should include(:locale_id)
       Item.non_localizable_properties.should include(DataMapper::Inflector.foreign_key('Item').to_sym)
     end
 

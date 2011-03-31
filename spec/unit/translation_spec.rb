@@ -5,19 +5,19 @@ describe "the remixed translation resource" do
   before :each do
     @l = Locale.create :locale => 'en-US', :name => 'English'
     @i = Item.create
-    @t1 = ItemTranslation.create(:item => @i, :language => @l)
+    @t1 = ItemTranslation.create(:item => @i, :locale => @l)
   end
 
   it "should belong to a localizable resource" do
     @t1.item.should == @i
   end
 
-  it "should belong to a language" do
-    @t1.language.should == @l
+  it "should belong to a locale" do
+    @t1.locale.should == @l
   end
 
-  it "should store unique languages for every resource to translate" do
-    @t2 = ItemTranslation.create(:item => @i, :language => @l)
+  it "should store unique locales for every resource to translate" do
+    @t2 = ItemTranslation.create(:item => @i, :locale => @l)
     @t1.should_not be_new
     @t2.should     be_new
     @t2.errors.should_not be_empty

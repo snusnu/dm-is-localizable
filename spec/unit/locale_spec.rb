@@ -76,7 +76,7 @@ describe "Locale" do
 
     end
 
-    describe "with an invalid (not present) language symbol as parameter" do
+    describe "with an invalid (not present) locale symbol as parameter" do
 
       it "should return nil" do
         Locale.for(:it).should be_nil
@@ -84,9 +84,9 @@ describe "Locale" do
 
     end
 
-    describe "with a valid (present) language symbol as parameter" do
+    describe "with a valid (present) locale symbol as parameter" do
 
-      it "should return the correct language instance" do
+      it "should return the correct locale instance" do
         Locale.for(:en_US).should == Locale.first(:locale => 'en-US')
       end
 

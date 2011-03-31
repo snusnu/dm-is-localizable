@@ -12,23 +12,23 @@ describe "instance level API:" do
     Item.new.should respond_to :translations
   end
 
-  it "should create a many_to_many association to languages" do
-    Item.new.should respond_to :languages
+  it "should create a many_to_many association to locales" do
+    Item.new.should respond_to :locales
   end
 
-  describe "available_languages" do
+  describe "available_locales" do
 
     before :each do
       @item  = Item.create
       @provider = @item
     end
 
-    it_should_behave_like "all available_languages providers"
+    it_should_behave_like "all available_locales providers"
 
   end
 
 
-  describe "nr_of_available_languages" do
+  describe "nr_of_available_locales" do
 
     before :each do
       @l1 = Locale.create :locale => 'en-US', :name => 'English'
@@ -39,7 +39,7 @@ describe "instance level API:" do
     describe "with 0 translations" do
 
       it "should return 0" do
-        @i1.nr_of_available_languages.should == 0
+        @i1.nr_of_available_locales.should == 0
       end
 
     end
@@ -47,28 +47,28 @@ describe "instance level API:" do
     describe "with 1 translation" do
 
       it "should return 1" do
-        ItemTranslation.create :item => @i1, :language => @l1, :name => 'Book', :desc => 'Literature'
-        @i1.nr_of_available_languages == 1
+        ItemTranslation.create :item => @i1, :locale => @l1, :name => 'Book', :desc => 'Literature'
+        @i1.nr_of_available_locales == 1
       end
 
     end
 
-    describe "with 2 translations in 1 language" do
+    describe "with 2 translations in 1 locale" do
 
       it "should return 1" do
-        ItemTranslation.create :item => @i1, :language => @l1, :name => 'Book', :desc => 'Literature'
-        ItemTranslation.create :item => @i1, :language => @l1, :name => 'Book', :desc => 'Literature'
-        @i1.nr_of_available_languages == 1
+        ItemTranslation.create :item => @i1, :locale => @l1, :name => 'Book', :desc => 'Literature'
+        ItemTranslation.create :item => @i1, :locale => @l1, :name => 'Book', :desc => 'Literature'
+        @i1.nr_of_available_locales == 1
       end
 
     end
 
-    describe "with 2 translations in 2 language" do
+    describe "with 2 translations in 2 locales" do
 
       it "should return 2" do
-        ItemTranslation.create :item => @i1, :language => @l1, :name => 'Book', :desc => 'Literature'
-        ItemTranslation.create :item => @i1, :language => @l2, :name => 'Book', :desc => 'Literature'
-        @i1.nr_of_available_languages == 2
+        ItemTranslation.create :item => @i1, :locale => @l1, :name => 'Book', :desc => 'Literature'
+        ItemTranslation.create :item => @i1, :locale => @l2, :name => 'Book', :desc => 'Literature'
+        @i1.nr_of_available_locales == 2
       end
 
     end
@@ -96,7 +96,7 @@ describe "instance level API:" do
 
         it "should return true" do
           l = Locale.create :locale => 'en-US', :name => 'English'
-          ItemTranslation.create :item => @i1, :language => l, :name => 'Book', :desc => 'Literature'
+          ItemTranslation.create :item => @i1, :locale => l, :name => 'Book', :desc => 'Literature'
           @i1.translations_complete?.should be_true
         end
 
@@ -107,8 +107,8 @@ describe "instance level API:" do
         it "should return true" do
           l1 = Locale.create :locale => 'en-US', :name => 'English'
           l2 = Locale.create :locale => 'de-AT', :name => 'Deutsch'
-          ItemTranslation.create :item => @i1, :language => l1, :name => 'Book', :desc => 'Literature'
-          ItemTranslation.create :item => @i1, :language => l2, :name => 'Buch', :desc => 'Literatur'
+          ItemTranslation.create :item => @i1, :locale => l1, :name => 'Book', :desc => 'Literature'
+          ItemTranslation.create :item => @i1, :locale => l2, :name => 'Buch', :desc => 'Literatur'
           @i1.translations_complete?.should be_true
         end
 
@@ -125,24 +125,24 @@ describe "instance level API:" do
         @i2 = Item.create
       end
 
-      describe "both having 1 translation into different languages" do
+      describe "both having 1 translation into different locales" do
 
         it "should return false" do
-          ItemTranslation.create :item => @i1, :language => @l1, :name => 'Book', :desc => 'Literature'
-          ItemTranslation.create :item => @i2, :language => @l2, :name => 'Buch', :desc => 'Literatur'
+          ItemTranslation.create :item => @i1, :locale => @l1, :name => 'Book', :desc => 'Literature'
+          ItemTranslation.create :item => @i2, :locale => @l2, :name => 'Buch', :desc => 'Literatur'
           @i1.translations_complete?.should be_false
           @i2.translations_complete?.should be_false
         end
 
       end
 
-      describe "both having 1 translation into all different languages" do
+      describe "both having 1 translation into all different locales" do
 
         it "should return true" do
-          ItemTranslation.create :item => @i1, :language => @l1, :name => 'Book',  :desc => 'Literature'
-          ItemTranslation.create :item => @i1, :language => @l2, :name => 'Buch',  :desc => 'Literatur'
-          ItemTranslation.create :item => @i2, :language => @l1, :name => 'Hook',  :desc => 'Tool'
-          ItemTranslation.create :item => @i2, :language => @l2, :name => 'Haken', :desc => 'Werkzeug'
+          ItemTranslation.create :item => @i1, :locale => @l1, :name => 'Book',  :desc => 'Literature'
+          ItemTranslation.create :item => @i1, :locale => @l2, :name => 'Buch',  :desc => 'Literatur'
+          ItemTranslation.create :item => @i2, :locale => @l1, :name => 'Hook',  :desc => 'Tool'
+          ItemTranslation.create :item => @i2, :locale => @l2, :name => 'Haken', :desc => 'Werkzeug'
           @i1.translations_complete?.should be_true
           @i2.translations_complete?.should be_true
         end
@@ -153,19 +153,19 @@ describe "instance level API:" do
 
   end
 
-  describe "translate(attribute, language_locale)" do
+  describe "translate(attribute, locale_code)" do
 
     before :each do
       @l1 = Locale.create :locale => 'en-US', :name => 'English'
       @l2 = Locale.create :locale => 'de-AT', :name => 'Deutsch'
       @i1 = Item.create
-      @t1 = ItemTranslation.create :item => @i1, :language => @l1, :name => 'Book', :desc => 'Literature'
-      @t2 = ItemTranslation.create :item => @i1, :language => @l2, :name => 'Buch', :desc => 'Literatur'
+      @t1 = ItemTranslation.create :item => @i1, :locale => @l1, :name => 'Book', :desc => 'Literature'
+      @t2 = ItemTranslation.create :item => @i1, :locale => @l2, :name => 'Buch', :desc => 'Literatur'
     end
 
     describe "with an existing attribute" do
 
-      describe "and an existing language_locale" do
+      describe "and an existing locale_code" do
 
         describe "passed as Symbol" do
 
@@ -191,7 +191,7 @@ describe "instance level API:" do
 
       end
 
-      describe "and a non existent language_locale" do
+      describe "and a non existent locale_code" do
 
         describe "passed as Symbol" do
 
@@ -215,7 +215,7 @@ describe "instance level API:" do
 
     describe "with a non existent attribute" do
 
-      describe "and an existing language_locale" do
+      describe "and an existing locale_code" do
 
         describe "passed as Symbol" do
 
@@ -235,7 +235,7 @@ describe "instance level API:" do
 
       end
 
-      describe "and a non existent language_locale" do
+      describe "and a non existent locale_code" do
 
         describe "passed as Symbol" do
 
@@ -259,17 +259,17 @@ describe "instance level API:" do
 
   end
 
-  describe "property_name(language_locale)" do
+  describe "property_name(locale_code)" do
 
     before :each do
       @l1 = Locale.create :locale => 'en-US', :name => 'English'
       @l2 = Locale.create :locale => 'de-AT', :name => 'Deutsch'
       @i1 = Item.create
-      @t1 = ItemTranslation.create :item => @i1, :language => @l1, :name => 'Book', :desc => 'Literature'
-      @t2 = ItemTranslation.create :item => @i1, :language => @l2, :name => 'Buch', :desc => 'Literatur'
+      @t1 = ItemTranslation.create :item => @i1, :locale => @l1, :name => 'Book', :desc => 'Literature'
+      @t2 = ItemTranslation.create :item => @i1, :locale => @l2, :name => 'Buch', :desc => 'Literatur'
     end
 
-    describe "with a nil language_locale" do
+    describe "with a nil locale_code" do
 
       it "should return nil" do
         @i1.name(nil).should be_nil
@@ -277,7 +277,7 @@ describe "instance level API:" do
 
     end
 
-    describe "with a non existent language_locale" do
+    describe "with a non existent locale_code" do
 
       describe "passed as Symbol" do
 
@@ -297,7 +297,7 @@ describe "instance level API:" do
 
     end
 
-    describe "with an existing language_locale" do
+    describe "with an existing locale_code" do
 
       describe "passed as Symbol" do
 

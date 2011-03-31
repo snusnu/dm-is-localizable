@@ -5,7 +5,7 @@ describe "is_localizable with no options" do
   before :each do
     @i = Item.create
     @l = Locale.create :locale => 'en', :name => 'English'
-    @t = ItemTranslation.new :item => @i, :language => @l
+    @t = ItemTranslation.new :item => @i, :locale => @l
   end
 
   it "should belong_to a resource" do
@@ -13,11 +13,11 @@ describe "is_localizable with no options" do
     @t.item.should be_instance_of(Item)
   end
 
-  it "should belong_to a language" do
-    @t.respond_to?(:language).should == true
-    @t.language.should be_instance_of(Locale)
-    @t.language.locale.should == 'en'
-    @t.language.name.should == 'English'
+  it "should belong_to a locale" do
+    @t.respond_to?(:locale).should == true
+    @t.locale.should be_instance_of(Locale)
+    @t.locale.locale.should == 'en'
+    @t.locale.name.should == 'English'
   end
 
   it "should store properties defined inside the block in the translations resource" do
