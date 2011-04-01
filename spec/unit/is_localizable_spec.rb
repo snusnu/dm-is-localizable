@@ -4,7 +4,7 @@ describe "is_localizable with no options" do
 
   before :each do
     @i = Item.create
-    @l = Locale.create :locale => 'en', :name => 'English'
+    @l = Locale.create :tag => 'en', :name => 'English'
     @t = ItemTranslation.new :item => @i, :locale => @l
   end
 
@@ -16,7 +16,7 @@ describe "is_localizable with no options" do
   it "should belong_to a locale" do
     @t.respond_to?(:locale).should == true
     @t.locale.should be_instance_of(Locale)
-    @t.locale.locale.should == 'en'
+    @t.locale.tag.should == 'en'
     @t.locale.name.should == 'English'
   end
 

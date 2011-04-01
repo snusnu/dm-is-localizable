@@ -17,15 +17,15 @@ module DataMapper
     module Backend
 
       module API
-        def default_locale=(locale)
-          raise NotImplementedError, "#{self}#default_locale= must be implemented"
+        def default_locale_tag=(tag)
+          raise NotImplementedError, "#{self}#default_locale_tag= must be implemented"
         end
 
-        def default_locale
-          raise NotImplementedError, "#{self}#default_locale must be implemented"
+        def default_locale_tag
+          raise NotImplementedError, "#{self}#default_locale_tag must be implemented"
         end
 
-        def locale_format
+        def locale_tag_format
           raise NotImplementedError, "#{self}#locale_format must be implemented"
         end
 
@@ -41,36 +41,36 @@ module DataMapper
           raise NotImplementedError, "#{self}#available_locales must be implemented"
         end
 
-        def normalized_locale(locale)
-          raise NotImplementedError, "#{self}#normalized_locale(locale) must be implemented"
+        def normalized_locale_tag(tag)
+          raise NotImplementedError, "#{self}#normalized_locale_tag(tag) must be implemented"
         end
       end
 
       class Default
         include API
 
-        DEFAULT_LOCALE                 = 'en-US'
+        DEFAULT_LOCALE_TAG             = 'en-US'
         DEFAULT_LOCALE_REPOSITORY_NAME = :default
         DEFAULT_LOCALE_STORAGE_NAME    = 'locales'
 
-        attr_accessor :default_locale
-        attr_reader   :locale_format
+        attr_accessor :default_locale_tag
+        attr_reader   :locale_tag_format
         attr_reader   :locale_repository_name
         attr_reader   :locale_storage_name
 
         def initialize
-          @default_locale         = DEFAULT_LOCALE
+          @default_locale_tag     = DEFAULT_LOCALE_TAG
           @locale_repository_name = DEFAULT_LOCALE_REPOSITORY_NAME
           @locale_storage_name    = DEFAULT_LOCALE_STORAGE_NAME
-          @locale_format          = /\A[a-z]{2}-[A-Z]{2}\z/
+          @locale_tag_format      = /\A[a-z]{2}-[A-Z]{2}\z/
         end
 
-        def normalized_locale(locale)
-          locale = locale.to_s.tr("_","-")
-          unless locale =~ locale_format
-            locale = "#{locale.downcase}-#{locale.upcase}"
+        def normalized_locale_tag(tag)
+          tag = tag.to_s.tr("_","-")
+          unless tag =~ locale_tag_format
+            tag = "#{tag.downcase}-#{tag.upcase}"
           end
-          locale
+          tag
         end
 
         def available_locales
@@ -82,20 +82,20 @@ module DataMapper
     module API
       include Backend::API
 
-      def default_locale=(locale)
-        backend.default_locale = locale
+      def default_locale_tag=(tag)
+        backend.default_locale_tag = tag
       end
 
-      def default_locale
-        backend.default_locale
+      def default_locale_tag
+        backend.default_locale_tag
       end
 
-      def locale_format
-        backend.locale_format
+      def locale_tag_format
+        backend.locale_tag_format
       end
 
-      def normalized_locale(locale)
-        backend.normalized_locale(locale)
+      def normalized_locale_tag(tag)
+        backend.normalized_locale_tag(tag)
       end
 
       def available_locales
@@ -120,22 +120,22 @@ module DataMapper
       storage_names[DataMapper::I18n.locale_repository_name] =
         DataMapper::I18n.locale_storage_name
 
-      property :id,     Serial
-      property :locale, String, :required => true, :unique => true, :format => DataMapper::I18n.locale_format
-      property :name,   String, :required => true
+      property :id,   Serial
+      property :tag,  String, :required => true, :unique => true, :format => DataMapper::I18n.locale_tag_format
+      property :name, String, :required => true
 
-      def self.for(locale)
-        cache[locale]
+      def self.for(tag)
+        cache[tag]
       end
 
       class << self
         private
 
         def cache
-          @cache ||= Hash.new do |cache, locale|
+          @cache ||= Hash.new do |cache, tag|
             # TODO find out why dm-core complains
             # when we try to freeze these values
-            cache[locale] = first(:locale => DataMapper::I18n.normalized_locale(locale))
+            cache[tag] = first(:tag => DataMapper::I18n.normalized_locale_tag(tag))
           end
         end
       end
@@ -209,7 +209,7 @@ module DataMapper
           self.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
 
             def #{property_name}(locale = DataMapper::I18n.default_locale)
-              translate(:#{property_name}, DataMapper::I18n.normalized_locale(locale))
+              translate(:#{property_name}, DataMapper::I18n.normalized_locale_tag(locale))
             end
 
           RUBY
@@ -271,8 +271,8 @@ module DataMapper
         end
 
         # translates the given attribute to the locale identified by the given locale_code
-        def translate(attribute, locale_code)
-          if locale = Locale.for(locale_code)
+        def translate(attribute, locale_tag)
+          if locale = Locale.for(locale_tag)
             t = translations.first(:locale => locale)
             t.respond_to?(attribute) ? t.send(attribute) : nil
           else
