@@ -26,7 +26,7 @@ module DataMapper
         end
 
         def locale_tag_format
-          raise NotImplementedError, "#{self}#locale_format must be implemented"
+          raise NotImplementedError, "#{self}#locale_tag_format must be implemented"
         end
 
         def locale_repository_name
