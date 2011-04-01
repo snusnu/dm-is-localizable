@@ -122,37 +122,42 @@ class Item
   # and a handy alias
   alias :translations :item_translations
 
-  # helper to get at ItemTranslation
-  class_inheritable_reader :translation_model
+  # helper method to get at ItemTranslation
+  def translation_model
+    @translation_model
+  end
 
   # -------------------
   #   class level API
   # -------------------
 
-  # list all available locales for Items
-  def self.available_locales
-    Locale.all :id => translation_model.all.map { |t| t.locale_id }.uniq
+  # list all available locales for the localizable model
+  def available_locales
+    ids = translation_model.all.map { |t| t.locale_id }.uniq
+    ids.any? ? Locale.all(:id => ids) : []
   end
 
   # the number of all available locales for the localizable model
-  def self.nr_of_available_locales
+  def nr_of_available_locales
     available_locales.size
   end
 
   # checks if all localizable resources are translated in all available locales
-  def self.translations_complete?
-    nr_of_available_locales * all.size == translation_model.all.size
+  def translations_complete?
+    available_locales.size * all.size == translation_model.all.size
   end
 
   # returns a list of symbols reflecting all localizable property names of this resource
   def localizable_properties
-    translation_model.properties.map do |p|
-      p.name
-    end.select do |p|
-      # exclude properties that are'nt localizable
-      p != :id && p != :locale_id && p != DataMapper::Inflection.foreign_key(self.name).to_sym
-    end
+    translation_model.properties.map { |p| p.name } - non_localizable_properties
   end
+
+  # returns a list of symbols reflecting the names of all the
+  # not localizable properties in the remixed translation_model
+  def non_localizable_properties
+    [ :id, :locale_id, DataMapper::Inflector.foreign_key(self.name).to_sym ]
+  end
+
 
   # ----------------------
   #   instance level API
@@ -160,7 +165,8 @@ class Item
 
   # list all available locales for this instance
   def available_locales
-    Locale.all :id => translations.map { |t| t.locale_id }.uniq
+    ids = translations.map { |t| t.locale_id }.uniq
+    ids.any? ? Locale.all(:id => ids) : []
   end
 
   # the number of all available locales for this instance
@@ -174,8 +180,8 @@ class Item
   end
 
   # translates the given attribute to the locale identified by the given locale_code
-  def translate(attribute, locale_code)
-    if locale = Locale.for(locale_code)
+  def translate(attribute, locale_tag)
+    if locale = Locale.for(locale_tag)
       t = translations.first(:locale => locale)
       t.respond_to?(attribute) ? t.send(attribute) : nil
     else
@@ -184,13 +190,13 @@ class Item
   end
 
   # translates the :name property to the given locale
-  def name(locale_code)
-    translate(:name, locale_code)
+  def name(locale_tag)
+    translate(:name, locale_tag)
   end
 
   # translates the :desc property to the given locale
-  def desc(locale_code)
-    translate(:desc, locale_code)
+  def desc(locale_tag)
+    translate(:desc, locale_tag)
   end
 
 
