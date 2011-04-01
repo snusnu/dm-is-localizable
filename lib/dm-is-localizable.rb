@@ -208,8 +208,8 @@ module DataMapper
         localizable_properties.each do |property_name|
           self.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
 
-            def #{property_name}(locale = DataMapper::I18n.default_locale)
-              translate(:#{property_name}, DataMapper::I18n.normalized_locale_tag(locale))
+            def #{property_name}(locale_tag = DataMapper::I18n.default_locale_tag)
+              translate(:#{property_name}, DataMapper::I18n.normalized_locale_tag(locale_tag))
             end
 
           RUBY
