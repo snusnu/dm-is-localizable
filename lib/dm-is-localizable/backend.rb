@@ -110,4 +110,3 @@ module DataMapper
 
   end # module I18n
 end # module DataMapper
-
