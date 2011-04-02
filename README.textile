@@ -108,8 +108,8 @@ class Item
   property :id, Serial
 
   is :localizable do
-    property :name, String
-    property :desc, String
+    property :name,        String
+    property :description, String
   end
 
   # ----------------------------
@@ -122,83 +122,20 @@ class Item
   # and a handy alias
   alias :translations :item_translations
 
-  # helper method to get at ItemTranslation
-  def translation_model
-    @translation_model
-  end
-
-  # -------------------
-  #   class level API
-  # -------------------
-
-  # list all available locales for the localizable model
-  def available_locales
-    ids = translation_model.all.map { |t| t.locale_id }.uniq
-    ids.any? ? Locale.all(:id => ids) : []
-  end
-
-  # the number of all available locales for the localizable model
-  def nr_of_available_locales
-    available_locales.size
-  end
-
-  # checks if all localizable resources are translated in all available locales
-  def translations_complete?
-    available_locales.size * all.size == translation_model.all.size
-  end
-
-  # returns a list of symbols reflecting all localizable property names of this resource
-  def localizable_properties
-    translation_model.properties.map { |p| p.name } - non_localizable_properties
-  end
-
-  # returns a list of symbols reflecting the names of all the
-  # not localizable properties in the remixed translation_model
-  def non_localizable_properties
-    [ :id, :locale_id, DataMapper::Inflector.foreign_key(self.name).to_sym ]
-  end
-
-
-  # ----------------------
-  #   instance level API
-  # ----------------------
-
-  # list all available locales for this instance
-  def available_locales
-    ids = translations.map { |t| t.locale_id }.uniq
-    ids.any? ? Locale.all(:id => ids) : []
-  end
-
-  # the number of all available locales for this instance
-  def nr_of_available_locales
-    available_locales.size
-  end
-
-  # checks if this instance is translated into all available locales for this model
-  def translations_complete?
-    self.class.nr_of_available_locales == translations.size
-  end
-
-  # translates the given attribute to the locale identified by the given locale_code
-  def translate(attribute, locale_tag)
-    if locale = Locale.for(locale_tag)
-      t = translations.first(:locale => locale)
-      t.respond_to?(attribute) ? t.send(attribute) : nil
-    else
-      nil
-    end
+  # method to access the i18n proxy for this model
+  def self.i18n
+    @i18n
   end
 
   # translates the :name property to the given locale
   def name(locale_tag)
-    translate(:name, locale_tag)
+    i18n.translate(:name, locale_tag)
   end
 
   # translates the :desc property to the given locale
-  def desc(locale_tag)
-    translate(:desc, locale_tag)
+  def description(locale_tag)
+    i18n.translate(:desc, locale_tag)
   end
-
 
   # ----------------------------------------
   #   added by dm-accepts_nested_attributes
@@ -217,12 +154,47 @@ class Item
 
   alias :translations_attributes  :item_translations_attributes
   alias :translations_attributes= :item_translations_attributes
-
-
-  # TODO
-  # more API to support common usecases (and i18n/l10n solutions)
-
 end
+
+# ---------------------------------------------
+#   methods accessible via the Item.i18n proxy
+# ---------------------------------------------
+
+# helper method to get at ItemTranslation
+Item.i18n.translation_model
+
+# list all available locales for the localizable model
+Item.i18n.available_locales
+
+# the number of all available locales for the localizable model
+Item.i18n.nr_of_available_locales
+
+# checks if all localizable resources are translated in all available locales
+Item.i18n.translations_complete?
+
+# returns a list of symbols reflecting all localizable property names of this resource
+Item.i18n.localizable_properties
+
+# returns a list of symbols reflecting the names of all the
+# not localizable properties in the remixed translation_model
+Item.i18n.non_localizable_properties
+
+
+# ---------------------------------------------
+#   methods accessible via the Item#i18n proxy
+# ---------------------------------------------
+
+# list all available locales for this instance
+item.i18n.available_locales
+
+# the number of all available locales for this instance
+item.i18n.nr_of_available_locales
+
+# checks if this instance is translated into all available locales for this model
+item.i18n.translations_complete?
+
+# translates the given attribute to the locale identified by the given locale_code
+item.i18n.translate(attribute, locale_tag)
 </code>
 </pre>
 
