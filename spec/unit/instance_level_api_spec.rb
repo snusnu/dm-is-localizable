@@ -39,7 +39,7 @@ describe "instance level API:" do
     describe "with 0 translations" do
 
       it "should return 0" do
-        @i1.nr_of_available_locales.should == 0
+        @i1.i18n.nr_of_available_locales.should == 0
       end
 
     end
@@ -48,7 +48,7 @@ describe "instance level API:" do
 
       it "should return 1" do
         ItemTranslation.create :item => @i1, :locale => @l1, :name => 'Book', :desc => 'Literature'
-        @i1.nr_of_available_locales == 1
+        @i1.i18n.nr_of_available_locales == 1
       end
 
     end
@@ -58,7 +58,7 @@ describe "instance level API:" do
       it "should return 1" do
         ItemTranslation.create :item => @i1, :locale => @l1, :name => 'Book', :desc => 'Literature'
         ItemTranslation.create :item => @i1, :locale => @l1, :name => 'Book', :desc => 'Literature'
-        @i1.nr_of_available_locales == 1
+        @i1.i18n.nr_of_available_locales == 1
       end
 
     end
@@ -68,7 +68,7 @@ describe "instance level API:" do
       it "should return 2" do
         ItemTranslation.create :item => @i1, :locale => @l1, :name => 'Book', :desc => 'Literature'
         ItemTranslation.create :item => @i1, :locale => @l2, :name => 'Book', :desc => 'Literature'
-        @i1.nr_of_available_locales == 2
+        @i1.i18n.nr_of_available_locales == 2
       end
 
     end
@@ -87,7 +87,7 @@ describe "instance level API:" do
       describe "and 0 translations" do
 
         it "should return true" do
-          @i1.translations_complete?.should be_true
+          @i1.i18n.translations_complete?.should be_true
         end
 
       end
@@ -97,7 +97,7 @@ describe "instance level API:" do
         it "should return true" do
           l = Locale.create :tag => 'en-US', :name => 'English'
           ItemTranslation.create :item => @i1, :locale => l, :name => 'Book', :desc => 'Literature'
-          @i1.translations_complete?.should be_true
+          @i1.i18n.translations_complete?.should be_true
         end
 
       end
@@ -109,7 +109,7 @@ describe "instance level API:" do
           l2 = Locale.create :tag => 'de-AT', :name => 'Deutsch'
           ItemTranslation.create :item => @i1, :locale => l1, :name => 'Book', :desc => 'Literature'
           ItemTranslation.create :item => @i1, :locale => l2, :name => 'Buch', :desc => 'Literatur'
-          @i1.translations_complete?.should be_true
+          @i1.i18n.translations_complete?.should be_true
         end
 
       end
@@ -130,8 +130,8 @@ describe "instance level API:" do
         it "should return false" do
           ItemTranslation.create :item => @i1, :locale => @l1, :name => 'Book', :desc => 'Literature'
           ItemTranslation.create :item => @i2, :locale => @l2, :name => 'Buch', :desc => 'Literatur'
-          @i1.translations_complete?.should be_false
-          @i2.translations_complete?.should be_false
+          @i1.i18n.translations_complete?.should be_false
+          @i2.i18n.translations_complete?.should be_false
         end
 
       end
@@ -143,8 +143,8 @@ describe "instance level API:" do
           ItemTranslation.create :item => @i1, :locale => @l2, :name => 'Buch',  :desc => 'Literatur'
           ItemTranslation.create :item => @i2, :locale => @l1, :name => 'Hook',  :desc => 'Tool'
           ItemTranslation.create :item => @i2, :locale => @l2, :name => 'Haken', :desc => 'Werkzeug'
-          @i1.translations_complete?.should be_true
-          @i2.translations_complete?.should be_true
+          @i1.i18n.translations_complete?.should be_true
+          @i2.i18n.translations_complete?.should be_true
         end
 
       end
@@ -170,10 +170,10 @@ describe "instance level API:" do
         describe "passed as Symbol" do
 
           it "should return the translated string" do
-            @i1.translate(:name, :en_US).should == 'Book'
-            @i1.translate(:desc, :en_US).should == 'Literature'
-            @i1.translate(:name, :de_AT).should == 'Buch'
-            @i1.translate(:desc, :de_AT).should == 'Literatur'
+            @i1.i18n.translate(:name, :en_US).should == 'Book'
+            @i1.i18n.translate(:desc, :en_US).should == 'Literature'
+            @i1.i18n.translate(:name, :de_AT).should == 'Buch'
+            @i1.i18n.translate(:desc, :de_AT).should == 'Literatur'
           end
 
         end
@@ -181,10 +181,10 @@ describe "instance level API:" do
         describe "passed as String" do
 
           it "should return the translated string" do
-            @i1.translate(:name, 'en_US').should == 'Book'
-            @i1.translate(:desc, 'en_US').should == 'Literature'
-            @i1.translate(:name, 'de_AT').should == 'Buch'
-            @i1.translate(:desc, 'de_AT').should == 'Literatur'
+            @i1.i18n.translate(:name, 'en_US').should == 'Book'
+            @i1.i18n.translate(:desc, 'en_US').should == 'Literature'
+            @i1.i18n.translate(:name, 'de_AT').should == 'Buch'
+            @i1.i18n.translate(:desc, 'de_AT').should == 'Literatur'
           end
 
         end
@@ -196,7 +196,7 @@ describe "instance level API:" do
         describe "passed as Symbol" do
 
           it "should return the translated string" do
-            @i1.translate(:name, :it).should be_nil
+            @i1.i18n.translate(:name, :it).should be_nil
           end
 
         end
@@ -204,7 +204,7 @@ describe "instance level API:" do
         describe "passed as String" do
 
           it "should return the translated string" do
-            @i1.translate(:name, 'it').should be_nil
+            @i1.i18n.translate(:name, 'it').should be_nil
           end
 
         end
@@ -220,7 +220,7 @@ describe "instance level API:" do
         describe "passed as Symbol" do
 
           it "should return the translated string" do
-            @i1.translate(:foo, :en_US).should be_nil
+            @i1.i18n.translate(:foo, :en_US).should be_nil
           end
 
         end
@@ -228,7 +228,7 @@ describe "instance level API:" do
         describe "passed as String" do
 
           it "should return the translated string" do
-            @i1.translate(:foo, 'en_US').should be_nil
+            @i1.i18n.translate(:foo, 'en_US').should be_nil
           end
 
         end
@@ -240,7 +240,7 @@ describe "instance level API:" do
         describe "passed as Symbol" do
 
           it "should return the translated string" do
-            @i1.translate(:foo, :it).should be_nil
+            @i1.i18n.translate(:foo, :it).should be_nil
           end
 
         end
@@ -248,7 +248,7 @@ describe "instance level API:" do
         describe "passed as String" do
 
           it "should return the translated string" do
-            @i1.translate(:foo, 'it').should be_nil
+            @i1.i18n.translate(:foo, 'it').should be_nil
           end
 
         end

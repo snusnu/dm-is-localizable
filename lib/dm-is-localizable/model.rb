@@ -50,37 +50,6 @@ module DataMapper
         def i18n
           raise NotImplementedError, "#{self}#i18n must be implemented"
         end
-
-        # the model that stores all translations
-        def translation_model
-          i18n.translation_model
-        end
-
-        # list all available locales for the localizable model
-        def available_locales
-          i18n.available_locales
-        end
-
-        # the number of all available locales for the localizable model
-        def nr_of_available_locales
-          i18n.nr_of_available_locales
-        end
-
-        # checks if all localizable resources are translated in all available locales
-        def translations_complete?
-          i18n.translations_complete?
-        end
-
-        # returns a list of symbols reflecting all localizable property names of this resource
-        def localizable_properties
-          i18n.localizable_properties
-        end
-
-        # returns a list of symbols reflecting the names of all the
-        # not localizable properties in the remixed translation_model
-        def non_localizable_properties
-          i18n.non_localizable_properties
-        end
       end # module API
 
       def is_localizable(options = {}, &block)
@@ -146,11 +115,11 @@ module DataMapper
 
         RUBY
 
-        localizable_properties.each do |property_name|
+        i18n.localizable_properties.each do |property_name|
           self.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
 
             def #{property_name}(locale_tag = DataMapper::I18n.default_locale_tag)
-              translate(:#{property_name}, DataMapper::I18n.normalized_locale_tag(locale_tag))
+              i18n.translate(:#{property_name}, DataMapper::I18n.normalized_locale_tag(locale_tag))
             end
 
           RUBY
@@ -159,4 +128,3 @@ module DataMapper
     end # module Model
   end # module I18n
 end # module DataMapper
-

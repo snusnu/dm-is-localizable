@@ -5,7 +5,7 @@ describe "all available_locales providers", :shared => true do
   describe "with no translations" do
 
     it "should return 0 locales" do
-      @provider.available_locales.size.should == 0
+      @provider.i18n.available_locales.size.should == 0
     end
 
   end
@@ -18,11 +18,11 @@ describe "all available_locales providers", :shared => true do
     end
 
     it "should return 1 locale" do
-      @provider.available_locales.size.should == 1
+      @provider.i18n.available_locales.size.should == 1
     end
 
     it "should return the right locale" do
-      @provider.available_locales.first.should == @l
+      @provider.i18n.available_locales.first.should == @l
     end
 
   end
@@ -37,11 +37,11 @@ describe "all available_locales providers", :shared => true do
     end
 
     it "should return 1 locale" do
-      @provider.available_locales.size.should == 1
+      @provider.i18n.available_locales.size.should == 1
     end
 
     it "should return the right locale" do
-      @provider.available_locales.first.should == @l
+      @provider.i18n.available_locales.first.should == @l
     end
 
   end
@@ -58,13 +58,13 @@ describe "all available_locales providers", :shared => true do
     end
 
     it "should return 2 locales" do
-      @provider.available_locales.size.should == 2
+      @provider.i18n.available_locales.size.should == 2
     end
 
     it "should return the right locale" do
-      @provider.available_locales.size.should == 2
-      @provider.available_locales.should include(@l1)
-      @provider.available_locales.should include(@l2)
+      @provider.i18n.available_locales.size.should == 2
+      @provider.i18n.available_locales.should include(@l1)
+      @provider.i18n.available_locales.should include(@l2)
     end
 
   end
