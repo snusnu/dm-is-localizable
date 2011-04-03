@@ -71,14 +71,14 @@ module DataMapper
         end
 
         def localize(&block)
-          model.remix n, Translation, :as => options[:as], :model => options[:model]
-
           fk_string    = DataMapper::Inflector.foreign_key(model.name)
           remixer_fk   = fk_string.to_sym
           remixer      = fk_string[0, fk_string.rindex('_id')].to_sym
           demodulized  = DataMapper::Inflector.demodulize(options[:model].to_s)
           remixee      = DataMapper::Inflector.tableize(demodulized).to_sym
           options      = @options
+
+          model.remix n, Translation, :as => options[:as], :model => options[:model]
 
           @translation_model = DataMapper::Inflector.constantize(@options[:model])
           @proxy             = I18n::Model::Proxy.new(model, @translation_model)
