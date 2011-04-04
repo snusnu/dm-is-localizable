@@ -89,13 +89,13 @@ module DataMapper
           nc = naming_convention # make nc available in the current binding
 
           model.remix model.n, Translation,
-            :as => options[:as],
+            :as    => options[:as],
             :model => options[:model]
 
           translation_model = DataMapper::Inflector.constantize(options[:model])
 
           model.has model.n, :locales, DataMapper::I18n::Locale,
-            :through => nc.remixee,
+            :through    => nc.remixee,
             :constraint => :destroy
 
           translation_model.belongs_to nc.remixer,
