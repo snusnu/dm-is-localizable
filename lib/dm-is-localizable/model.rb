@@ -52,7 +52,7 @@ module DataMapper
 
       class Localizer
 
-        class NamingConvention
+        class Naming
 
           attr_reader :remixer_fk
           attr_reader :remixer
@@ -69,13 +69,13 @@ module DataMapper
 
         attr_reader :model
         attr_reader :options
-        attr_reader :naming_convention
+        attr_reader :naming
         attr_reader :proxy
 
         def initialize(model, options)
-          @model             = model
-          @options           = default_options.merge(options)
-          @naming_convention = NamingConvention.new(@model, @options)
+          @model   = model
+          @options = default_options.merge(options)
+          @naming  = Naming.new(@model, @options)
         end
 
         def localize(&block)
@@ -86,7 +86,7 @@ module DataMapper
         end
 
         def generate_translation_model(&block)
-          nc = naming_convention # make nc available in the current binding
+          nc = naming
 
           model.remix model.n, Translation,
             :as    => options[:as],
@@ -113,7 +113,7 @@ module DataMapper
         end
 
         def generate_accessor_aliases(nested_accessors)
-          nc = naming_convention # make nc available in the current binding
+          nc = naming # make nc available in the current binding
 
           model.class_eval do
             extend  I18n::Model::API
