@@ -79,14 +79,9 @@ module DataMapper
         end
 
         def localize(&block)
-          generate_translation_model(&block)
-
-          translation_model = DataMapper::Inflector.constantize(options[:model])
-          @proxy            = I18n::Model::Proxy.new(model, translation_model)
-
+          @proxy = I18n::Model::Proxy.new(model, generate_translation_model(&block))
           generate_accessor_aliases(options[:accepts_nested_attributes])
           generate_property_readers
-
           self
         end
 
@@ -97,25 +92,24 @@ module DataMapper
             :as => options[:as],
             :model => options[:model]
 
+          translation_model = DataMapper::Inflector.constantize(options[:model])
+
           model.has model.n, :locales, DataMapper::I18n::Locale,
             :through => nc.remixee,
             :constraint => :destroy
 
-          model.enhance :translation do
-
-            belongs_to nc.remixer,
+          translation_model.belongs_to nc.remixer,
               :unique_index => :unique_locales
 
-            belongs_to :locale, DataMapper::I18n::Locale,
+          translation_model.belongs_to :locale, DataMapper::I18n::Locale,
               :parent_repository_name => DataMapper::I18n.locale_repository_name,
-              :child_repository_name  => self.repository_name,
+              :child_repository_name  => model.repository_name,
               :unique_index           => :unique_locales
 
-            validates_uniqueness_of :locale_id, :scope => nc.remixer_fk
+          translation_model.validates_uniqueness_of :locale_id, :scope => nc.remixer_fk
+          translation_model.class_eval &block
 
-            class_eval &block
-          end
-          self
+          translation_model
         end
 
         def generate_accessor_aliases(nested_accessors)
