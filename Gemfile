@@ -12,7 +12,6 @@ DM_DO_ADAPTERS = %w[ sqlite postgres mysql oracle sqlserver ]
 
 gem 'dm-core',          DM_VERSION, SOURCE => "#{DATAMAPPER}/dm-core#{REPO_POSTFIX}"
 gem 'dm-validations',   DM_VERSION, SOURCE => "#{DATAMAPPER}/dm-validations#{REPO_POSTFIX}"
-gem 'dm-is-remixable',  DM_VERSION, SOURCE => "#{DATAMAPPER}/dm-is-remixable#{REPO_POSTFIX}"
 gem 'dm-accepts_nested_attributes', SOURCE => "#{SNUSNU}/dm-accepts_nested_attributes#{REPO_POSTFIX}"
 
 group :development do

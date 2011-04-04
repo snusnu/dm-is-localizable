@@ -1,6 +1,5 @@
 require 'dm-core'
 require 'dm-validations'
-require 'dm-is-remixable'
 require 'dm-accepts_nested_attributes'
 
 require 'dm-is-localizable/backend'

@@ -2,12 +2,6 @@ module DataMapper
   module I18n
     module Model
 
-      module Translation
-        include DataMapper::Resource
-        is :remixable
-        property :id, Serial
-      end
-
       class Proxy
         attr_reader :model_to_translate
         attr_reader :translation_model
@@ -54,16 +48,16 @@ module DataMapper
 
         class Naming
 
-          attr_reader :remixer_fk
-          attr_reader :remixer
-          attr_reader :remixee
+          attr_reader :localizable_model_fk
+          attr_reader :localizable_model
+          attr_reader :localizations
 
           def initialize(model, options)
-            fk_string   = DataMapper::Inflector.foreign_key(model.name)
-            @remixer_fk = fk_string.to_sym
-            @remixer    = fk_string[0, fk_string.rindex('_id')].to_sym
-            demodulized = DataMapper::Inflector.demodulize(options[:model].to_s)
-            @remixee    = DataMapper::Inflector.tableize(demodulized).to_sym
+            fk_string             = DataMapper::Inflector.foreign_key(model.name)
+            @localizable_model_fk = fk_string.to_sym
+            @localizable_model    = fk_string[0, fk_string.rindex('_id')].to_sym
+            demodulized           = DataMapper::Inflector.demodulize(options[:model].to_s)
+            @localizations        = DataMapper::Inflector.tableize(demodulized).to_sym
           end
         end
 
@@ -86,28 +80,30 @@ module DataMapper
         end
 
         def generate_translation_model(&block)
-          nc = naming
+          nc = naming # make nc available in the current binding
 
-          model.remix model.n, Translation,
-            :as    => options[:as],
-            :model => options[:model]
+          translation_model = DataMapper::Model.new(options[:model]) do
 
-          translation_model = DataMapper::Inflector.constantize(options[:model])
+            property :id, DataMapper::Property::Serial
+
+            belongs_to nc.localizable_model,
+              :unique_index => :unique_locales
+
+            belongs_to :locale, DataMapper::I18n::Locale,
+              :parent_repository_name => DataMapper::I18n.locale_repository_name,
+              :child_repository_name  => self.repository_name,
+              :unique_index           => :unique_locales
+
+            validates_uniqueness_of :locale_id, :scope => nc.localizable_model_fk
+            class_eval &block
+
+          end
+
+          model.has model.n, nc.localizations, translation_model
 
           model.has model.n, :locales, DataMapper::I18n::Locale,
-            :through    => nc.remixee,
+            :through    => nc.localizations,
             :constraint => :destroy
-
-          translation_model.belongs_to nc.remixer,
-            :unique_index => :unique_locales
-
-          translation_model.belongs_to :locale, DataMapper::I18n::Locale,
-            :parent_repository_name => DataMapper::I18n.locale_repository_name,
-            :child_repository_name  => model.repository_name,
-            :unique_index           => :unique_locales
-
-          translation_model.validates_uniqueness_of :locale_id, :scope => nc.remixer_fk
-          translation_model.class_eval &block
 
           translation_model
         end
@@ -118,12 +114,12 @@ module DataMapper
           model.class_eval do
             extend  I18n::Model::API
             include I18n::Resource::API
-            alias_method :translations, nc.remixee
+            alias_method :translations, nc.localizations
 
             if nested_accessors
-              remixee_attributes = :"#{nc.remixee}_atttributes"
+              remixee_attributes = :"#{nc.translations}_atttributes"
 
-              accepts_nested_attributes_for nc.remixee.to_sym
+              accepts_nested_attributes_for nc.translations.to_sym
               alias_method :translations_attributes, remixee_attributes
             end
           end
@@ -143,7 +139,6 @@ module DataMapper
 
         def default_options
           {
-            :as    => nil,
             :model => "#{model}Translation",
             :accept_nested_attributes => true
           }
