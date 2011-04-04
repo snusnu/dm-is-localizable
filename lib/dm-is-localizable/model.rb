@@ -56,18 +56,16 @@ module DataMapper
 
         attr_reader :model
         attr_reader :options
-        attr_reader :n
         attr_reader :translation_model
         attr_reader :proxy
 
-        def initialize(model, options, n)
+        def initialize(model, options)
           @model       = model
           @options     = {
             :as                       => nil,
             :model                    => "#{model}Translation",
             :accept_nested_attributes => true
           }.merge(options)
-          @n           = n
         end
 
         def localize(&block)
@@ -78,7 +76,7 @@ module DataMapper
           remixee      = DataMapper::Inflector.tableize(demodulized).to_sym
           options      = @options
 
-          model.remix n, Translation, :as => options[:as], :model => options[:model]
+          model.remix model.n, Translation, :as => options[:as], :model => options[:model]
 
           @translation_model = DataMapper::Inflector.constantize(@options[:model])
           @proxy             = I18n::Model::Proxy.new(model, @translation_model)
@@ -98,7 +96,7 @@ module DataMapper
             validates_uniqueness_of :locale_id, :scope => remixer_fk
           end
 
-          model.has n, :locales, DataMapper::I18n::Locale, :through => remixee, :constraint => :destroy
+          model.has model.n, :locales, DataMapper::I18n::Locale, :through => remixee, :constraint => :destroy
 
           model.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
 
@@ -141,7 +139,7 @@ module DataMapper
         extend  I18n::Model::API
         include I18n::Resource::API
 
-        localizer = Localizer.new(self, options, n)
+        localizer = Localizer.new(self, options)
         localizer.localize(&block)
 
         @i18n = localizer.proxy
