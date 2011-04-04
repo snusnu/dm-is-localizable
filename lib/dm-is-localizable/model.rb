@@ -117,9 +117,9 @@ module DataMapper
             alias_method :translations, nc.localizations
 
             if nested_accessors
-              remixee_attributes = :"#{nc.translations}_atttributes"
+              remixee_attributes = :"#{nc.localizations}_atttributes"
 
-              accepts_nested_attributes_for nc.translations.to_sym
+              accepts_nested_attributes_for nc.localizations
               alias_method :translations_attributes, remixee_attributes
             end
           end
