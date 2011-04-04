@@ -99,12 +99,12 @@ module DataMapper
             :constraint => :destroy
 
           translation_model.belongs_to nc.remixer,
-              :unique_index => :unique_locales
+            :unique_index => :unique_locales
 
           translation_model.belongs_to :locale, DataMapper::I18n::Locale,
-              :parent_repository_name => DataMapper::I18n.locale_repository_name,
-              :child_repository_name  => model.repository_name,
-              :unique_index           => :unique_locales
+            :parent_repository_name => DataMapper::I18n.locale_repository_name,
+            :child_repository_name  => model.repository_name,
+            :unique_index           => :unique_locales
 
           translation_model.validates_uniqueness_of :locale_id, :scope => nc.remixer_fk
           translation_model.class_eval &block
