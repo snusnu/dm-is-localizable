@@ -54,6 +54,10 @@ module DataMapper
 
       class Localizer
 
+        def self.localize(model, options, &block)
+          new(model, options).localize(&block)
+        end
+
         attr_reader :model
         attr_reader :options
         attr_reader :translation_model
@@ -69,6 +73,11 @@ module DataMapper
         end
 
         def localize(&block)
+          model.class_eval do
+            extend  I18n::Model::API
+            include I18n::Resource::API
+          end
+
           fk_string    = DataMapper::Inflector.foreign_key(model.name)
           remixer_fk   = fk_string.to_sym
           remixer      = fk_string[0, fk_string.rindex('_id')].to_sym
@@ -77,6 +86,7 @@ module DataMapper
           options      = @options
 
           model.remix model.n, Translation, :as => options[:as], :model => options[:model]
+          model.has   model.n, :locales, DataMapper::I18n::Locale, :through => remixee, :constraint => :destroy
 
           @translation_model = DataMapper::Inflector.constantize(@options[:model])
           @proxy             = I18n::Model::Proxy.new(model, @translation_model)
@@ -95,8 +105,6 @@ module DataMapper
 
             validates_uniqueness_of :locale_id, :scope => remixer_fk
           end
-
-          model.has model.n, :locales, DataMapper::I18n::Locale, :through => remixee, :constraint => :destroy
 
           model.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
 
@@ -131,18 +139,13 @@ module DataMapper
 
             RUBY
           end
-        end
 
+          @proxy
+        end
       end
 
       def is_localizable(options = {}, &block)
-        extend  I18n::Model::API
-        include I18n::Resource::API
-
-        localizer = Localizer.new(self, options)
-        localizer.localize(&block)
-
-        @i18n = localizer.proxy
+        @i18n = Localizer.localize(self, options, &block)
       end
     end # module Model
   end # module I18n
