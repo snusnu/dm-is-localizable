@@ -37,7 +37,7 @@ module DataMapper
       module API
         # the proxy instance to delegate api calls to
         def i18n
-          raise NotImplementedError, "#{self}#i18n must be implemented"
+          @i18n ||= I18n::Resource::Proxy.new(self)
         end
       end # module API
     end # module Resource

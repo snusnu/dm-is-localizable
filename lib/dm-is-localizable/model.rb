@@ -47,16 +47,10 @@ module DataMapper
 
       module API
         # the proxy instance to delegate api calls to
-        def i18n
-          raise NotImplementedError, "#{self}#i18n must be implemented"
-        end
+        attr_reader :i18n
       end # module API
 
       class Localizer
-
-        def self.localize(model, options, &block)
-          new(model, options).localize(&block)
-        end
 
         attr_reader :model
         attr_reader :options
@@ -73,80 +67,87 @@ module DataMapper
         end
 
         def localize(&block)
+
+          fk_string          = DataMapper::Inflector.foreign_key(model.name)
+          remixer_fk         = fk_string.to_sym
+          remixer            = fk_string[0, fk_string.rindex('_id')].to_sym
+          demodulized        = DataMapper::Inflector.demodulize(options[:model].to_s)
+          remixee            = DataMapper::Inflector.tableize(demodulized).to_sym
+
+          generate_translation_model(remixer, remixee, remixer_fk, &block)
+
+          @translation_model = DataMapper::Inflector.constantize(options[:model])
+          @proxy             = I18n::Model::Proxy.new(model, translation_model)
+
+          generate_accessor_aliases(remixee, options[:accepts_nested_attributes])
+          generate_property_readers
+
+          self
+        end
+
+        def generate_translation_model(remixer, remixee, remixer_fk, &block)
+          model.remix model.n, Translation,
+            :as => options[:as],
+            :model => options[:model]
+
+          model.has model.n, :locales, DataMapper::I18n::Locale,
+            :through => remixee,
+            :constraint => :destroy
+
+          model.enhance :translation do
+
+            belongs_to remixer,
+              :unique_index => :unique_locales
+
+            belongs_to :locale, DataMapper::I18n::Locale,
+              :parent_repository_name => DataMapper::I18n.locale_repository_name,
+              :child_repository_name  => self.repository_name,
+              :unique_index           => :unique_locales
+
+            validates_uniqueness_of :locale_id, :scope => remixer_fk
+
+            class_eval &block
+          end
+          self
+        end
+
+        def generate_accessor_aliases(remixee, nested_accessors)
           model.class_eval do
             extend  I18n::Model::API
             include I18n::Resource::API
+            alias_method :translations, remixee
+
+            if nested_accessors
+              remixee_attributes = :"#{remixee}_atttributes"
+
+              accepts_nested_attributes_for remixee.to_sym
+              alias_method :translations_attributes, remixee_attributes
+            end
           end
+          self
+        end
 
-          fk_string    = DataMapper::Inflector.foreign_key(model.name)
-          remixer_fk   = fk_string.to_sym
-          remixer      = fk_string[0, fk_string.rindex('_id')].to_sym
-          demodulized  = DataMapper::Inflector.demodulize(options[:model].to_s)
-          remixee      = DataMapper::Inflector.tableize(demodulized).to_sym
-          options      = @options
-
-          model.remix model.n, Translation, :as => options[:as], :model => options[:model]
-          model.has   model.n, :locales, DataMapper::I18n::Locale, :through => remixee, :constraint => :destroy
-
-          @translation_model = DataMapper::Inflector.constantize(@options[:model])
-          @proxy             = I18n::Model::Proxy.new(model, @translation_model)
-
-          model.enhance :translation, @translation_model do
-
-            property remixer_fk, Integer, :min => 1, :required => true, :unique_index => :unique_locales
-            property :locale_id, Integer, :min => 1, :required => true, :unique_index => :unique_locales
-
-            belongs_to remixer
-            belongs_to :locale, DataMapper::I18n::Locale,
-              :parent_repository_name => DataMapper::I18n.locale_repository_name,
-              :child_repository_name  => self.repository_name
-
-            class_eval &block
-
-            validates_uniqueness_of :locale_id, :scope => remixer_fk
-          end
-
-          model.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
-
-            alias :translations :#{remixee}
-
-            if options[:accept_nested_attributes]
-
-              # cannot accept_nested_attributes_for :translations
-              # since this is no valid relationship name, only an alias
-
-              accepts_nested_attributes_for :#{remixee}
-              alias :translations_attributes :#{remixee}_attributes
-
-            end
-
-            def self.i18n
-              @i18n
-            end
-
-            def i18n
-              @i18n ||= I18n::Resource::Proxy.new(self)
-            end
-
-          RUBY
-
-          @proxy.localizable_properties.each do |property_name|
+        def generate_property_readers
+          proxy.localizable_properties.each do |property_name|
             model.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
-
               def #{property_name}(locale_tag = DataMapper::I18n.default_locale_tag)
                 i18n.translate(:#{property_name}, DataMapper::I18n.normalized_locale_tag(locale_tag))
               end
-
             RUBY
           end
-
-          @proxy
+          self
         end
-      end
+
+      end # class Localizer
 
       def is_localizable(options = {}, &block)
-        @i18n = Localizer.localize(self, options, &block)
+        localizer = Localizer.new(self, options)
+        localizer.localize(&block)
+        @i18n = localizer.proxy
+
+        self
       end
+
     end # module Model
   end # module I18n
 end # module DataMapper
