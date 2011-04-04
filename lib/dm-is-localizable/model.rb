@@ -69,9 +69,8 @@ module DataMapper
 
         attr_reader :model
         attr_reader :options
-        attr_reader :translation_model
-        attr_reader :proxy
         attr_reader :naming_convention
+        attr_reader :proxy
 
         def initialize(model, options)
           @model             = model
@@ -82,8 +81,8 @@ module DataMapper
         def localize(&block)
           generate_translation_model(&block)
 
-          @translation_model = DataMapper::Inflector.constantize(options[:model])
-          @proxy             = I18n::Model::Proxy.new(model, translation_model)
+          translation_model = DataMapper::Inflector.constantize(options[:model])
+          @proxy            = I18n::Model::Proxy.new(model, translation_model)
 
           generate_accessor_aliases(options[:accepts_nested_attributes])
           generate_property_readers
