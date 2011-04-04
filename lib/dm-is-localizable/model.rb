@@ -2,6 +2,13 @@ module DataMapper
   module I18n
     module Model
 
+      def is_localizable(options = {}, &block)
+        localizer = Localizer.new(self, options)
+        localizer.localize(&block)
+        @i18n = localizer.proxy
+        self
+      end
+
       class Proxy
         attr_reader :model_to_translate
         attr_reader :translation_model
@@ -145,14 +152,6 @@ module DataMapper
         end
 
       end # class Localizer
-
-      def is_localizable(options = {}, &block)
-        localizer = Localizer.new(self, options)
-        localizer.localize(&block)
-        @i18n = localizer.proxy
-        self
-      end
-
     end # module Model
   end # module I18n
 end # module DataMapper
