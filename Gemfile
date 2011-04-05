@@ -4,8 +4,8 @@ source 'http://rubygems.org'
 
 SOURCE         = ENV.fetch('SOURCE', :git).to_sym
 REPO_POSTFIX   = SOURCE == :path ? ''                                : '.git'
-DATAMAPPER     = SOURCE == :path ? Pathname(__FILE__).dirname.parent : 'http://github.com/datamapper'
-SNUSNU         = SOURCE == :path ? Pathname(__FILE__).dirname.parent : 'http://github.com/snusnu'
+DATAMAPPER     = SOURCE == :path ? Pathname(__FILE__).dirname.parent : 'https://github.com/datamapper'
+SNUSNU         = SOURCE == :path ? Pathname(__FILE__).dirname.parent : 'https://github.com/snusnu'
 DM_VERSION     = '~> 1.1.0'
 DO_VERSION     = '~> 0.10.2'
 DM_DO_ADAPTERS = %w[ sqlite postgres mysql oracle sqlserver ]
