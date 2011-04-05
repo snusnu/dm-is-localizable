@@ -1,3 +1,400 @@
+[c800eee | Tue Apr 05 21:38:57 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Fix the rake changelog task and update the CHANGELOG
+
+[086fc9e | Tue Apr 05 21:30:58 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Nuke unused rake tasks
+
+[af46c8d | Mon Apr 04 13:31:59 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Move the main method to the top of the module
+
+[f49e2ab | Mon Apr 04 13:05:10 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Fix a couple of broken method calls that aren't tested yet
+
+[a524e7f | Mon Apr 04 12:49:47 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Remove the dependency on dm-is-remixable
+
+[dac44fd | Mon Apr 04 12:00:05 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Minor formatting fixes
+
+[2b39a5b | Mon Apr 04 11:59:14 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Rename Localizer::NamingConvention to Localizer::Naming
+
+[b7f1c64 | Mon Apr 04 11:57:14 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Minor formatting changes
+
+[33217b5 | Mon Apr 04 11:56:31 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Don't rely on Model#enhance provided by dm-is-remixable
+
+[187e07a | Mon Apr 04 11:49:49 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Don't expose Localizer#translation_model
+
+[d735bed | Mon Apr 04 11:43:33 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Encapsulate naming logic in Localizer::NamingConvention
+
+[4e7ff14 | Mon Apr 04 11:09:13 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Split the Localizer's tasks into several smaller methods
+
+[a5b6760 | Mon Apr 04 09:05:27 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Let the Localizer handle all aspects of localizing
+
+[1e44aca | Mon Apr 04 08:54:45 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Use DataMapper::Model#n instead of passing it around
+
+[7aa1a51 | Sun Apr 03 21:55:13 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Have all local variables handy before starting work
+
+[cf79de2 | Sun Apr 03 21:49:28 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Let a dedicated object handle localizing of a model
+
+    Localizer will probably still be refactored some
+    more.
+
+[4af6c0c | Sat Apr 02 15:16:08 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Update the README to reflect the latest API changes
+
+[552587e | Sat Apr 02 15:15:56 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Minor whitespace fix
+
+[fb87d59 | Sat Apr 02 14:49:29 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Don't pollute the Model and Resource namespaces
+
+    All the methods are still available via the #i18n
+    proxy accessor available in both DataMapper::Model
+    and DataMapper::Resource.
+
+    Arguably, these methods are mostly useful for code
+    that handles UI for resource translations. I think
+    that we are not violating the Law of Demeter here,
+    but instead shifting responsiblity to where it
+    belongs, while at the same time not exposing too
+    many methods for the common case.
+
+[71ffef5 | Sat Apr 02 12:48:56 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Refactoring to let dedicated objects handle the work
+
+[e02d28f | Fri Apr 01 16:10:53 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Also reflect code/tag renaming in error messages
+
+    See, this is what you get for not speccing things
+
+[024c45c | Fri Apr 01 16:07:46 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Update the README to reflect the latest changes
+
+[86fb1b6 | Fri Apr 01 15:36:02 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Fix property reader to reflect the code/tag renaming
+
+    This is what you get for not speccing things ...
+
+[2d3282e | Fri Apr 01 15:22:51 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Rename Locale#code to Locale#tag
+
+[8e0aef1 | Thu Mar 31 17:42:37 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Rename all (API) occurrences of language to locale
+
+[5627036 | Wed Mar 30 14:25:23 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Fix broken gemspec
+
+[99c607e | Tue Mar 29 18:34:19 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Update the README to mention Locale not Language
+
+[9d6d753 | Mon Mar 28 22:44:02 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Rename Language to Locale
+
+[70886e6 | Sun Mar 27 22:49:15 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Only remove the last occurrence of '_id' in an FK name
+
+[ec72009 | Sat Mar 26 17:15:46 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Don't rely on Language#id when this is not necessary
+
+[3bfb490 | Sat Mar 26 16:14:37 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Remove useless ivar definitions in shared specs
+
+[3f760eb | Fri Mar 25 17:32:16 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Nuke rspec_tmbundle stuff but keep #with_dm_logger
+
+[567c41b | Fri Mar 25 17:09:19 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Minor code formatting changes
+
+[2935b97 | Fri Mar 25 17:06:57 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Rename Language.[] to Language.for to not violate LSP
+
+[a2a0a48 | Fri Mar 25 15:37:10 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Support storing locales in a different repository
+
+[8778262 | Thu Mar 24 14:14:03 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Initial work on pluggable i18n backend integration
+
+    Also adds preliminary support for default language
+    configuration. To be continued a bit later ...
+
+[215fd6d | Thu Mar 24 10:30:47 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Normalize language code passed into property readers
+
+[b2012e3 | Thu Mar 24 10:07:24 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Move default language code to DataMapper::I18n
+
+    Specs will be added, promised!
+
+[7922634 | Thu Mar 24 09:41:00 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * DataMapper::Is::Localizable => DataMapper::I18n::Model
+
+[79a93a0 | Thu Mar 24 08:53:25 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Simplify the source code directory structure
+
+[883d38d | Thu Mar 24 08:46:48 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Use the default language in property readers
+
+[0681b22 | Wed Mar 23 23:48:21 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Initial support for Language.default - needs specs
+
+    Also adds the Language.normalized_code hook method
+
+[e84cabb | Wed Mar 23 18:42:09 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Rename private Language#codes to Language#cache
+
+[b36ea51 | Wed Mar 23 18:18:16 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Don't #freeze the cached Language instances
+
+    This makes all specs green, note the TODO comment
+    in the diff tho.
+
+[d134629 | Wed Mar 23 18:08:27 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * More obvious implementation of .localizable_properties
+
+    Maybe it would even be better remember localizable
+    properties explicitly in the "hosting" model.
+
+    TODO:
+    Handle translations models where the FK consists of
+    multiple properties because the parent model's key
+    is a CPK.
+
+[0f1bd13 | Wed Mar 23 15:15:02 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * No need to declare the Language model in app code
+
+[b8adf9e | Tue Mar 22 23:52:25 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Test for presence instead of emptiness
+
+[93ae2ab | Tue Mar 22 23:46:47 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Minor formatting changes
+
+[e224c12 | Mon Mar 21 23:50:28 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Move the remixable Translation model into the main file
+
+[30996bd | Sun Mar 20 23:57:00 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Bump version to 1.0.1
+
+[cf389dd | Sat Mar 19 17:10:24 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Update the Language model example in the README
+
+[e566120 | Sat Mar 19 17:09:54 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Fix whitespace before updating the README
+
+[3718c70 | Sat Mar 19 17:04:42 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Update Gemfile and gemspec to reference DM 1.1.0
+
+    One failing spec in language.rb:90
+
+      - TypeError: can't modify frozen object
+
+[e1f2685 | Sat Jan 29 17:09:54 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Clean the Gemfile and bring it up to date
+
+[649e277 | Sat Jan 29 17:09:38 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Add Gemifle.lock to .gitignore
+
+[5ff3795 | Sat Jan 29 16:53:47 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Cache languages in memory after first accessing them
+
+[97acacb | Thu Jan 27 09:49:36 UTC 2011] snusnu <gamsnjaga@gmail.com>
+
+ * Support namespaced models and use DataMapper::Inflector
+
+[0dda7b8 | Tue Jun 08 21:17:45 UTC 2010] snusnu <gamsnjaga@gmail.com>
+
+ * Version bump to 1.0.0
+
+[5f343ef | Tue Jun 08 21:17:04 UTC 2010] snusnu <gamsnjaga@gmail.com>
+
+ * Bumped DataMapper dependencies to ~> 1.0.0
+
+[d4a1821 | Thu May 20 14:44:31 UTC 2010] snusnu <gamsnjaga@gmail.com>
+
+ * Version bump to 1.0.0.rc2
+
+[a1b70ab | Thu May 20 14:38:22 UTC 2010] snusnu <gamsnjaga@gmail.com>
+
+ * Bumped datamapper dependencies to ~> 1.0.0.rc2
+
+[13ac804 | Thu May 20 14:38:02 UTC 2010] snusnu <gamsnjaga@gmail.com>
+
+ * Added .gem to .gitignore
+
+[c8290ee | Thu May 20 03:24:50 UTC 2010] snusnu <gamsnjaga@gmail.com>
+
+ * Version bump to 1.0.0.rc1
+
+[12a63ff | Thu May 20 03:12:47 UTC 2010] snusnu <gamsnjaga@gmail.com>
+
+ * Bumped datamapper dependencies to ~> 1.0.0.rc1
+
+[d3bd2ab | Thu May 20 03:14:26 UTC 2010] snusnu <gamsnjaga@gmail.com>
+
+ * Execute auto_migrate_down! after spec runs
+
+    This ensures that switching between having
+    dm-constraints enabled/disabled, won't cause FK
+    problems when automigrating.
+
+    All but the in_memory adapter specs pass on all
+    supported rubies.
+
+[a36f4d5 | Thu May 20 03:11:35 UTC 2010] snusnu <gamsnjaga@gmail.com>
+
+ * Added common datamapper quality tasks
+
+[26cc040 | Sun May 16 23:16:24 UTC 2010] snusnu <gamsnjaga@gmail.com>
+
+ * Use dm-core/spec/setup in specs
+
+[2907dc0 | Sun May 16 23:16:10 UTC 2010] snusnu <gamsnjaga@gmail.com>
+
+ * Updated Gemfile
+
+[38e1cae | Sun May 16 23:15:15 UTC 2010] snusnu <gamsnjaga@gmail.com>
+
+ * Avoid deprecation warnings in the validation API
+
+    Also moved require statements closer to where they
+    are needed.
+
+[a4c8289 | Tue Mar 16 02:57:22 UTC 2010] snusnu <gamsnjaga@gmail.com>
+
+ * Bumped version to 0.10.1
+
+[f0e6b94 | Tue Mar 16 02:57:05 UTC 2010] snusnu <gamsnjaga@gmail.com>
+
+ * Added Gemfile
+
+[6ff27a7 | Tue Mar 16 02:55:46 UTC 2010] snusnu <gamsnjaga@gmail.com>
+
+ * Removed extraneous task declarations.
+
+[80a609e | Thu Feb 04 00:41:56 UTC 2010] snusnu <gamsnjaga@gmail.com>
+
+ * Use active_support instead of extlib
+
+[92c64c8 | Thu Feb 04 00:41:56 UTC 2010] snusnu <gamsnjaga@gmail.com>
+
+ * Version bump to 0.10.1
+
+[0765c53 | Thu Feb 04 00:41:29 UTC 2010] snusnu <gamsnjaga@gmail.com>
+
+ * Activated Jeweler::GemcutterTasks
+
+[2169cff | Thu Feb 04 00:30:30 UTC 2010] snusnu <gamsnjaga@gmail.com>
+
+ * Added rspec '~> 1.3' development dependency
+
+[35e9be6 | Thu Feb 04 00:29:50 UTC 2010] snusnu <gamsnjaga@gmail.com>
+
+ * Bumped dm-core deps to >= 0.10.2 and rubygems >= 1.3.5
+
+[111966a | Thu Feb 04 00:28:10 UTC 2010] snusnu <gamsnjaga@gmail.com>
+
+ * Minor formatting in rspec textmate support
+
+[e9c0421 | Thu Feb 04 00:26:40 UTC 2010] snusnu <gamsnjaga@gmail.com>
+
+ * Silenced deprecation warnings
+
+    Also updated integer FK property constraints to be
+    more exact.
+
+[1f221c1 | Thu Oct 29 19:30:09 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * Added specs for passing language code as String
+
+[bedb069 | Thu Oct 29 19:29:51 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * Formatting
+
+[06265e6 | Thu Oct 29 19:29:39 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * FK properties match the referenced column type (2)
+
+[582abf7 | Thu Oct 29 03:13:21 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * FK properties match the referenced column type
+
+[589b76a | Mon Sep 21 16:40:19 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * Replaced class_inheritable_accessor with reader method
+
+[f776334 | Mon Sep 21 15:13:18 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * Improved rubygems citizenship and simpler require statements
+
+[9cb3b83 | Thu Jun 18 16:14:00 UTC 2009] snusnu <gamsnjaga@gmail.com>
+
+ * updated CHANGELOG
+
 [b879a46 | Thu Jun 18 16:13:36 UTC 2009] snusnu <gamsnjaga@gmail.com>
 
  * minor README additions
