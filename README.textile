@@ -133,12 +133,12 @@ class Item
   end
 
   # translates the :name property to the given locale
-  def name(locale_tag = DataMapper::I18n.default_locale_tag))
+  def name(locale_tag = DataMapper::I18n.default_locale_tag)
     i18n.translate(:name, locale_tag)
   end
 
   # translates the :desc property to the given locale
-  def description(locale_tag = DataMapper::I18n.default_locale_tag))
+  def description(locale_tag = DataMapper::I18n.default_locale_tag)
     i18n.translate(:desc, locale_tag)
   end
 
