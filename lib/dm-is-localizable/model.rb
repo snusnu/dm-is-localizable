@@ -80,16 +80,21 @@ module DataMapper
         end
 
         def localize(&block)
-          @proxy = I18n::Model::Proxy.new(model, generate_translation_model(&block))
+          translation_model = generate_translation_model(&block)
+
+          @proxy = I18n::Model::Proxy.new(model, translation_model)
+
+          relate_translation_model
           generate_accessor_aliases(options[:accepts_nested_attributes])
           generate_property_readers
+
           self
         end
 
         def generate_translation_model(&block)
           nc = naming # make nc available in the current binding
 
-          translation_model = DataMapper::Model.new(options[:model]) do
+          DataMapper::Model.new(options[:model]) do
 
             property :id, DataMapper::Property::Serial
 
@@ -102,17 +107,18 @@ module DataMapper
               :unique_index           => :unique_locales
 
             validates_uniqueness_of :locale_id, :scope => nc.localizable_model_fk
+
             class_eval &block
-
           end
+        end
 
-          model.has model.n, nc.localizations, translation_model
-
+        def relate_translation_model
+          model.has model.n, naming.localizations, proxy.translation_model
           model.has model.n, :locales, DataMapper::I18n::Locale,
-            :through    => nc.localizations,
+            :through    => naming.localizations,
             :constraint => :destroy
 
-          translation_model
+          self
         end
 
         def generate_accessor_aliases(nested_accessors)
