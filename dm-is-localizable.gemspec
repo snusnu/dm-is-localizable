@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
     "dm-is-localizable.gemspec",
     "lib/dm-is-localizable.rb",
     "lib/dm-is-localizable/backend.rb",
+    "lib/dm-is-localizable/backend/default.rb",
     "lib/dm-is-localizable/locale.rb",
     "lib/dm-is-localizable/model.rb",
     "lib/dm-is-localizable/resource.rb",
