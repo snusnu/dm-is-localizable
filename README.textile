@@ -127,13 +127,18 @@ class Item
     @i18n
   end
 
+  # the proxy instance to delegate api calls to
+  def i18n
+    @i18n ||= I18n::Resource::Proxy.new(self)
+  end
+
   # translates the :name property to the given locale
-  def name(locale_tag)
+  def name(locale_tag = DataMapper::I18n.default_locale_tag))
     i18n.translate(:name, locale_tag)
   end
 
   # translates the :desc property to the given locale
-  def description(locale_tag)
+  def description(locale_tag = DataMapper::I18n.default_locale_tag))
     i18n.translate(:desc, locale_tag)
   end
 
