@@ -3,8 +3,8 @@ module DataMapper
     module Model
 
       def is_localizable(options = {}, &block)
-        localizer = Localizer.new(self, options)
-        localizer.localize(&block)
+        localizer = Localizer.new(self, options, &block)
+        localizer.localize
         @i18n = localizer.proxy
         self
       end
@@ -71,30 +71,28 @@ module DataMapper
         attr_reader :model
         attr_reader :options
         attr_reader :naming
+        attr_reader :translation_model
         attr_reader :proxy
 
-        def initialize(model, options)
-          @model   = model
-          @options = default_options.merge(options)
-          @naming  = Naming.new(@model, @options)
+        def initialize(model, options, &block)
+          @model             = model
+          @options           = default_options.merge(options)
+          @naming            = Naming.new(@model, @options)
+          @translation_model = new_translation_model(&block)
+          @proxy             = I18n::Model::Proxy.new(model, @translation_model)
         end
 
-        def localize(&block)
-          translation_model = generate_translation_model(&block)
-
-          @proxy = I18n::Model::Proxy.new(model, translation_model)
-
+        def localize
           setup_proxy_accessor_api
           relate_translation_model
           generate_accessor_aliases
           generate_property_readers
-
           self
         end
 
       private
 
-        def generate_translation_model(&block)
+        def new_translation_model(&block)
           nc = naming # make nc available in the current binding
 
           DataMapper::Model.new(options[:model]) do
@@ -123,7 +121,7 @@ module DataMapper
         end
 
         def relate_translation_model
-          model.has model.n, naming.localizations, proxy.translation_model
+          model.has model.n, naming.localizations, translation_model
           model.has model.n, :locales, DataMapper::I18n::Locale,
             :through    => naming.localizations,
             :constraint => :destroy
