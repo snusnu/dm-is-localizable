@@ -84,12 +84,15 @@ module DataMapper
 
           @proxy = I18n::Model::Proxy.new(model, translation_model)
 
+          setup_proxy_accessor_api
           relate_translation_model
           generate_accessor_aliases
           generate_property_readers
 
           self
         end
+
+      private
 
         def generate_translation_model(&block)
           nc = naming # make nc available in the current binding
@@ -112,6 +115,13 @@ module DataMapper
           end
         end
 
+        def setup_proxy_accessor_api
+          model.class_eval do
+            extend  I18n::Model::API
+            include I18n::Resource::API
+          end
+        end
+
         def relate_translation_model
           model.has model.n, naming.localizations, proxy.translation_model
           model.has model.n, :locales, DataMapper::I18n::Locale,
@@ -126,8 +136,6 @@ module DataMapper
           nc = naming # make nc available in the current binding
 
           model.class_eval do
-            extend  I18n::Model::API
-            include I18n::Resource::API
             alias_method :translations, nc.localizations
 
             if nested_accessors
