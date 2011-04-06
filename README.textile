@@ -166,12 +166,6 @@ Item.i18n.translation_model
 # list all available locales for the localizable model
 Item.i18n.available_locales
 
-# the number of all available locales for the localizable model
-Item.i18n.nr_of_available_locales
-
-# checks if all localizable resources are translated in all available locales
-Item.i18n.translations_complete?
-
 # returns a list of symbols reflecting all localizable property names of this resource
 Item.i18n.localizable_properties
 
@@ -186,12 +180,6 @@ Item.i18n.non_localizable_properties
 
 # list all available locales for this instance
 item.i18n.available_locales
-
-# the number of all available locales for this instance
-item.i18n.nr_of_available_locales
-
-# checks if this instance is translated into all available locales for this model
-item.i18n.translations_complete?
 
 # translates the given attribute to the locale identified by the given locale_code
 item.i18n.translate(attribute, locale_tag)
