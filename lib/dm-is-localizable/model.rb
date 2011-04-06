@@ -85,7 +85,7 @@ module DataMapper
           @proxy = I18n::Model::Proxy.new(model, translation_model)
 
           relate_translation_model
-          generate_accessor_aliases(options[:accepts_nested_attributes])
+          generate_accessor_aliases
           generate_property_readers
 
           self
@@ -121,7 +121,8 @@ module DataMapper
           self
         end
 
-        def generate_accessor_aliases(nested_accessors)
+        def generate_accessor_aliases
+          nested_accessors = options[:accepts_nested_attributes]
           nc = naming # make nc available in the current binding
 
           model.class_eval do
