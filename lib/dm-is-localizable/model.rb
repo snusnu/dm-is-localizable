@@ -24,16 +24,6 @@ module DataMapper
           ids.any? ? Locale.all(:id => ids) : []
         end
 
-        # the number of all available locales for the localizable model
-        def nr_of_available_locales
-          available_locales.size
-        end
-
-        # checks if all localizable resources are translated in all available locales
-        def translations_complete?
-          available_locales.size * model_to_translate.all.size == translation_model.all.size
-        end
-
         # returns a list of symbols reflecting all localizable property names of this resource
         def localizable_properties
           translation_model.properties.map { |p| p.name } - non_localizable_properties

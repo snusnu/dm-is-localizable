@@ -13,16 +13,6 @@ module DataMapper
           ids.any? ? Locale.all(:id => ids) : []
         end
 
-        # the number of all available locales for this instance
-        def nr_of_available_locales
-          available_locales.size
-        end
-
-        # checks if this instance is translated into all available locales for this model
-        def translations_complete?
-          resource.model.i18n.nr_of_available_locales == resource.translations.size
-        end
-
         # translates the given attribute to the locale identified by the given locale_code
         def translate(attribute, locale_tag)
           if locale = Locale.for(locale_tag)
