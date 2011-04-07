@@ -3,9 +3,9 @@ module DataMapper
     module Model
 
       def translatable(options = {}, &block)
-        localizer = Localizer.new(self, options, &block)
-        localizer.localize
-        @i18n = localizer.proxy
+        generator = Generator.new(self, options, &block)
+        generator.generate
+        @i18n = generator.translation_proxy
         self
       end
 
@@ -14,7 +14,7 @@ module DataMapper
         translatable(options, &block)
       end
 
-      class Proxy
+      class TranslationProxy
         attr_reader :model_to_translate
         attr_reader :translation_model
 
@@ -39,14 +39,14 @@ module DataMapper
         def non_localizable_properties
           [ :id, :locale_id, DataMapper::Inflector.foreign_key(model_to_translate.name).to_sym ]
         end
-      end # class Proxy
+      end # class TranslationProxy
 
       module API
         # the proxy instance to delegate api calls to
         attr_reader :i18n
       end # module API
 
-      class Localizer
+      class Generator
 
         class Naming
 
@@ -67,17 +67,17 @@ module DataMapper
         attr_reader :options
         attr_reader :naming
         attr_reader :translation_model
-        attr_reader :proxy
+        attr_reader :translation_proxy
 
         def initialize(model, options, &block)
           @model             = model
           @options           = default_options.merge(options)
           @naming            = Naming.new(@model, @options)
           @translation_model = new_translation_model(&block)
-          @proxy             = I18n::Model::Proxy.new(@model, @translation_model)
+          @translation_proxy = I18n::Model::TranslationProxy.new(@model, @translation_model)
         end
 
-        def localize
+        def generate
           setup_proxy_accessor_api
           relate_translation_model
           generate_accessor_aliases
@@ -142,7 +142,7 @@ module DataMapper
         end
 
         def generate_property_readers
-          proxy.localizable_properties.each do |property_name|
+          translation_proxy.localizable_properties.each do |property_name|
             model.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
               def #{property_name}(locale_tag = DataMapper::I18n.default_locale_tag)
                 i18n.translate(:#{property_name}, DataMapper::I18n.normalized_locale_tag(locale_tag))
@@ -159,7 +159,7 @@ module DataMapper
           }
         end
 
-      end # class Localizer
+      end # class Generator
     end # module Model
   end # module I18n
 end # module DataMapper
