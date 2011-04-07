@@ -74,7 +74,7 @@ module DataMapper
           @options           = default_options.merge(options)
           @naming            = Naming.new(@model, @options)
           @translation_model = new_translation_model(&block)
-          @proxy             = I18n::Model::Proxy.new(model, @translation_model)
+          @proxy             = I18n::Model::Proxy.new(@model, @translation_model)
         end
 
         def localize
