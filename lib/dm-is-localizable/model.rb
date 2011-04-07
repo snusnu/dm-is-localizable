@@ -15,27 +15,20 @@ module DataMapper
       class TranslationProxy
         attr_reader :model_to_translate
         attr_reader :translation_model
+        attr_reader :localizable_properties
+        attr_reader :non_localizable_properties
 
         def initialize(model_to_translate, translation_model)
-          @model_to_translate = model_to_translate
-          @translation_model  = translation_model
+          @model_to_translate         = model_to_translate
+          @translation_model          = translation_model
+          @non_localizable_properties = [ :id, :locale_id, DataMapper::Inflector.foreign_key(model_to_translate.name).to_sym ]
+          @localizable_properties     = @translation_model.properties.map { |p| p.name } - @non_localizable_properties
         end
 
         # list all available locales for the localizable model
         def available_locales
           ids = translation_model.all.map { |t| t.locale_id }.uniq
           ids.any? ? Locale.all(:id => ids) : []
-        end
-
-        # returns a list of symbols reflecting all localizable property names of this resource
-        def localizable_properties
-          translation_model.properties.map { |p| p.name } - non_localizable_properties
-        end
-
-        # returns a list of symbols reflecting the names of all the
-        # not localizable properties in the remixed translation_model
-        def non_localizable_properties
-          [ :id, :locale_id, DataMapper::Inflector.foreign_key(model_to_translate.name).to_sym ]
         end
       end # class TranslationProxy
 
