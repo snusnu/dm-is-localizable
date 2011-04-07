@@ -21,6 +21,9 @@ module DataMapper
         def initialize(model_to_translate, translation_model)
           @model_to_translate         = model_to_translate
           @translation_model          = translation_model
+          # TODO collect localizable properties inside #translate blocks
+          # This will also make sure that "dynamically" added properties
+          # are taken into account.
           @non_localizable_properties = [ :id, :locale_id, DataMapper::Inflector.foreign_key(model_to_translate.name).to_sym ]
           @localizable_properties     = @translation_model.properties.map { |p| p.name } - @non_localizable_properties
         end
