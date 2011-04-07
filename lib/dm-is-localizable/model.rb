@@ -3,9 +3,7 @@ module DataMapper
     module Model
 
       def translatable(options = {}, &block)
-        generator = Generator.new(self, options, &block)
-        generator.generate
-        @i18n = generator.translation_proxy
+        @i18n = Generator.translation_proxy(self, options, &block)
         self
       end
 
@@ -61,6 +59,11 @@ module DataMapper
             demodulized           = DataMapper::Inflector.demodulize(options[:model].to_s)
             @localizations        = DataMapper::Inflector.tableize(demodulized).to_sym
           end
+        end
+
+        def self.translation_proxy(model, options, &block)
+          generator = new(model, options, &block).generate
+          generator.translation_proxy
         end
 
         attr_reader :model
