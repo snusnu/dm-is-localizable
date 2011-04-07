@@ -23,6 +23,10 @@ module DataMapper
       backend.default_locale_tag
     end
 
+    def self.locale_tag_format=(format_regex)
+      backend.locale_tag_format = format_regex
+    end
+
     def self.locale_tag_format
       backend.locale_tag_format
     end

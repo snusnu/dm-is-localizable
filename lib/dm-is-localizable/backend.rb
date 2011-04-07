@@ -11,6 +11,10 @@ module DataMapper
           raise NotImplementedError, "#{self}#default_locale_tag must be implemented"
         end
 
+        def locale_tag_format=(format_regex)
+          raise NotImplementedError, "#{self}#locale_tag_format= must be implemented"
+        end
+
         def locale_tag_format
           raise NotImplementedError, "#{self}#locale_tag_format must be implemented"
         end

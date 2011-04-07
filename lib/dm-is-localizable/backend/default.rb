@@ -12,7 +12,7 @@ module DataMapper
         DEFAULT_LOCALE_STORAGE_NAME    = 'locales'
 
         attr_accessor :default_locale_tag
-        attr_reader   :locale_tag_format
+        attr_accessor :locale_tag_format
         attr_reader   :locale_repository_name
         attr_reader   :locale_storage_name
 
