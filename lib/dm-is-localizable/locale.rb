@@ -19,8 +19,7 @@ module DataMapper
 
         def cache
           @cache ||= Hash.new do |cache, tag|
-            # TODO find out why dm-core complains
-            # when we try to freeze these values
+            # TODO find out why dm-core complains when we try to freeze these values
             cache[tag] = first(:tag => DataMapper::I18n.normalized_locale_tag(tag))
           end
         end
