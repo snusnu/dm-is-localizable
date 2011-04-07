@@ -2,11 +2,16 @@ module DataMapper
   module I18n
     module Model
 
-      def is_localizable(options = {}, &block)
+      def translatable(options = {}, &block)
         localizer = Localizer.new(self, options, &block)
         localizer.localize
         @i18n = localizer.proxy
         self
+      end
+
+      def is_localizable(options = {}, &block)
+        warn "#{self}.is_localizable is deprecated, use #{self}.translatable instead (#{caller[2]})"
+        translatable(options, &block)
       end
 
       class Proxy

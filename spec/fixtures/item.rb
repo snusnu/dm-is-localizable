@@ -4,7 +4,7 @@ class Item
 
   property :id, Serial
 
-  is :localizable do
+  translatable do
     property :name, String
     property :desc, String
   end
