@@ -44,10 +44,10 @@ describe "instance level API:" do
         describe "passed as Symbol" do
 
           it "should return the translated string" do
-            @i1.i18n.translate(:name, :en_US).should == 'Book'
-            @i1.i18n.translate(:desc, :en_US).should == 'Literature'
-            @i1.i18n.translate(:name, :de_AT).should == 'Buch'
-            @i1.i18n.translate(:desc, :de_AT).should == 'Literatur'
+            @i1.i18n.translate(:name, :'en-US').should == 'Book'
+            @i1.i18n.translate(:desc, :'en-US').should == 'Literature'
+            @i1.i18n.translate(:name, :'de-AT').should == 'Buch'
+            @i1.i18n.translate(:desc, :'de-AT').should == 'Literatur'
           end
 
         end
@@ -55,10 +55,10 @@ describe "instance level API:" do
         describe "passed as String" do
 
           it "should return the translated string" do
-            @i1.i18n.translate(:name, 'en_US').should == 'Book'
-            @i1.i18n.translate(:desc, 'en_US').should == 'Literature'
-            @i1.i18n.translate(:name, 'de_AT').should == 'Buch'
-            @i1.i18n.translate(:desc, 'de_AT').should == 'Literatur'
+            @i1.i18n.translate(:name, 'en-US').should == 'Book'
+            @i1.i18n.translate(:desc, 'en-US').should == 'Literature'
+            @i1.i18n.translate(:name, 'de-AT').should == 'Buch'
+            @i1.i18n.translate(:desc, 'de-AT').should == 'Literatur'
           end
 
         end
@@ -94,7 +94,7 @@ describe "instance level API:" do
         describe "passed as Symbol" do
 
           it "should return the translated string" do
-            @i1.i18n.translate(:foo, :en_US).should be_nil
+            @i1.i18n.translate(:foo, :'en-US').should be_nil
           end
 
         end
@@ -102,7 +102,7 @@ describe "instance level API:" do
         describe "passed as String" do
 
           it "should return the translated string" do
-            @i1.i18n.translate(:foo, 'en_US').should be_nil
+            @i1.i18n.translate(:foo, 'en-US').should be_nil
           end
 
         end
@@ -176,10 +176,10 @@ describe "instance level API:" do
       describe "passed as Symbol" do
 
         it "should return the translated property" do
-          @i1.name(:en_US).should == 'Book'
-          @i1.desc(:en_US).should == 'Literature'
-          @i1.name(:de_AT).should == 'Buch'
-          @i1.desc(:de_AT).should == 'Literatur'
+          @i1.name(:'en-US').should == 'Book'
+          @i1.desc(:'en-US').should == 'Literature'
+          @i1.name(:'de-AT').should == 'Buch'
+          @i1.desc(:'de-AT').should == 'Literatur'
         end
 
       end
@@ -187,10 +187,10 @@ describe "instance level API:" do
       describe "passed as String" do
 
         it "should return the translated property" do
-          @i1.name('en_US').should == 'Book'
-          @i1.desc('en_US').should == 'Literature'
-          @i1.name('de_AT').should == 'Buch'
-          @i1.desc('de_AT').should == 'Literatur'
+          @i1.name('en-US').should == 'Book'
+          @i1.desc('en-US').should == 'Literature'
+          @i1.name('de-AT').should == 'Buch'
+          @i1.desc('de-AT').should == 'Literatur'
         end
 
       end

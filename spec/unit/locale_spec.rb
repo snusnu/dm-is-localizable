@@ -83,11 +83,18 @@ describe "Locale" do
     describe "with a valid (present) locale symbol as parameter" do
 
       it "should return the correct locale instance" do
-        Locale.for(:en_US).should == Locale.first(:tag => 'en-US')
+        Locale.for(:'en-US').should == Locale.first(:tag => 'en-US')
       end
 
     end
 
+    describe "with a valid (present) locale string as parameter" do
+
+      it "should return the correct locale instance" do
+        Locale.for('en-US').should == Locale.first(:tag => 'en-US')
+      end
+
+    end
   end
 
 end

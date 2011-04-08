@@ -36,11 +36,7 @@ module DataMapper
         end
 
         def normalized_locale_tag(tag)
-          tag = tag.to_s.tr("_","-")
-          unless tag =~ locale_tag_format
-            tag = "#{tag.downcase}-#{tag.upcase}"
-          end
-          tag
+          tag # noop, overwrite for specific behavior
         end
 
         def available_locales
