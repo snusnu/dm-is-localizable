@@ -39,15 +39,11 @@ describe "Locale" do
 
   describe "with invalid attributes" do
 
+    # We only do basic tests here, since the regex is
+    # copied from svenfuchs/i18n and is tested over there
     it "should not accept invalid locale strings" do
-      Locale.new(:tag => 'foo',     :name => "English").should_not be_valid
-      Locale.new(:tag => 'foo-bar', :name => "English").should_not be_valid
-      Locale.new(:tag => 'foo-BAR', :name => "English").should_not be_valid
-      Locale.new(:tag => 'FOO-bar', :name => "English").should_not be_valid
-      Locale.new(:tag => 'FOO-BAR', :name => "English").should_not be_valid
-      Locale.new(:tag => 'en-us',   :name => "English").should_not be_valid
-      Locale.new(:tag => 'EN-us',   :name => "English").should_not be_valid
-      Locale.new(:tag => 'EN-US',   :name => "English").should_not be_valid
+      Locale.new(:tag => 'a-DE',      :name => "German").should_not be_valid
+      Locale.new(:tag => 'de-419-DE', :name => "German").should_not be_valid
     end
 
     it "should only allow unique locale string locales" do
