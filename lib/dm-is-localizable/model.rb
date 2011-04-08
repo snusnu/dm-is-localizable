@@ -16,16 +16,11 @@ module DataMapper
         attr_reader :model_to_translate
         attr_reader :translation_model
         attr_reader :localizable_properties
-        attr_reader :non_localizable_properties
 
         def initialize(model_to_translate, translation_model)
-          @model_to_translate         = model_to_translate
-          @translation_model          = translation_model
-          # TODO collect localizable properties inside #translate blocks
-          # This will also make sure that "dynamically" added properties
-          # are taken into account.
-          @non_localizable_properties = [ :id, :locale_id, DataMapper::Inflector.foreign_key(model_to_translate.name).to_sym ]
-          @localizable_properties     = @translation_model.properties.map { |p| p.name } - @non_localizable_properties
+          @model_to_translate     = model_to_translate
+          @translation_model      = translation_model
+          @localizable_properties = @translation_model.localizable_properties
         end
 
         # list all available locales for the localizable model
@@ -89,7 +84,7 @@ module DataMapper
         def new_translation_model(&block)
           nc = naming # make nc available in the current binding
 
-          DataMapper::Model.new(options[:model]) do
+          translation_model = DataMapper::Model.new(options[:model]) do
 
             property :id, DataMapper::Property::Serial
 
@@ -103,8 +98,33 @@ module DataMapper
 
             validates_uniqueness_of :locale_id, :scope => nc.localizable_model_fk
 
-            class_eval &block
           end
+
+          translation_model.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+            class << self
+              def localizable_properties
+                @localizable_properties ||= []
+              end
+
+              def localizable_property?(name)
+                !non_localizable_properties.any? { |reserved_name| reserved_name == name.to_sym }
+              end
+
+              def non_localizable_properties
+                [ :id, :locale_id, :#{nc.localizable_model_fk} ]
+              end
+
+              def property(name, type, options = {})
+                property = super
+                localizable_properties << property if localizable_property?(name)
+                property
+              end
+            end
+          RUBY
+
+          translation_model.class_eval &block
+
+          translation_model
         end
 
         def setup_proxy_accessor_api
@@ -141,10 +161,10 @@ module DataMapper
         end
 
         def generate_property_readers
-          translation_proxy.localizable_properties.each do |property_name|
+          translation_model.localizable_properties.each do |property|
             model.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
-              def #{property_name}(locale_tag = DataMapper::I18n.default_locale_tag)
-                i18n.translate(:#{property_name}, DataMapper::I18n.normalized_locale_tag(locale_tag))
+              def #{property.name}(locale_tag = DataMapper::I18n.default_locale_tag)
+                i18n.translate(:#{property.name}, DataMapper::I18n.normalized_locale_tag(locale_tag))
               end
             RUBY
           end
