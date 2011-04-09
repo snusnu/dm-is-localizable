@@ -114,9 +114,9 @@ class Item
     property :description, String
   end
 
-  # ----------------------------
-  #   added by is :localizable
-  # ----------------------------
+  # -------------------------
+  #   added by .translatable
+  # -------------------------
 
   has n, :item_translations
   has n, :locales, :through => :item_translations
