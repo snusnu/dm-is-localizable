@@ -22,12 +22,12 @@ describe "class level API:" do
 
   end
 
-  describe "localizable_properties" do
+  describe "translatable_properties" do
 
-    it "should return a list of symbols reflecting the localizable properties" do
-      Item.i18n.localizable_properties.size.should == 2
-      Item.i18n.localizable_properties.should include(ItemTranslation.properties[:name])
-      Item.i18n.localizable_properties.should include(ItemTranslation.properties[:desc])
+    it "should return a list of translatable properties" do
+      Item.i18n.translatable_properties.size.should == 2
+      Item.i18n.translatable_properties.should include(ItemTranslation.properties[:name])
+      Item.i18n.translatable_properties.should include(ItemTranslation.properties[:desc])
     end
 
   end
