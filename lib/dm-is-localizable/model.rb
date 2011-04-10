@@ -164,7 +164,7 @@ module DataMapper
               generate_accessor_aliases
               generate_property_readers
 
-              translation_model
+              self
             end
 
             def relate_translation_model
