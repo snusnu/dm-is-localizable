@@ -25,10 +25,13 @@ module DataMapper
         attr_reader :configuration
 
         def initialize(translated_model, options, &block)
-          @translated_model       = translated_model
-          @configuration          = Configuration.new(@translated_model, options)
-          @translation_model      = TranslationProxy::Model.setup(@translated_model, @configuration, &block)
+          @translated_model        = translated_model
+          @configuration           = Configuration.new(@translated_model, options)
+          @translation_model       = TranslationProxy::Model::Generator.generate(self, &block)
           @translatable_properties = @translation_model.translatable_properties
+
+          TranslationProxy::Model::Integrator.integrate(self)
+
           @translated_model.class_eval do
             extend  I18n::Model::API
             include I18n::Resource::API
@@ -77,30 +80,20 @@ module DataMapper
 
         module Model
 
-          def self.setup(translated_model, configuration, &block)
-            translation_model = Generator.generate(translated_model, configuration, &block)
-            Integrator.integrate(translated_model, translation_model, configuration)
-            translation_model
-          end
-
           class Generator
 
-            def self.generate(translated_model, configuration, &block)
-              new(translated_model, configuration).generate(&block)
+            def self.generate(translation_proxy, &block)
+              new(translation_proxy).generate(&block)
             end
 
-            attr_reader :translated_model
-            attr_reader :configuration
-
-            def initialize(translated_model, configuration)
-              @translated_model = translated_model
-              @configuration    = configuration
+            def initialize(translation_proxy)
+              @translation_proxy = translation_proxy
             end
 
             def generate(&block)
-              config = configuration # make config available in the current binding
+              config = @translation_proxy.configuration # make config available in the current binding
 
-              translation_model = DataMapper::Model.new(configuration.translation_model_name) do
+              translation_model = DataMapper::Model.new(config.translation_model_name) do
 
                 property :id, DataMapper::Property::Serial
 
@@ -119,20 +112,20 @@ module DataMapper
               translation_model.class_eval <<-RUBY, __FILE__, __LINE__ + 1
                 class << self
                   def translatable_properties
-                    @translatable_properties ||= []
+                    @translatable_properties ||= DataMapper::PropertySet.new
                   end
 
-                  def translatable_property?(name)
-                    !non_translatable_properties.any? { |reserved_name| reserved_name == name.to_sym }
+                  def translatable_property?(property)
+                    !non_translatable_property_names.any? { |reserved_name| reserved_name == property.name }
                   end
 
-                  def non_translatable_properties
+                  def non_translatable_property_names
                     [ :id, :locale_id, :#{config.translated_model_fk} ]
                   end
 
                   def property(name, type, options = {})
                     property = super
-                    translatable_properties << property if translatable_property?(name)
+                    translatable_properties << property if translatable_property?(property)
                     property
                   end
                 end
@@ -146,18 +139,18 @@ module DataMapper
 
           class Integrator
 
-            def self.integrate(translated_model, translation_model, configuration)
-              new(translated_model, translation_model, configuration).integrate
+            def self.integrate(translation_proxy)
+              new(translation_proxy).integrate
             end
 
             attr_reader :translated_model
             attr_reader :translation_model
             attr_reader :configuration
 
-            def initialize(translated_model, translation_model, configuration)
-              @translated_model  = translated_model
-              @translation_model = translation_model
-              @configuration     = configuration
+            def initialize(translation_proxy)
+              @translated_model  = translation_proxy.translated_model
+              @translation_model = translation_proxy.translation_model
+              @configuration     = translation_proxy.configuration
             end
 
             def integrate
