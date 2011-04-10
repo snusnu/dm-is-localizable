@@ -170,15 +170,15 @@ end
 # helper method to get at ItemTranslation
 Item.i18n.translation_model
 
-# list all available locales for the localizable model
+# list all available locales for the translatable model
 Item.i18n.available_locales
 
-# returns a list of symbols reflecting all localizable property names of this resource
-Item.i18n.localizable_properties
+# returns all translatable properties of this resource
+Item.i18n.translatable_properties
 
 # returns a list of symbols reflecting the names of all the
-# not localizable properties in the remixed translation_model
-Item.i18n.non_localizable_properties
+# not translatable properties in the remixed translation_model
+Item.i18n.non_translatable_properties
 
 
 # ---------------------------------------------
