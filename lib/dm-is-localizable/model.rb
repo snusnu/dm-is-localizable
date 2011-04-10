@@ -22,10 +22,12 @@ module DataMapper
         attr_reader :translated_model
         attr_reader :translation_model
         attr_reader :translatable_properties
+        attr_reader :configuration
 
         def initialize(translated_model, options, &block)
           @translated_model       = translated_model
-          @translation_model      = TranslationProxy::Model.setup(translated_model, options, &block)
+          @configuration          = Configuration.new(@translated_model, options)
+          @translation_model      = TranslationProxy::Model.setup(@translated_model, @configuration, &block)
           @translatable_properties = @translation_model.translatable_properties
           @translated_model.class_eval do
             extend  I18n::Model::API
@@ -39,48 +41,47 @@ module DataMapper
           ids.any? ? Locale.all(:id => ids) : []
         end
 
+        class Configuration
+
+          attr_reader :options
+          attr_reader :translated_model
+          attr_reader :translated_model_fk
+          attr_reader :translated_model_name
+          attr_reader :translation_model_name
+          attr_reader :translations
+
+          def initialize(translated_model, options)
+            @translated_model       = translated_model
+            @options                = default_options.merge(options)
+            fk_string               = DataMapper::Inflector.foreign_key(@translated_model.name)
+            @translated_model_fk    = fk_string.to_sym
+            @translated_model_name  = fk_string[0, fk_string.rindex('_id')].to_sym
+            @translation_model_name = @options[:model]
+            demodulized             = DataMapper::Inflector.demodulize(@options[:model].to_s)
+            @translations           = DataMapper::Inflector.tableize(demodulized).to_sym
+            @nested_accessors       = @options[:accepts_nested_attributes]
+          end
+
+          def nested_accessors?
+            @nested_accessors
+          end
+
+          def default_options
+            {
+              :model => "#{translated_model}Translation",
+              :accept_nested_attributes => true
+            }
+          end
+
+        end # class Configuration
+
         module Model
 
-          def self.setup(translated_model, options, &block)
-            configuration     = Configuration.new(translated_model, options)
+          def self.setup(translated_model, configuration, &block)
             translation_model = Generator.generate(translated_model, configuration, &block)
             Integrator.integrate(translated_model, translation_model, configuration)
             translation_model
           end
-
-          class Configuration
-
-            attr_reader :options
-            attr_reader :translated_model
-            attr_reader :translated_model_fk
-            attr_reader :translated_model_name
-            attr_reader :translation_model_name
-            attr_reader :translations
-
-            def initialize(translated_model, options)
-              @translated_model       = translated_model
-              @options                = default_options.merge(options)
-              fk_string               = DataMapper::Inflector.foreign_key(@translated_model.name)
-              @translated_model_fk    = fk_string.to_sym
-              @translated_model_name  = fk_string[0, fk_string.rindex('_id')].to_sym
-              @translation_model_name = @options[:model]
-              demodulized             = DataMapper::Inflector.demodulize(@options[:model].to_s)
-              @translations           = DataMapper::Inflector.tableize(demodulized).to_sym
-              @nested_accessors       = @options[:accepts_nested_attributes]
-            end
-
-            def nested_accessors?
-              @nested_accessors
-            end
-
-            def default_options
-              {
-                :model => "#{translated_model}Translation",
-                :accept_nested_attributes => true
-              }
-            end
-
-          end # class Configuration
 
           class Generator
 
