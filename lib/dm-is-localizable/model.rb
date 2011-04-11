@@ -26,7 +26,12 @@ module DataMapper
         def initialize(translated_model, options, &block)
           @translated_model  = translated_model
           @configuration     = Configuration.new(@translated_model, options)
-          @translation_model = DataMapper::Model.new(@configuration.translation_model_name) do
+
+          # locals are cheap, formatting ftw!
+          translation_model_name      = @configuration.translation_model_name
+          translation_model_namespace = @configuration.translation_model_namespace
+
+          @translation_model = DataMapper::Model.new(translation_model_name, translation_model_namespace) do
             property :id, DataMapper::Property::Serial
           end
 
@@ -70,18 +75,20 @@ module DataMapper
           attr_reader :translated_model_fk
           attr_reader :translated_model_name
           attr_reader :translation_model_name
+          attr_reader :translation_model_namespace
           attr_reader :translations
 
           def initialize(translated_model, options)
-            @translated_model       = translated_model
-            @options                = default_options.merge(options)
-            fk_string               = DataMapper::Inflector.foreign_key(@translated_model.name)
-            @translated_model_fk    = fk_string.to_sym
-            @translated_model_name  = fk_string[0, fk_string.rindex('_id')].to_sym
-            @translation_model_name = @options[:model]
-            demodulized             = DataMapper::Inflector.demodulize(@options[:model].to_s)
-            @translations           = DataMapper::Inflector.tableize(demodulized).to_sym
-            @nested_accessors       = @options[:accepts_nested_attributes]
+            @translated_model            = translated_model
+            @options                     = default_options.merge(options)
+            fk_string                    = DataMapper::Inflector.foreign_key(@translated_model.name)
+            @translated_model_fk         = fk_string.to_sym
+            @translated_model_name       = fk_string[0, fk_string.rindex('_id')].to_sym
+            @translation_model_name      = @options[:model]
+            @translation_model_namespace = Object # TODO make this configurable
+            demodulized                  = DataMapper::Inflector.demodulize(@options[:model].to_s)
+            @translations                = DataMapper::Inflector.tableize(demodulized).to_sym
+            @nested_accessors            = @options[:accepts_nested_attributes]
           end
 
           def nested_accessors?
