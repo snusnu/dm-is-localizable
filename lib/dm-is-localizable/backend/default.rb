@@ -40,7 +40,7 @@ module DataMapper
         end
 
         def available_locales
-          @available_locales ||= Locale.all(:fields => [:locale])
+          @available_locales ||= Locale.all
         end
       end # class Default
 
