@@ -24,20 +24,22 @@ module DataMapper
         attr_reader :configuration
 
         def initialize(translated_model, options, &block)
-          @translated_model        = translated_model
-          @configuration           = Configuration.new(@translated_model, options)
+          @translated_model  = translated_model
+          @configuration     = Configuration.new(@translated_model, options)
+          @translation_model = DataMapper::Model.new(@configuration.translation_model_name) do
+            property :id, DataMapper::Property::Serial
+          end
+
           @translatable_properties = {}
 
           instance_eval &block # capture @translatable properties
-
-          @translation_model = TranslationProxy::Model::Generator.generate(self, &block)
 
           # define translatable properties on @translation_model
           @translatable_properties.each do |name, args|
             @translation_model.property name, *args
           end
 
-          TranslationProxy::Model::Integrator.integrate(self)
+          Integrator.integrate(self)
 
           @translated_model.class_eval do
             extend  I18n::Model::API
@@ -95,104 +97,80 @@ module DataMapper
 
         end # class Configuration
 
-        module Model
+        class Integrator
 
-          class Generator
+          def self.integrate(translation_proxy)
+            new(translation_proxy).integrate
+          end
 
-            def self.generate(translation_proxy, &block)
-              new(translation_proxy).generate(&block)
-            end
+          attr_reader :translation_proxy
+          attr_reader :translated_model
+          attr_reader :translation_model
+          attr_reader :configuration
 
-            def initialize(translation_proxy)
-              @translation_proxy = translation_proxy
-            end
+          def initialize(translation_proxy)
+            @translation_proxy = translation_proxy
+            @translated_model  = @translation_proxy.translated_model
+            @translation_model = @translation_proxy.translation_model
+            @configuration     = @translation_proxy.configuration
+          end
 
-            def generate(&block)
-              config = @translation_proxy.configuration # make config available in the current binding
+          def integrate
+            establish_relationships
+            establish_validations
+            generate_accessor_aliases
+            generate_property_readers
 
-              DataMapper::Model.new(config.translation_model_name) do
+            self
+          end
 
-                property :id, DataMapper::Property::Serial
+          def establish_relationships
+            translation_model.belongs_to configuration.translated_model_name,
+              :unique_index => :unique_locales
+            translation_model.belongs_to :locale, DataMapper::I18n::Locale,
+              :parent_repository_name => DataMapper::I18n.locale_repository_name,
+              :child_repository_name  => translation_model.repository_name,
+              :unique_index           => :unique_locales
+            translated_model.has translated_model.n, configuration.translations, translation_model
+            translated_model.has translated_model.n, :locales, DataMapper::I18n::Locale,
+              :through    => configuration.translations,
+              :constraint => :destroy
 
-                belongs_to config.translated_model_name,
-                  :unique_index => :unique_locales
+            self
+          end
 
-                belongs_to :locale, DataMapper::I18n::Locale,
-                  :parent_repository_name => DataMapper::I18n.locale_repository_name,
-                  :child_repository_name  => self.repository_name,
-                  :unique_index           => :unique_locales
+          def establish_validations
+            translation_model.validates_uniqueness_of :locale_id, :scope => configuration.translated_model_fk
+          end
 
-                validates_uniqueness_of :locale_id, :scope => config.translated_model_fk
+          def generate_accessor_aliases
+            config = configuration # make config available in the current binding
 
+            translated_model.class_eval do
+              alias_method :translations, config.translations
+
+              if config.nested_accessors?
+                remixee_attributes = :"#{config.translations}_atttributes"
+
+                accepts_nested_attributes_for config.translations
+                alias_method :translations_attributes, remixee_attributes
               end
             end
-          end # class Generator
+            self
+          end
 
-          class Integrator
-
-            def self.integrate(translation_proxy)
-              new(translation_proxy).integrate
-            end
-
-            attr_reader :translation_proxy
-            attr_reader :translated_model
-            attr_reader :translation_model
-            attr_reader :configuration
-
-            def initialize(translation_proxy)
-              @translation_proxy = translation_proxy
-              @translated_model  = @translation_proxy.translated_model
-              @translation_model = @translation_proxy.translation_model
-              @configuration     = @translation_proxy.configuration
-            end
-
-            def integrate
-              relate_translation_model
-              generate_accessor_aliases
-              generate_property_readers
-
-              self
-            end
-
-            def relate_translation_model
-              translated_model.has translated_model.n, configuration.translations, translation_model
-              translated_model.has translated_model.n, :locales, DataMapper::I18n::Locale,
-                :through    => configuration.translations,
-                :constraint => :destroy
-
-              self
-            end
-
-            def generate_accessor_aliases
-              config = configuration # make config available in the current binding
-
-              translated_model.class_eval do
-                alias_method :translations, config.translations
-
-                if config.nested_accessors?
-                  remixee_attributes = :"#{config.translations}_atttributes"
-
-                  accepts_nested_attributes_for config.translations
-                  alias_method :translations_attributes, remixee_attributes
+          def generate_property_readers
+            translation_proxy.translatable_properties.each do |property|
+              translated_model.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
+                def #{property.name}(locale_tag = DataMapper::I18n.default_locale_tag)
+                  i18n.translate(:#{property.name}, DataMapper::I18n.normalized_locale_tag(locale_tag))
                 end
-              end
-              self
+              RUBY
             end
+            self
+          end
 
-            def generate_property_readers
-              translation_proxy.translatable_properties.each do |property|
-                translated_model.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
-                  def #{property.name}(locale_tag = DataMapper::I18n.default_locale_tag)
-                    i18n.translate(:#{property.name}, DataMapper::I18n.normalized_locale_tag(locale_tag))
-                  end
-                RUBY
-              end
-              self
-            end
-
-          end # class Integrator
-
-        end # module Model
+        end # class Integrator
       end # class TranslationProxy
     end # module Model
   end # module I18n
