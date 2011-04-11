@@ -40,7 +40,7 @@ module DataMapper
         end
 
         def available_locales
-          Locale.all
+          DataMapper::I18n::Locale.all
         end
       end # class Default
 
