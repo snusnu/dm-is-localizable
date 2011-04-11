@@ -21,14 +21,21 @@ module DataMapper
 
         attr_reader :translated_model
         attr_reader :translation_model
-        attr_reader :translatable_properties
         attr_reader :configuration
 
         def initialize(translated_model, options, &block)
           @translated_model        = translated_model
           @configuration           = Configuration.new(@translated_model, options)
-          @translation_model       = TranslationProxy::Model::Generator.generate(self, &block)
-          @translatable_properties = @translation_model.translatable_properties
+          @translatable_properties = {}
+
+          instance_eval &block # capture @translatable properties
+
+          @translation_model = TranslationProxy::Model::Generator.generate(self, &block)
+
+          # define translatable properties on @translation_model
+          @translatable_properties.each do |name, args|
+            @translation_model.property name, *args
+          end
 
           TranslationProxy::Model::Integrator.integrate(self)
 
@@ -42,6 +49,16 @@ module DataMapper
         def available_locales
           ids = translation_model.all.map { |t| t.locale_id }.uniq
           ids.any? ? Locale.all(:id => ids) : []
+        end
+
+        def translatable_properties
+          translation_model.properties.select { |property| @translatable_properties.key?(property.name) }
+        end
+
+      private
+
+        def property(name, type, options = {})
+          @translatable_properties[name] = [ type, options ]
         end
 
         class Configuration
@@ -93,7 +110,7 @@ module DataMapper
             def generate(&block)
               config = @translation_proxy.configuration # make config available in the current binding
 
-              translation_model = DataMapper::Model.new(config.translation_model_name) do
+              DataMapper::Model.new(config.translation_model_name) do
 
                 property :id, DataMapper::Property::Serial
 
@@ -108,32 +125,6 @@ module DataMapper
                 validates_uniqueness_of :locale_id, :scope => config.translated_model_fk
 
               end
-
-              translation_model.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-                class << self
-                  def translatable_properties
-                    @translatable_properties ||= DataMapper::PropertySet.new
-                  end
-
-                  def translatable_property?(property)
-                    !non_translatable_property_names.any? { |reserved_name| reserved_name == property.name }
-                  end
-
-                  def non_translatable_property_names
-                    [ :id, :locale_id, :#{config.translated_model_fk} ]
-                  end
-
-                  def property(name, type, options = {})
-                    property = super
-                    translatable_properties << property if translatable_property?(property)
-                    property
-                  end
-                end
-              RUBY
-
-              translation_model.class_eval &block
-
-              translation_model
             end
           end # class Generator
 
@@ -143,14 +134,16 @@ module DataMapper
               new(translation_proxy).integrate
             end
 
+            attr_reader :translation_proxy
             attr_reader :translated_model
             attr_reader :translation_model
             attr_reader :configuration
 
             def initialize(translation_proxy)
-              @translated_model  = translation_proxy.translated_model
-              @translation_model = translation_proxy.translation_model
-              @configuration     = translation_proxy.configuration
+              @translation_proxy = translation_proxy
+              @translated_model  = @translation_proxy.translated_model
+              @translation_model = @translation_proxy.translation_model
+              @configuration     = @translation_proxy.configuration
             end
 
             def integrate
@@ -187,7 +180,7 @@ module DataMapper
             end
 
             def generate_property_readers
-              translation_model.translatable_properties.each do |property|
+              translation_proxy.translatable_properties.each do |property|
                 translated_model.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
                   def #{property.name}(locale_tag = DataMapper::I18n.default_locale_tag)
                     i18n.translate(:#{property.name}, DataMapper::I18n.normalized_locale_tag(locale_tag))
