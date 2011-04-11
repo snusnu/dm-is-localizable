@@ -48,7 +48,7 @@ module DataMapper
         # list all available locales for the localizable model
         def available_locales
           ids = translation_model.all.map { |t| t.locale_id }.uniq
-          ids.any? ? Locale.all(:id => ids) : []
+          ids.any? ? DataMapper::I18n::Locale.all(:id => ids) : []
         end
 
         def translatable_properties

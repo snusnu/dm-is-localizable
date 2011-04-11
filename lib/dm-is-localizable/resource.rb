@@ -10,12 +10,12 @@ module DataMapper
         # list all available locales for this instance
         def available_locales
           ids = resource.translations.map { |t| t.locale_id }.uniq
-          ids.any? ? Locale.all(:id => ids) : []
+          ids.any? ? DataMapper::I18n::Locale.all(:id => ids) : []
         end
 
         # translates the given attribute to the locale identified by the given locale_code
         def translate(attribute, locale_tag)
-          if locale = Locale.for(locale_tag)
+          if locale = DataMapper::I18n::Locale.for(locale_tag)
             t = resource.translations.first(:locale => locale)
             t.respond_to?(attribute) ? t.send(attribute) : nil
           else
