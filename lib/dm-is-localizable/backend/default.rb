@@ -25,8 +25,8 @@ module DataMapper
 
         attr_accessor :default_locale_tag
         attr_accessor :locale_tag_format
-        attr_reader   :locale_repository_name
-        attr_reader   :locale_storage_name
+        attr_accessor :locale_repository_name
+        attr_accessor :locale_storage_name
 
         def initialize
           @default_locale_tag     = DEFAULT_LOCALE_TAG

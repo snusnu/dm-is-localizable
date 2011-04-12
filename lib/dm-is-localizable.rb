@@ -39,8 +39,16 @@ module DataMapper
       backend.available_locales
     end
 
+    def self.locale_repository_name=(repository_name)
+      backend.locale_repository_name = repository_name
+    end
+
     def self.locale_repository_name
       backend.locale_repository_name
+    end
+
+    def self.locale_storage_name=(storage_name)
+      backend.locale_storage_name = storage_name
     end
 
     def self.locale_storage_name
