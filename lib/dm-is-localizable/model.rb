@@ -131,17 +131,24 @@ module DataMapper
             self
           end
 
+        private
+
           def establish_relationships
             translation_model.belongs_to configuration.translated_model_name,
+              :repository   => translated_model.repository.name,
               :unique_index => :unique_locales
+
             translation_model.belongs_to :locale, DataMapper::I18n::Locale,
-              :parent_repository_name => DataMapper::I18n.locale_repository_name,
-              :child_repository_name  => translation_model.repository_name,
-              :unique_index           => :unique_locales
-            translated_model.has translated_model.n, configuration.translations, translation_model
-            translated_model.has translated_model.n, :locales, DataMapper::I18n::Locale,
-              :through    => configuration.translations,
-              :constraint => :destroy
+              :repository   => DataMapper::I18n.locale_repository_name,
+              :unique_index => :unique_locales
+
+            translated_model.has n, configuration.translations, translation_model,
+              :repository   => translation_model.repository.name
+
+            translated_model.has n, :locales, DataMapper::I18n::Locale,
+              :repository   => DataMapper::I18n.locale_repository_name,
+              :through      => configuration.translations,
+              :constraint   => :destroy
 
             self
           end
@@ -175,6 +182,10 @@ module DataMapper
               RUBY
             end
             self
+          end
+
+          def n
+            Infinity
           end
 
         end # class Integrator
