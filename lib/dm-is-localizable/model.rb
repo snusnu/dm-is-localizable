@@ -91,10 +91,6 @@ module DataMapper
             require 'dm-accepts_nested_attributes' if @accepts_nested_attributes
           end
 
-          def nested_accessors?
-            @nested_accessors
-          end
-
           def default_options
             {
               :namespace => default_translation_model_namespace,
