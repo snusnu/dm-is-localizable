@@ -82,15 +82,15 @@ class ItemTranslation
 
   include DataMapper::Resource
 
-  property :id,        Serial
+  property :id,         Serial
 
-  property :item_id,   Integer, :required => true, :unique_index => :unique_locales
-  property :locale_id, Integer, :required => true, :unique_index => :unique_locales
+  property :item_id,    Integer, :required => true, :unique_index => :unique_locales
+  property :locale_tag, String,  :required => true, :unique_index => :unique_locales
 
-  property :name,      String
-  property :desc,      String
+  property :name,       String
+  property :desc,       String
 
-  validates_is_unique :locale_id, :scope => :item_id
+  validates_is_unique :locale_tag, :scope => :item_id
 
   belongs_to :item
   belongs_to :locale
