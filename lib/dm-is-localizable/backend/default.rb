@@ -7,9 +7,10 @@ module DataMapper
       class Default
         include Backend::API
 
-        DEFAULT_LOCALE_TAG             = 'en-US'
-        DEFAULT_LOCALE_REPOSITORY_NAME = :default
-        DEFAULT_LOCALE_STORAGE_NAME    = 'locales'
+        DEFAULT_LOCALE_TAG                  = 'en-US'
+        DEFAULT_LOCALE_REPOSITORY_NAME      = :default
+        DEFAULT_LOCALE_STORAGE_NAME         = 'locales'
+        DEFAULT_TRANSLATION_MODEL_NAMESPACE = nil
 
         # RFC 4646/47
         DEFAULT_LOCALE_TAG_FORMAT = %r{\A(?:
@@ -27,12 +28,14 @@ module DataMapper
         attr_accessor :locale_tag_format
         attr_accessor :locale_repository_name
         attr_accessor :locale_storage_name
+        attr_accessor :translation_model_namespace
 
         def initialize
-          @default_locale_tag     = DEFAULT_LOCALE_TAG
-          @locale_repository_name = DEFAULT_LOCALE_REPOSITORY_NAME
-          @locale_storage_name    = DEFAULT_LOCALE_STORAGE_NAME
-          @locale_tag_format      = DEFAULT_LOCALE_TAG_FORMAT
+          @default_locale_tag          = DEFAULT_LOCALE_TAG
+          @locale_repository_name      = DEFAULT_LOCALE_REPOSITORY_NAME
+          @locale_storage_name         = DEFAULT_LOCALE_STORAGE_NAME
+          @locale_tag_format           = DEFAULT_LOCALE_TAG_FORMAT
+          @translation_model_namespace = DEFAULT_TRANSLATION_MODEL_NAMESPACE
         end
 
         def normalized_locale_tag(tag)

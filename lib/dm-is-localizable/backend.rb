@@ -42,6 +42,14 @@ module DataMapper
         def normalized_locale_tag(tag)
           raise NotImplementedError, "#{self}#normalized_locale_tag(tag) must be implemented"
         end
+
+        def translation_model_namespace=(namespace)
+          raise NotImplementedError, "#{self}#translation_model_namespace= must be implemented"
+        end
+
+        def translation_model_namespace
+          raise NotImplementedError, "#{self}#translation_model_namespace must be implemented"
+        end
       end # module API
 
     end # module Backend

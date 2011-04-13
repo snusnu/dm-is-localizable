@@ -55,8 +55,17 @@ module DataMapper
       backend.locale_storage_name
     end
 
+    def self.translation_model_namespace=(namespace)
+      backend.translation_model_namespace = namespace
+    end
+
+    def self.translation_model_namespace
+      backend.translation_model_namespace
+    end
+
   end # module I18n
 
+  require 'dm-is-localizable/support/ext/object'
   require 'dm-is-localizable/backend'
   require 'dm-is-localizable/locale'
   require 'dm-is-localizable/model'

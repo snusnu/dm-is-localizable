@@ -84,10 +84,9 @@ module DataMapper
             fk_string                    = DataMapper::Inflector.foreign_key(@translated_model.name)
             @translated_model_fk         = fk_string.to_sym
             @translated_model_name       = fk_string[0, fk_string.rindex('_id')].to_sym
-            @translation_model_name      = @options[:model]
-            @translation_model_namespace = Object # TODO make this configurable
-            demodulized                  = DataMapper::Inflector.demodulize(@options[:model].to_s)
-            @translations                = DataMapper::Inflector.tableize(demodulized).to_sym
+            @translation_model_name      = DataMapper::Inflector.demodulize(@options[:model].to_s)
+            @translation_model_namespace = @options[:namespace]
+            @translations                = DataMapper::Inflector.tableize(@translation_model_name).to_sym
             @nested_accessors            = @options[:accepts_nested_attributes]
           end
 
@@ -97,9 +96,14 @@ module DataMapper
 
           def default_options
             {
-              :model => "#{translated_model}Translation",
+              :namespace => default_translation_model_namespace,
+              :model     => "#{translated_model}Translation",
               :accept_nested_attributes => true
             }
+          end
+
+          def default_translation_model_namespace
+            DataMapper::I18n.translation_model_namespace || DataMapper::Ext::Object.namespace(translated_model)
           end
 
         end # class Configuration
