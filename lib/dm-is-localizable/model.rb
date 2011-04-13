@@ -54,8 +54,8 @@ module DataMapper
 
         # list all available locales for the localizable model
         def available_locales
-          ids = translation_model.all.map { |t| t.locale_id }.uniq
-          ids.any? ? DataMapper::I18n::Locale.all(:id => ids) : []
+          tags = translation_model.all.map { |t| t.locale_tag }.uniq
+          tags.any? ? DataMapper::I18n::Locale.all(:tag => tags) : []
         end
 
         def translatable_properties
@@ -159,7 +159,7 @@ module DataMapper
           end
 
           def establish_validations
-            translation_model.validates_uniqueness_of :locale_id, :scope => configuration.translated_model_fk
+            translation_model.validates_uniqueness_of :locale_tag, :scope => configuration.translated_model_fk
           end
 
           def generate_accessor_aliases

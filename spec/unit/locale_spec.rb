@@ -8,11 +8,6 @@ describe "Locale" do
       Locale.new(:tag => "en-US", :name => "English").should be_valid
     end
 
-    it "should store unique locale string locales" do
-      Locale.create(:tag => "en-US", :name => "English").should_not be_new
-      Locale.create(:tag => "en-US", :name => "English").should be_new
-    end
-
   end
 
   describe "with incomplete attributes" do
@@ -44,15 +39,6 @@ describe "Locale" do
     it "should not accept invalid locale strings" do
       Locale.new(:tag => 'a-DE',      :name => "German").should_not be_valid
       Locale.new(:tag => 'de-419-DE', :name => "German").should_not be_valid
-    end
-
-    it "should only allow unique locale string locales" do
-      l1 = Locale.create(:tag => 'en-US', :name => "English")
-      l1.should_not be_new
-      l2 = Locale.create(:tag => 'en-US', :name => "English")
-      l2.should be_new
-      l2.errors.on(:tag).should_not be_empty
-      l2.errors.size.should == 1
     end
 
   end

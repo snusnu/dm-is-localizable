@@ -6,8 +6,7 @@ module DataMapper
       storage_names[DataMapper::I18n.locale_repository_name] =
         DataMapper::I18n.locale_storage_name
 
-      property :id,   Serial
-      property :tag,  String, :required => true, :unique => true, :format => DataMapper::I18n.locale_tag_format
+      property :tag,  String, :key      => true, :format => DataMapper::I18n.locale_tag_format
       property :name, String, :required => true
 
       def self.for(tag)
@@ -20,7 +19,7 @@ module DataMapper
         def cache
           @cache ||= Hash.new do |cache, tag|
             # TODO find out why dm-core complains when we try to freeze these values
-            cache[tag] = first(:tag => DataMapper::I18n.normalized_locale_tag(tag))
+            cache[tag] = get(DataMapper::I18n.normalized_locale_tag(tag))
           end
         end
       end
