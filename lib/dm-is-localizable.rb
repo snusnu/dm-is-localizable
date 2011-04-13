@@ -1,6 +1,5 @@
 require 'dm-core'
 require 'dm-validations'
-require 'dm-accepts_nested_attributes'
 
 module DataMapper
   module I18n
@@ -61,6 +60,14 @@ module DataMapper
 
     def self.translation_model_namespace
       backend.translation_model_namespace
+    end
+
+    def self.accepts_nested_attributes=(true_or_false)
+      backend.accepts_nested_attributes = true_or_false
+    end
+
+    def self.accepts_nested_attributes?
+      backend.accepts_nested_attributes?
     end
 
   end # module I18n

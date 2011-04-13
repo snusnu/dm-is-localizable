@@ -86,7 +86,9 @@ module DataMapper
             @translation_model_name      = DataMapper::Inflector.demodulize(@options[:model].to_s)
             @translation_model_namespace = @options[:namespace]
             @translations                = DataMapper::Inflector.tableize(@translation_model_name).to_sym
-            @nested_accessors            = @options[:accepts_nested_attributes]
+            @accepts_nested_attributes   = @options[:accepts_nested_attributes]
+
+            require 'dm-accepts_nested_attributes' if @accepts_nested_attributes
           end
 
           def nested_accessors?
@@ -97,12 +99,16 @@ module DataMapper
             {
               :namespace => default_translation_model_namespace,
               :model     => "#{translated_model}Translation",
-              :accept_nested_attributes => true
+              :accept_nested_attributes => DataMapper::I18n.accepts_nested_attributes?
             }
           end
 
           def default_translation_model_namespace
             DataMapper::I18n.translation_model_namespace || DataMapper::Ext::Object.namespace(translated_model)
+          end
+
+          def accepts_nested_attributes?
+            @accepts_nested_attributes
           end
 
         end # class Configuration
@@ -166,7 +172,7 @@ module DataMapper
             translated_model.class_eval do
               alias_method :translations, config.translations
 
-              if config.nested_accessors?
+              if config.accepts_nested_attributes?
                 remixee_attributes = :"#{config.translations}_atttributes"
 
                 accepts_nested_attributes_for config.translations

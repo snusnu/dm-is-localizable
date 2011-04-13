@@ -11,6 +11,7 @@ module DataMapper
         DEFAULT_LOCALE_REPOSITORY_NAME      = :default
         DEFAULT_LOCALE_STORAGE_NAME         = 'locales'
         DEFAULT_TRANSLATION_MODEL_NAMESPACE = nil
+        ACCEPTS_NESTED_ATTRIBUTES           = true
 
         # RFC 4646/47
         DEFAULT_LOCALE_TAG_FORMAT = %r{\A(?:
@@ -29,6 +30,7 @@ module DataMapper
         attr_accessor :locale_repository_name
         attr_accessor :locale_storage_name
         attr_accessor :translation_model_namespace
+        attr_writer   :accepts_nested_attributes
 
         def initialize
           @default_locale_tag          = DEFAULT_LOCALE_TAG
@@ -36,6 +38,7 @@ module DataMapper
           @locale_storage_name         = DEFAULT_LOCALE_STORAGE_NAME
           @locale_tag_format           = DEFAULT_LOCALE_TAG_FORMAT
           @translation_model_namespace = DEFAULT_TRANSLATION_MODEL_NAMESPACE
+          @accepts_nested_attributes   = ACCEPTS_NESTED_ATTRIBUTES
         end
 
         def normalized_locale_tag(tag)
@@ -44,6 +47,10 @@ module DataMapper
 
         def available_locales
           DataMapper::I18n::Locale.all
+        end
+
+        def accepts_nested_attributes?
+          @accepts_nested_attributes
         end
       end # class Default
 

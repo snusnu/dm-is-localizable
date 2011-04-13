@@ -50,6 +50,14 @@ module DataMapper
         def translation_model_namespace
           raise NotImplementedError, "#{self}#translation_model_namespace must be implemented"
         end
+
+        def accepts_nested_attributes=(true_or_false)
+          raise NotImplementedError, "#{self}#accepts_nested_attributes= must be implemented"
+        end
+
+        def accepts_nested_attributes?
+          raise NotImplementedError, "#{self}#accepts_nested_attributes? must be implemented"
+        end
       end # module API
 
     end # module Backend
