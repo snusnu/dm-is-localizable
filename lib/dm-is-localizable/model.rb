@@ -184,7 +184,7 @@ module DataMapper
 
           def generate_property_readers
             proxy.translatable_properties.each do |property|
-              translated_model.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
+              translated_model.class_eval <<-RUBY, __FILE__, __LINE__ + 1
                 def #{property.name}(locale_tag = DataMapper::I18n.default_locale_tag)
                   i18n.translate(:#{property.name}, DataMapper::I18n.normalized_locale_tag(locale_tag))
                 end
