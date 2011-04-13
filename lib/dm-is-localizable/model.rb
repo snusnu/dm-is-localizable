@@ -28,10 +28,10 @@ module DataMapper
           @configuration     = Configuration.new(@translated_model, options)
 
           # locals are cheap, formatting ftw!
-          translation_model_name      = @configuration.translation_model_name
-          translation_model_namespace = @configuration.translation_model_namespace
+          name      = @configuration.translation_model_name
+          namespace = @configuration.translation_model_namespace
 
-          @translation_model = DataMapper::Model.new(translation_model_name, translation_model_namespace) do
+          @translation_model = DataMapper::Model.new(name, namespace) do
             property :id, DataMapper::Property::Serial
           end
 
