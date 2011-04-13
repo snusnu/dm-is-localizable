@@ -3,7 +3,7 @@ module DataMapper
     module Model
 
       def translatable(options = {}, &block)
-        @i18n = TranslationProxy.new(self, options, &block)
+        @i18n = Proxy.new(self, options, &block)
         self
       end
 
@@ -17,7 +17,7 @@ module DataMapper
         attr_reader :i18n
       end # module API
 
-      class TranslationProxy
+      class Proxy
 
         attr_reader :translated_model
         attr_reader :translation_model
@@ -114,16 +114,16 @@ module DataMapper
             new(translation_proxy).integrate
           end
 
-          attr_reader :translation_proxy
+          attr_reader :proxy
           attr_reader :translated_model
           attr_reader :translation_model
           attr_reader :configuration
 
-          def initialize(translation_proxy)
-            @translation_proxy = translation_proxy
-            @translated_model  = @translation_proxy.translated_model
-            @translation_model = @translation_proxy.translation_model
-            @configuration     = @translation_proxy.configuration
+          def initialize(proxy)
+            @proxy             = proxy
+            @translated_model  = @proxy.translated_model
+            @translation_model = @proxy.translation_model
+            @configuration     = @proxy.configuration
           end
 
           def integrate
@@ -178,7 +178,7 @@ module DataMapper
           end
 
           def generate_property_readers
-            translation_proxy.translatable_properties.each do |property|
+            proxy.translatable_properties.each do |property|
               translated_model.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
                 def #{property.name}(locale_tag = DataMapper::I18n.default_locale_tag)
                   i18n.translate(:#{property.name}, DataMapper::I18n.normalized_locale_tag(locale_tag))
@@ -193,7 +193,7 @@ module DataMapper
           end
 
         end # class Integrator
-      end # class TranslationProxy
+      end # classProxy
     end # module Model
   end # module I18n
 end # module DataMapper
