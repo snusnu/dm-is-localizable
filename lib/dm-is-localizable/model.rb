@@ -130,8 +130,12 @@ module DataMapper
           def integrate
             establish_relationships
             establish_validations
-            generate_accessor_aliases
+            generate_relationship_alias
             generate_property_readers
+
+            if configuration.accepts_nested_attributes?
+              generate_nested_attribute_accessors
+            end
 
             self
           end
@@ -162,19 +166,14 @@ module DataMapper
             translation_model.validates_uniqueness_of :locale_tag, :scope => configuration.translated_model_fk
           end
 
-          def generate_accessor_aliases
-            config = configuration # make config available in the current binding
+          def generate_relationship_alias
+            # make that available in #class_eval
+            translations_relationship = configuration.translations
 
             translated_model.class_eval do
-              alias_method :translations, config.translations
-
-              if config.accepts_nested_attributes?
-                remixee_attributes = :"#{config.translations}_atttributes"
-
-                accepts_nested_attributes_for config.translations
-                alias_method :translations_attributes, remixee_attributes
-              end
+              alias_method :translations, translations_relationship
             end
+
             self
           end
 
@@ -186,6 +185,19 @@ module DataMapper
                 end
               RUBY
             end
+            self
+          end
+
+          def generate_nested_attribute_accessors
+            # make those available in #class_eval
+            translations_relationship = configuration.translations
+            translations_attributes   = :"#{translations_relationship}_atttributes"
+
+            translated_model.class_eval do
+              accepts_nested_attributes_for translations_relationship
+              alias_method :translations_attributes, translations_attributes
+            end
+
             self
           end
 
