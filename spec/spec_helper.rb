@@ -1,6 +1,10 @@
 require 'dm-is-localizable'
 require 'dm-core/spec/setup'
-require 'fixtures/item'
+
+# MUST happen before requiring model definitions
+require 'dm-constraints' if ENV['DM_CONSTRAINTS']
+
+require 'fixtures/item' # the model definitions
 
 # Have a logger handy but mostly very quiet
 # Must be done before DataMapper::Spec.setup

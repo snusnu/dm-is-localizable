@@ -16,10 +16,12 @@ gem 'dm-accepts_nested_attributes', SOURCE => "#{SNUSNU}/dm-accepts_nested_attri
 
 group :development do
 
-  gem 'rake',    '~> 0.8.7'
-  gem 'rspec',   '~> 1.3.1'
-  gem 'yard',    '~> 0.5'
-  gem 'jeweler', '~> 1.5.2'
+  gem 'rake',           '~> 0.8.7'
+  gem 'rspec',          '~> 1.3.1'
+  gem 'yard',           '~> 0.5'
+  gem 'jeweler',        '~> 1.5.2'
+
+  gem 'dm-constraints', DM_VERSION, SOURCE => "#{DATAMAPPER}/dm-constraints#{REPO_POSTFIX}"
 
 end
 
