@@ -152,7 +152,7 @@ module DataMapper
               :unique_index => :unique_locales
 
             translated_model.has n, configuration.translations, translation_model,
-              { :repository => translation_model.repository.name }.merge(
+              { :repository => translation_model.repository.name }.merge!(
               DataMapper.const_defined?('Constraints') ?
               { :constraint => :destroy! }             :
               {})
