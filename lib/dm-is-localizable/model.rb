@@ -72,21 +72,21 @@ module DataMapper
 
           attr_reader :options
           attr_reader :translated_model
-          attr_reader :translated_model_fk
-          attr_reader :translated_model_name
+          attr_reader :translated_model_fk_name
+          attr_reader :translated_model_belongs_to_name
           attr_reader :translation_model_name
           attr_reader :translation_model_namespace
           attr_reader :translations
 
           def initialize(translated_model, options)
-            @translated_model            = translated_model
-            @options                     = default_options.merge(options)
-            @translated_model_fk         = DataMapper::Inflector.foreign_key(@translated_model.name).to_sym
-            @translated_model_name       = DataMapper::Inflector.underscore(@translated_model.name).to_sym
-            @translation_model_name      = DataMapper::Inflector.demodulize(@options[:model].to_s)
-            @translation_model_namespace = @options[:namespace]
-            @translations                = DataMapper::Inflector.tableize(@translation_model_name).to_sym
-            @accepts_nested_attributes   = @options[:accepts_nested_attributes]
+            @translated_model                 = translated_model
+            @options                          = default_options.merge(options)
+            @translated_model_fk_name         = DataMapper::Inflector.foreign_key(@translated_model.name).to_sym
+            @translated_model_belongs_to_name = DataMapper::Inflector.underscore(@translated_model.name).to_sym
+            @translation_model_name           = DataMapper::Inflector.demodulize(@options[:model].to_s)
+            @translation_model_namespace      = @options[:namespace]
+            @translations                     = DataMapper::Inflector.tableize(@translation_model_name).to_sym
+            @accepts_nested_attributes        = @options[:accepts_nested_attributes]
 
             require 'dm-accepts_nested_attributes' if @accepts_nested_attributes
           end
@@ -143,7 +143,7 @@ module DataMapper
         private
 
           def establish_relationships
-            translation_model.belongs_to configuration.translated_model_name,
+            translation_model.belongs_to configuration.translated_model_belongs_to_name,
               :repository   => translated_model.repository.name,
               :unique_index => :unique_locales
 
@@ -165,7 +165,7 @@ module DataMapper
           end
 
           def establish_validations
-            translation_model.validates_uniqueness_of :locale_tag, :scope => configuration.translated_model_fk
+            translation_model.validates_uniqueness_of :locale_tag, :scope => configuration.translated_model_fk_name
           end
 
           def generate_relationship_alias
