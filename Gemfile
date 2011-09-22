@@ -6,22 +6,23 @@ SOURCE         = ENV.fetch('SOURCE', :git).to_sym
 REPO_POSTFIX   = SOURCE == :path ? ''                                : '.git'
 DATAMAPPER     = SOURCE == :path ? Pathname(__FILE__).dirname.parent : 'https://github.com/datamapper'
 SNUSNU         = SOURCE == :path ? Pathname(__FILE__).dirname.parent : 'https://github.com/snusnu'
-DM_VERSION     = '~> 1.1.0'
-DO_VERSION     = '~> 0.10.2'
+DM_VERSION     = '~> 1.2.0.rc2'
+DM_BRANCH      = 'release-1.2'
+DO_VERSION     = '~> 0.10.6'
 DM_DO_ADAPTERS = %w[ sqlite postgres mysql oracle sqlserver ]
 
-gem 'dm-core',          DM_VERSION, SOURCE => "#{DATAMAPPER}/dm-core#{REPO_POSTFIX}"
-gem 'dm-validations',   DM_VERSION, SOURCE => "#{DATAMAPPER}/dm-validations#{REPO_POSTFIX}"
+gem 'dm-core',          DM_VERSION, SOURCE => "#{DATAMAPPER}/dm-core#{REPO_POSTFIX}",                  :branch => DM_BRANCH
+gem 'dm-validations',   DM_VERSION, SOURCE => "#{DATAMAPPER}/dm-validations#{REPO_POSTFIX}",           :branch => DM_BRANCH
 gem 'dm-accepts_nested_attributes', SOURCE => "#{SNUSNU}/dm-accepts_nested_attributes#{REPO_POSTFIX}"
 
 group :development do
 
-  gem 'rake',           '~> 0.8.7'
-  gem 'rspec',          '~> 1.3.1'
-  gem 'yard',           '~> 0.5'
-  gem 'jeweler',        '~> 1.5.2'
+  gem 'rake',           '~> 0.9.2'
+  gem 'rspec',          '~> 1.3.2'
+  gem 'yard',           '~> 0.7.2'
+  gem 'jeweler',        '~> 1.6.4'
 
-  gem 'dm-constraints', DM_VERSION, SOURCE => "#{DATAMAPPER}/dm-constraints#{REPO_POSTFIX}"
+  gem 'dm-constraints', DM_VERSION, SOURCE => "#{DATAMAPPER}/dm-constraints#{REPO_POSTFIX}", :branch => DM_BRANCH
 
 end
 
@@ -41,18 +42,18 @@ group :datamapper do
       gem "do_#{adapter}", DO_VERSION, do_options.dup
     end
 
-    gem 'dm-do-adapter', DM_VERSION, SOURCE => "#{DATAMAPPER}/dm-do-adapter#{REPO_POSTFIX}"
+    gem 'dm-do-adapter', DM_VERSION, SOURCE => "#{DATAMAPPER}/dm-do-adapter#{REPO_POSTFIX}", :branch => DM_BRANCH
   end
 
   adapters.each do |adapter|
-    gem "dm-#{adapter}-adapter", DM_VERSION, SOURCE => "#{DATAMAPPER}/dm-#{adapter}-adapter#{REPO_POSTFIX}"
+    gem "dm-#{adapter}-adapter", DM_VERSION, SOURCE => "#{DATAMAPPER}/dm-#{adapter}-adapter#{REPO_POSTFIX}", :branch => DM_BRANCH
   end
 
   plugins = ENV['PLUGINS'] || ENV['PLUGIN']
   plugins = plugins.to_s.tr(',', ' ').split.push('dm-migrations').uniq
 
   plugins.each do |plugin|
-    gem plugin, DM_VERSION, SOURCE => "#{DATAMAPPER}/#{plugin}#{REPO_POSTFIX}"
+    gem plugin, DM_VERSION, SOURCE => "#{DATAMAPPER}/#{plugin}#{REPO_POSTFIX}", :branch => DM_BRANCH
   end
 
 end
