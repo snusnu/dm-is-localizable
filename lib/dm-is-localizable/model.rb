@@ -80,9 +80,10 @@ module DataMapper
 
           def initialize(translated_model, options)
             @translated_model                 = translated_model
+            translated_model_name             = DataMapper::Inflector.demodulize(translated_model.name)
             @options                          = default_options.merge(options)
-            @translated_model_fk_name         = DataMapper::Inflector.foreign_key(@translated_model.name).to_sym
-            @translated_model_belongs_to_name = DataMapper::Inflector.underscore(@translated_model.name).to_sym
+            @translated_model_fk_name         = DataMapper::Inflector.foreign_key(translated_model_name).to_sym
+            @translated_model_belongs_to_name = DataMapper::Inflector.underscore(translated_model_name).to_sym
             @translation_model_name           = DataMapper::Inflector.demodulize(@options[:model].to_s)
             @translation_model_namespace      = @options[:namespace]
             @translations                     = DataMapper::Inflector.tableize(@translation_model_name).to_sym
