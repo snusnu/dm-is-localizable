@@ -194,7 +194,7 @@ module DataMapper
           def generate_nested_attribute_accessors
             # make those available in #class_eval
             translations_relationship = configuration.translations
-            translations_attributes   = :"#{translations_relationship}_atttributes"
+            translations_attributes   = :"#{translations_relationship}_attributes"
 
             translated_model.class_eval do
               accepts_nested_attributes_for translations_relationship
