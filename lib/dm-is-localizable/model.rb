@@ -198,7 +198,8 @@ module DataMapper
 
             translated_model.class_eval do
               accepts_nested_attributes_for translations_relationship
-              alias_method :translations_attributes, translations_attributes
+              alias_method :translations_attributes,     translations_attributes
+              alias_method :translations_attributes=, "#{translations_attributes}="
             end
 
             self
