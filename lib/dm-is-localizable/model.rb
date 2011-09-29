@@ -86,7 +86,7 @@ module DataMapper
             @translation_model_name           = DataMapper::Inflector.demodulize(@options[:model].to_s)
             @translation_model_namespace      = @options[:namespace]
             @translations                     = DataMapper::Inflector.tableize(@translation_model_name).to_sym
-            @accepts_nested_attributes        = @options[:accepts_nested_attributes]
+            @accepts_nested_attributes        = @options[:accepts_nested_attributes] || DataMapper::I18n.accepts_nested_attributes?
 
             @translation_model_fk = translated_model.key.map do |property|
               "#{@translated_model_name}_#{property.name}"
