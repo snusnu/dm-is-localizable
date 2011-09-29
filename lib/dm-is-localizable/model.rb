@@ -71,22 +71,26 @@ module DataMapper
 
           attr_reader :options
           attr_reader :translated_model
-          attr_reader :translated_model_fk_name
+          attr_reader :translated_model_name
           attr_reader :translated_model_belongs_to_name
           attr_reader :translation_model_name
           attr_reader :translation_model_namespace
+          attr_reader :translation_model_fk
           attr_reader :translations
 
           def initialize(translated_model, options)
             @translated_model                 = translated_model
             @translated_model_name            = DataMapper::Inflector.underscore(DataMapper::Inflector.demodulize(translated_model.name))
-            @translated_model_fk_name         = "#{@translated_model_name}_#{@translated_model.key.first.name}".to_sym # TODO support CPKs
             @translated_model_belongs_to_name = @translated_model_name.to_sym
             @options                          = default_options.merge(options)
             @translation_model_name           = DataMapper::Inflector.demodulize(@options[:model].to_s)
             @translation_model_namespace      = @options[:namespace]
             @translations                     = DataMapper::Inflector.tableize(@translation_model_name).to_sym
             @accepts_nested_attributes        = @options[:accepts_nested_attributes]
+
+            @translation_model_fk = translated_model.key.map do |property|
+              "#{@translated_model_name}_#{property.name}"
+            end
 
             require 'dm-accepts_nested_attributes' if @accepts_nested_attributes
           end
@@ -143,13 +147,31 @@ module DataMapper
         private
 
           def establish_relationships
+
+            source_key = []
+            target_key = []
+            options    = { :unique_index => :locales }
+
+            # setup the (composite) foreign key properties
+            translated_model.key.each do |property|
+              fk_attribute_name    = "#{configuration.translated_model_name}_#{property.name}"
+              fk_attribute_options = property.serial? ? options.merge(:min => 1) : options
+              source_key << fk_attribute_name
+              target_key << property.name
+              translation_model.property fk_attribute_name, property.to_child_key, fk_attribute_options
+            end
+
+            # workaround a bug in dm-core that excludes :unique_index from propagating
+            # down from DataMapper::Model#belongs_to to DataMapper::Model#property
+            translation_model.property :locale_tag, String, :unique_index => :locales
+
             translation_model.belongs_to configuration.translated_model_belongs_to_name,
-              :repository   => translated_model.repository.name,
-              :unique_index => :unique_locales
+              :repository => translated_model.repository.name,
+              :source_key => source_key,
+              :target_key => target_key
 
             translation_model.belongs_to :locale, DataMapper::I18n::Locale,
-              :repository   => DataMapper::I18n.locale_repository_name,
-              :unique_index => :unique_locales
+              :repository   => DataMapper::I18n.locale_repository_name
 
             translated_model.has n, configuration.translations, translation_model,
               { :repository => translation_model.repository.name }.merge!(
@@ -165,7 +187,7 @@ module DataMapper
           end
 
           def establish_validations
-            translation_model.validates_uniqueness_of :locale_tag, :scope => configuration.translated_model_fk_name
+            translation_model.validates_uniqueness_of :locale_tag, :scope => configuration.translation_model_fk
           end
 
           def generate_relationship_alias
