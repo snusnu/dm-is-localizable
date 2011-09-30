@@ -24,8 +24,8 @@ module DataMapper
         attr_reader :configuration
 
         def initialize(translated_model, options, &block)
-          @translated_model  = translated_model
-          @configuration     = Configuration.new(@translated_model, options)
+          @translated_model = translated_model
+          @configuration    = Configuration.new(@translated_model, options)
 
           # locals are cheap, formatting ftw!
           name      = @configuration.translation_model_name
@@ -171,7 +171,7 @@ module DataMapper
               :parent_key => target_key
 
             translation_model.belongs_to :locale, DataMapper::I18n::Locale,
-              :repository   => DataMapper::I18n.locale_repository_name
+              :repository => DataMapper::I18n.locale_repository_name
 
             translated_model.has n, configuration.translations, translation_model,
               { :repository => translation_model.repository.name }.merge!(
@@ -180,8 +180,8 @@ module DataMapper
               {})
 
             translated_model.has n, :locales, DataMapper::I18n::Locale,
-              :repository   => DataMapper::I18n.locale_repository_name,
-              :through      => configuration.translations
+              :repository => DataMapper::I18n.locale_repository_name,
+              :through    => configuration.translations
 
             self
           end
