@@ -7,6 +7,7 @@ module DataMapper
         def initialize(resource)
           @resource = resource
         end
+
         # list all available locales for this instance
         def available_locales
           resource.translations.all(:fields => [:locale_tag], :unique => true).map { |t| t.locale }
