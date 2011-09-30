@@ -16,7 +16,7 @@ module DataMapper
         def translate(attribute, locale_tag)
           if locale = DataMapper::I18n::Locale.for(locale_tag)
             t = resource.translations.first(:locale => locale)
-            t.respond_to?(attribute) ? t.send(attribute) : nil
+            t ? t.send(attribute) : nil
           else
             nil
           end

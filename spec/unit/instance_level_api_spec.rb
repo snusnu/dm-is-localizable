@@ -93,16 +93,16 @@ describe "instance level API:" do
 
         describe "passed as Symbol" do
 
-          it "should return the translated string" do
-            @i1.i18n.translate(:foo, :'en-US').should be_nil
+          it "should raise NoMethodError" do
+            lambda { @i1.i18n.translate(:foo, :'en-US') }.should raise_error(NoMethodError)
           end
 
         end
 
         describe "passed as String" do
 
-          it "should return the translated string" do
-            @i1.i18n.translate(:foo, 'en-US').should be_nil
+          it "should raise NoMethodError" do
+            lambda { @i1.i18n.translate(:foo, 'en-US') }.should raise_error(NoMethodError)
           end
 
         end
