@@ -9,8 +9,7 @@ module DataMapper
         end
         # list all available locales for this instance
         def available_locales
-          tags = resource.translations.map { |t| t.locale_tag }.uniq
-          tags.any? ? DataMapper::I18n::Locale.all(:tag => tags) : []
+          resource.translations.all(:fields => [:locale_tag], :unique => true).map { |t| t.locale }
         end
 
         # translates the given attribute to the locale identified by the given locale_code
