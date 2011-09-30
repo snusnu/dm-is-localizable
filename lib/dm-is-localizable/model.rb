@@ -150,12 +150,12 @@ module DataMapper
 
             source_key = []
             target_key = []
-            options    = { :unique_index => :locales }
+            fk_options = { :required => true, :unique_index => :locales }
 
             # setup the (composite) foreign key properties
             translated_model.key.each do |property|
               fk_attribute_name    = "#{configuration.translated_model_name}_#{property.name}"
-              fk_attribute_options = property.serial? ? options.merge(:min => 1) : options
+              fk_attribute_options = property.serial? ? fk_options.merge(:min => 1) : fk_options
               source_key << fk_attribute_name
               target_key << property.name
               translation_model.property fk_attribute_name, property.to_child_key, fk_attribute_options
@@ -163,7 +163,7 @@ module DataMapper
 
             # workaround a bug in dm-core that excludes :unique_index from propagating
             # down from DataMapper::Model#belongs_to to DataMapper::Model#property
-            translation_model.property :locale_tag, String, :unique_index => :locales
+            translation_model.property :locale_tag, String, fk_options
 
             translation_model.belongs_to configuration.translated_model_belongs_to_name,
               :repository => translated_model.repository.name,
