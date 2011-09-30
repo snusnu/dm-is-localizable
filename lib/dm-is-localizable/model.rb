@@ -167,8 +167,8 @@ module DataMapper
 
             translation_model.belongs_to configuration.translated_model_belongs_to_name,
               :repository => translated_model.repository.name,
-              :source_key => source_key,
-              :target_key => target_key
+              :child_key  => source_key,
+              :parent_key => target_key
 
             translation_model.belongs_to :locale, DataMapper::I18n::Locale,
               :repository   => DataMapper::I18n.locale_repository_name
