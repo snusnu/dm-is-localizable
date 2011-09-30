@@ -69,7 +69,7 @@ describe "instance level API:" do
 
         describe "passed as Symbol" do
 
-          it "should return the translated string" do
+          it "should return nil" do
             @i1.i18n.translate(:name, :it).should be_nil
           end
 
@@ -77,7 +77,7 @@ describe "instance level API:" do
 
         describe "passed as String" do
 
-          it "should return the translated string" do
+          it "should return nil" do
             @i1.i18n.translate(:name, 'it').should be_nil
           end
 
@@ -113,7 +113,7 @@ describe "instance level API:" do
 
         describe "passed as Symbol" do
 
-          it "should return the translated string" do
+          it "should return nil" do
             @i1.i18n.translate(:foo, :it).should be_nil
           end
 
@@ -121,7 +121,7 @@ describe "instance level API:" do
 
         describe "passed as String" do
 
-          it "should return the translated string" do
+          it "should return nil" do
             @i1.i18n.translate(:foo, 'it').should be_nil
           end
 
