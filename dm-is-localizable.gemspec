@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{Martin Gamsjaeger (snusnu)}]
-  s.date = %q{2011-09-23}
+  s.date = %q{2011-09-30}
   s.email = %q{gamsnjaga@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -38,7 +38,6 @@ Gem::Specification.new do |s|
     "spec/shared/shared_examples_spec.rb",
     "spec/spec.opts",
     "spec/spec_helper.rb",
-    "spec/unit/auto_migrate_spec.rb",
     "spec/unit/class_level_api_spec.rb",
     "spec/unit/instance_level_api_spec.rb",
     "spec/unit/is_localizable_spec.rb",

@@ -17,7 +17,7 @@ include DataMapper::I18n
 Spec::Runner.configure do |config|
 
   config.before(:each) do
-    DataMapper.auto_migrate!
+    DataMapper.finalize.auto_migrate!
   end
 
   config.after(:suite) do
