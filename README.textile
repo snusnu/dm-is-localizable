@@ -140,7 +140,7 @@ class Item
   end
 
   # translates the :desc property to the given locale
-  def description(locale_tag = DataMapper::I18n.default_locale_tag)
+  def desc(locale_tag = DataMapper::I18n.default_locale_tag)
     i18n.translate(:desc, locale_tag)
   end
 
@@ -175,11 +175,6 @@ Item.i18n.available_locales
 
 # returns all translatable properties of this resource
 Item.i18n.translatable_properties
-
-# returns a list of symbols reflecting the names of all the
-# not translatable properties in the remixed translation_model
-Item.i18n.non_translatable_properties
-
 
 # ---------------------------------------------
 #   methods accessible via the Item#i18n proxy
