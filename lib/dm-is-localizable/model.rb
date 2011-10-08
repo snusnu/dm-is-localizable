@@ -36,6 +36,7 @@ module DataMapper
           end
 
           @translatable_properties = {}
+          @timestamps = false
 
           instance_eval &block # capture @translatable properties
 
@@ -43,6 +44,8 @@ module DataMapper
           @translatable_properties.each do |name, args|
             @translation_model.property name, *args
           end
+
+          @translation_model.timestamps(@timestamps) if @timestamps
 
           Integrator.integrate(self)
 
@@ -65,6 +68,10 @@ module DataMapper
 
         def property(name, type, options = {})
           @translatable_properties[name] = [ type, options ]
+        end
+
+        def timestamps(kind)
+          @timestamps = kind
         end
 
         class Configuration
