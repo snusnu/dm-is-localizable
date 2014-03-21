@@ -38,11 +38,11 @@ module DataMapper
           @translatable_properties = {}
           @timestamps = false
 
-          instance_eval &block # capture @translatable properties
+          instance_eval(&block) # capture @translatable properties
 
           # define translatable properties on @translation_model
-          @translatable_properties.each do |name, args|
-            @translation_model.property name, *args
+          @translatable_properties.each do |property_name, args|
+            @translation_model.property property_name, *args
           end
 
           @translation_model.timestamps(@timestamps) if @timestamps
