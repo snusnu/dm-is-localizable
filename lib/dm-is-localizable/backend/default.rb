@@ -11,6 +11,7 @@ module DataMapper
         DEFAULT_LOCALE_REPOSITORY_NAME      = :default
         DEFAULT_LOCALE_STORAGE_NAME         = 'locales'
         DEFAULT_TRANSLATION_MODEL_NAMESPACE = nil
+        USE_VALIDATIONS                     = false
         ACCEPTS_NESTED_ATTRIBUTES           = true
 
         # RFC 4646/47
@@ -30,6 +31,7 @@ module DataMapper
         attr_accessor :locale_repository_name
         attr_accessor :locale_storage_name
         attr_accessor :translation_model_namespace
+        attr_writer   :use_validations
         attr_writer   :accepts_nested_attributes
 
         def initialize
@@ -38,6 +40,7 @@ module DataMapper
           @locale_storage_name         = DEFAULT_LOCALE_STORAGE_NAME
           @locale_tag_format           = DEFAULT_LOCALE_TAG_FORMAT
           @translation_model_namespace = DEFAULT_TRANSLATION_MODEL_NAMESPACE
+          @use_validations             = USE_VALIDATIONS
           @accepts_nested_attributes   = ACCEPTS_NESTED_ATTRIBUTES
         end
 
@@ -51,6 +54,10 @@ module DataMapper
 
         def accepts_nested_attributes?
           @accepts_nested_attributes
+        end
+
+        def use_validations?
+          @use_validations
         end
       end # class Default
 

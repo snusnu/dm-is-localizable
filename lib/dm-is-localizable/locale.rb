@@ -6,7 +6,13 @@ module DataMapper
       storage_names[DataMapper::I18n.locale_repository_name] =
         DataMapper::I18n.locale_storage_name
 
-      property :tag,  String, :key      => true, :format => DataMapper::I18n.locale_tag_format
+      tag_options = if I18n.use_validations?
+        { :format => I18n.locale_tag_format }
+      else
+        {}
+      end
+
+      property :tag,  String, {:key     => true}.merge(tag_options)
       property :name, String, :required => true
 
       def self.for(tag)

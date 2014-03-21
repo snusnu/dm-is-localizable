@@ -140,7 +140,7 @@ module DataMapper
 
           def integrate
             establish_relationships
-            establish_validations
+            establish_validations if I18n.use_validations?
             generate_relationship_alias
             generate_property_readers
 

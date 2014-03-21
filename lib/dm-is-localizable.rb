@@ -1,5 +1,4 @@
 require 'dm-core'
-require 'dm-validations'
 
 module DataMapper
   module I18n
@@ -60,6 +59,18 @@ module DataMapper
 
     def self.translation_model_namespace
       backend.translation_model_namespace
+    end
+
+    # When true, clients need to manually
+    # require 'dm-validations' themselves
+    #
+    # By default, dm-validations IS NOT USED
+    def self.use_validations=(true_or_false)
+      backend.use_validations = true_or_false
+    end
+
+    def self.use_validations?
+      backend.use_validations?
     end
 
     def self.accepts_nested_attributes=(true_or_false)
