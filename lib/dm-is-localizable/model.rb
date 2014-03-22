@@ -208,31 +208,25 @@ module DataMapper
             translation_model.belongs_to :locale, DataMapper::I18n::Locale,
               :repository => DataMapper::I18n.locale_repository_name
 
-            translated_model.has n, configuration.translations, translation_model,
-              { :repository => translation_model.repository.name }.merge!(
-              DataMapper.const_defined?('Constraints') ?
-              { :constraint => :destroy! }             :
-              {})
+            translated_model.has n, :translations, translation_model,
+              { :repository => translation_model.repository.name, :child_key => source_key }.merge!(
+              DataMapper.const_defined?('Constraints') ? { :constraint => :destroy! } : {})
 
             translated_model.has n, :locales, DataMapper::I18n::Locale,
               :repository => DataMapper::I18n.locale_repository_name,
-              :through    => configuration.translations
+              :through    => :translations
 
             self
           end
 
           def establish_validations
             translation_model.validates_uniqueness_of :locale_tag, :scope => configuration.translation_model_fk
+            self
           end
 
           def generate_relationship_alias
-            # make that available in #class_eval
-            translations_relationship = configuration.translations
-
-            translated_model.class_eval do
-              alias_method :translations, translations_relationship
-            end
-
+            translations_alias = configuration.translations # support the closure
+            translated_model.class_eval { alias_method translations_alias, :translations }
             self
           end
 
