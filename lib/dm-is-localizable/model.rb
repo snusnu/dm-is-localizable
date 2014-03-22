@@ -78,6 +78,11 @@ module DataMapper
           @translatable_properties[name] = [ type, options ]
         end
 
+        def property_set(property_definitions)
+          property_definitions.each { |args| property(*args) }
+          self
+        end
+
         def belongs_to(name, type, options = {})
           @translatable_foreign_keys[name] = [ type, options ]
         end
