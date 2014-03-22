@@ -22,6 +22,7 @@ module DataMapper
         attr_reader :translated_model
         attr_reader :translation_model
         attr_reader :configuration
+        attr_reader :locale_tag_unique_index
 
         def initialize(translated_model, options, &block)
           @translated_model = translated_model
@@ -35,7 +36,9 @@ module DataMapper
             property :id, DataMapper::Property::Serial
           end
 
-          @translatable_properties = {}
+          @translatable_properties   = {}
+          @translatable_foreign_keys = {}
+          @locale_tag_unique_index   = []
           @timestamps = false
 
           instance_eval(&block) # capture @translatable properties
@@ -43,6 +46,11 @@ module DataMapper
           # define translatable properties on @translation_model
           @translatable_properties.each do |property_name, args|
             @translation_model.property property_name, *args
+          end
+
+          # define foreign keys on @translation_model
+          @translatable_foreign_keys.each do |fk_name, args|
+            @translation_model.belongs_to fk_name, *args
           end
 
           @translation_model.timestamps(@timestamps) if @timestamps
@@ -68,6 +76,14 @@ module DataMapper
 
         def property(name, type, options = {})
           @translatable_properties[name] = [ type, options ]
+        end
+
+        def belongs_to(name, type, options = {})
+          @translatable_foreign_keys[name] = [ type, options ]
+        end
+
+        def add_locale_tag_unique_index(name)
+          @locale_tag_unique_index = Array(name)
         end
 
         def timestamps(kind)
@@ -129,13 +145,15 @@ module DataMapper
           attr_reader :proxy
           attr_reader :translated_model
           attr_reader :translation_model
+          attr_reader :locale_tag_unique_index
           attr_reader :configuration
 
           def initialize(proxy)
-            @proxy             = proxy
-            @translated_model  = @proxy.translated_model
-            @translation_model = @proxy.translation_model
-            @configuration     = @proxy.configuration
+            @proxy                   = proxy
+            @translated_model        = @proxy.translated_model
+            @translation_model       = @proxy.translation_model
+            @locale_tag_unique_index = @proxy.locale_tag_unique_index
+            @configuration           = @proxy.configuration
           end
 
           def integrate
@@ -157,7 +175,7 @@ module DataMapper
 
             source_key = []
             target_key = []
-            fk_options = { :required => true, :unique_index => :locales }
+            fk_options = { :required => true, :unique_index => [:locales] }
 
             # setup the (composite) foreign key properties
             translated_model.key.each do |property|
@@ -168,9 +186,14 @@ module DataMapper
               translation_model.property fk_attribute_name, property.to_child_key, fk_attribute_options
             end
 
+            # merge any other unique indexes locale_tag should be a part of
+            locale_tag_fk_options = fk_options.merge(
+              :unique_index => locale_tag_unique_index + fk_options[:unique_index]
+            )
+
             # workaround a bug in dm-core that excludes :unique_index from propagating
             # down from DataMapper::Model#belongs_to to DataMapper::Model#property
-            translation_model.property :locale_tag, String, fk_options
+            translation_model.property :locale_tag, String, locale_tag_fk_options
 
             translation_model.belongs_to configuration.translated_model_belongs_to_name,
               :repository => translated_model.repository.name,
