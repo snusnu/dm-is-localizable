@@ -12,6 +12,10 @@ module DataMapper
         translatable(options, &block)
       end
 
+      def translatable?
+        !!@i18n
+      end
+
       module API
         # the proxy instance to delegate api calls to
         attr_reader :i18n
