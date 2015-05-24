@@ -7,12 +7,13 @@ module DataMapper
       class Default
         include Backend::API
 
-        DEFAULT_LOCALE_TAG                  = 'en-US'
-        DEFAULT_LOCALE_REPOSITORY_NAME      = :default
-        DEFAULT_LOCALE_STORAGE_NAME         = 'locales'
-        DEFAULT_TRANSLATION_MODEL_NAMESPACE = nil
-        USE_VALIDATIONS                     = false
-        ACCEPTS_NESTED_ATTRIBUTES           = true
+        DEFAULT_LOCALE_TAG                         = 'en-US'
+        DEFAULT_LOCALE_REPOSITORY_NAME             = :default
+        DEFAULT_LOCALE_STORAGE_NAME                = 'locales'
+        DEFAULT_TRANSLATION_MODEL_NAMESPACE        = nil
+        USE_VALIDATIONS                            = false
+        ACCEPTS_NESTED_ATTRIBUTES                  = true
+        DEFAULT_PROPERTY_READER_DEFAULT_LOCALE_TAG = "DataMapper::I18n.default_locale_tag"
 
         # RFC 4646/47
         DEFAULT_LOCALE_TAG_FORMAT = %r{\A(?:
@@ -27,6 +28,7 @@ module DataMapper
           )\z}xi
 
         attr_accessor :default_locale_tag
+        attr_accessor :property_reader_default_locale_tag
         attr_accessor :locale_tag_format
         attr_accessor :locale_repository_name
         attr_accessor :locale_storage_name
@@ -35,13 +37,14 @@ module DataMapper
         attr_writer   :accepts_nested_attributes
 
         def initialize
-          @default_locale_tag          = DEFAULT_LOCALE_TAG
-          @locale_repository_name      = DEFAULT_LOCALE_REPOSITORY_NAME
-          @locale_storage_name         = DEFAULT_LOCALE_STORAGE_NAME
-          @locale_tag_format           = DEFAULT_LOCALE_TAG_FORMAT
-          @translation_model_namespace = DEFAULT_TRANSLATION_MODEL_NAMESPACE
-          @use_validations             = USE_VALIDATIONS
-          @accepts_nested_attributes   = ACCEPTS_NESTED_ATTRIBUTES
+          @default_locale_tag                 = DEFAULT_LOCALE_TAG
+          @locale_repository_name             = DEFAULT_LOCALE_REPOSITORY_NAME
+          @locale_storage_name                = DEFAULT_LOCALE_STORAGE_NAME
+          @locale_tag_format                  = DEFAULT_LOCALE_TAG_FORMAT
+          @translation_model_namespace        = DEFAULT_TRANSLATION_MODEL_NAMESPACE
+          @use_validations                    = USE_VALIDATIONS
+          @accepts_nested_attributes          = ACCEPTS_NESTED_ATTRIBUTES
+          @property_reader_default_locale_tag = DEFAULT_PROPERTY_READER_DEFAULT_LOCALE_TAG
         end
 
         def normalized_locale_tag(tag)
