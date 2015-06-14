@@ -11,6 +11,14 @@ module DataMapper
           raise NotImplementedError, "#{self}#default_locale_tag must be implemented"
         end
 
+        def default_translation=(value)
+          raise NotImplementedError, "#{self}#default_translation= must be implemented"
+        end
+
+        def default_translation
+          raise NotImplementedError, "#{self}#default_translation must be implemented"
+        end
+
         def locale_tag_format=(format_regex)
           raise NotImplementedError, "#{self}#locale_tag_format= must be implemented"
         end

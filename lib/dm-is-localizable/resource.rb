@@ -14,10 +14,10 @@ module DataMapper
         end
 
         # translates the given attribute to the locale identified by the given locale_code
-        def translate(attribute, locale_tag)
+        def translate(attribute, locale_tag, default_translation = I18n.default_translation)
           if locale = DataMapper::I18n::Locale.for(locale_tag)
             t = resource.translations.first(:locale => locale)
-            t ? t.send(attribute) : nil
+            t ? t.send(attribute) : default_translation
           else
             nil
           end

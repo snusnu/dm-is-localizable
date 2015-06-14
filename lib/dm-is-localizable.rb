@@ -21,6 +21,14 @@ module DataMapper
       backend.default_locale_tag
     end
 
+    def self.default_translation=(value)
+      backend.default_translation = value
+    end
+
+    def self.default_translation
+      backend.default_translation
+    end
+
     def self.property_reader_default_locale_tag=(tag)
       backend.property_reader_default_locale_tag = tag
     end

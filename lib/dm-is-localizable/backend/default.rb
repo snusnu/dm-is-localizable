@@ -8,6 +8,7 @@ module DataMapper
         include Backend::API
 
         DEFAULT_LOCALE_TAG                         = 'en-US'
+        DEFAULT_TRANSLATION                        = nil
         DEFAULT_LOCALE_REPOSITORY_NAME             = :default
         DEFAULT_LOCALE_STORAGE_NAME                = 'locales'
         DEFAULT_TRANSLATION_MODEL_NAMESPACE        = nil
@@ -28,6 +29,7 @@ module DataMapper
           )\z}xi
 
         attr_accessor :default_locale_tag
+        attr_accessor :default_translation
         attr_accessor :property_reader_default_locale_tag
         attr_accessor :locale_tag_format
         attr_accessor :locale_repository_name
@@ -38,6 +40,7 @@ module DataMapper
 
         def initialize
           @default_locale_tag                 = DEFAULT_LOCALE_TAG
+          @default_translation                = DEFAULT_TRANSLATION
           @locale_repository_name             = DEFAULT_LOCALE_REPOSITORY_NAME
           @locale_storage_name                = DEFAULT_LOCALE_STORAGE_NAME
           @locale_tag_format                  = DEFAULT_LOCALE_TAG_FORMAT
